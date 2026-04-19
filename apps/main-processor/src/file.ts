@@ -5,10 +5,7 @@ export async function readFile(filePath: string): Promise<string> {
   try {
     const content = await fsReadFile(filePath, 'utf-8');
     return content;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new Error(`Could not read file: ${filePath}`, error);
-    }
-    return 'Unknown error';
+  } catch (error) {
+    throw new Error(`Could not read file: ${filePath}`, { cause: error });
   }
 }

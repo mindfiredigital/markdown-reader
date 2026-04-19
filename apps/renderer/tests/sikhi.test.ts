@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { sikhiHighlighter } from '../src/renderer/sikhi';
+import { shikiHighlighter } from '../src/renderer/shiki';
 
 vi.mock('shiki/core', () => ({
   createHighlighterCore: vi.fn().mockResolvedValue({
@@ -13,13 +13,13 @@ vi.mock('shiki/engine/javascript', () => ({
 
 describe('shiki renderer setup', () => {
   it('should initialize and return the highlighter', async () => {
-    const instance = await sikhiHighlighter();
+    const instance = await shikiHighlighter();
     expect(instance).toBeDefined();
   });
 
   it('should be a singleton', async () => {
-    const first = await sikhiHighlighter();
-    const second = await sikhiHighlighter();
+    const first = await shikiHighlighter();
+    const second = await shikiHighlighter();
 
     expect(first).toBe(second);
   });
