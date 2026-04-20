@@ -1,11 +1,12 @@
 import { ipcMain, dialog } from 'electron';
 import { readFile } from './file';
 import { validateMarkdownFile, validatePath, validateSender } from './utils/ipc-validation';
+import { IPC_CONSTANTS } from '@package/shared-constants';
 
 //registers all IPC handlers for main process
 export function registerIPCHandlers(): void {
   //returns text content of the file
-  ipcMain.handle('readFile', async (event, filePath: string) => {
+  ipcMain.handle(IPC_CONSTANTS.READ_FILE, async (event, filePath: string) => {
     if (!validateSender(event)) {
       throw new Error('Untrusted sender');
     }
@@ -20,7 +21,7 @@ export function registerIPCHandlers(): void {
   });
 
   // opens the file path
-  ipcMain.handle('openFileDialog', async (event) => {
+  ipcMain.handle(IPC_CONSTANTS.OPEN_FILE_DIALOG, async (event) => {
     if (!validateSender(event)) {
       throw new Error('Untrusted sender');
     }
