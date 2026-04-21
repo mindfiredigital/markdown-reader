@@ -10,3 +10,9 @@ export interface ReaderProps {
 export interface WelcomeProps {
   onOpen: () => void;
 }
+
+export interface ThemeContextType {
+  themeSource: string;
+  toggleTheme: () => Promise<void>;
+  resetToSystem: () => Promise<void>;
+}
