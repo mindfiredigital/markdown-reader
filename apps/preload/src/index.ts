@@ -16,6 +16,9 @@ const apiContract: MarkdownReaderAPI = {
   getAppVersion: () => ipcRenderer.invoke(IPC_CONSTANTS.GET_APP_VERSION),
   watchFile: (path) => ipcRenderer.invoke(IPC_CONSTANTS.WATCH_FILE, path),
   unWatchFile: (path) => ipcRenderer.invoke(IPC_CONSTANTS.UNWATCH_FILE, path),
+  onFileChanged: (callback: (path: string) => void) =>
+    ipcRenderer.on(IPC_CONSTANTS.FILE_CHANGED, (_event, path: string) => callback(path)),
+  removeFileChangedListener: () => ipcRenderer.removeAllListeners(IPC_CONSTANTS.FILE_CHANGED),
 };
 
 // bridge between renderer and main
