@@ -11,4 +11,5 @@ export const IPC_CONSTANTS = {
   GET_APP_VERSION: 'getAppVersion',
   WATCH_FILE: 'watchFile',
   UNWATCH_FILE: 'unWatchFile',
+  FILE_CHANGED: 'file-changed',
 } as const;
