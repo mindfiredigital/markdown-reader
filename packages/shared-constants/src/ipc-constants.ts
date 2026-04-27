@@ -12,4 +12,6 @@ export const IPC_CONSTANTS = {
   WATCH_FILE: 'watchFile',
   UNWATCH_FILE: 'unWatchFile',
   FILE_CHANGED: 'file-changed',
+  TOGGLE_MODE: 'dark-mode:toggle',
+  SYSTEM_MODE: 'dark-mode:system',
 } as const;

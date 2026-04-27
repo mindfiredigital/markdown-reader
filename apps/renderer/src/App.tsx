@@ -9,9 +9,12 @@ import { Sidebar } from './components/Sidebar';
 import { useWatcher } from './hooks/useWatcher';
 import { saveScrollPos, getScrollPos } from './renderer/scroll';
 import { Toast } from './components/Toast';
+import { useTheme } from './hooks/useTheme';
+
+
 
 export default function App() {
-  const { html, filePath, error, isLoading, openFile, toc, reloadFile } = useFile();
+const { html, filePath, error, isLoading, openFile, toc, reloadFile } = useFile();  const { theme, toggleTheme } = useTheme();
   const {activeId,scrollToHeading}=useTOC(toc);
   const [sidebarOpen,setSidebarOpen]=useState(true);
   const [showToast, setShowToast]=useState(false);
@@ -29,13 +32,17 @@ export default function App() {
         openFile();
       }
 
-      if(e.key==='['){
+      if (e.key==='[') {
         setSidebarOpen(prev=>!prev)
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 't') {
+        e.preventDefault();
+        toggleTheme();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [openFile]);
+  }, [openFile,toggleTheme]);
   const handleFileChange = useCallback(() => {
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
@@ -69,11 +76,19 @@ export default function App() {
       }
     });
   }, [html, filePath]);
+  
 
   return (
-    <div className="h-screen flex flex-col">
-      {isLoading && <Loading/>}
-      {error && <Error message={error} onRetry={openFile}/>}
+    <div className="h-screen flex flex-col app-bg">
+      {isLoading && <Loading />}
+      <div className='flex justify-between items-center px-4 py-2 border-b border-theme'>
+        <span className='text-sm font-medium'>Markdown Reader</span>
+        <button onClick={toggleTheme} className='flex items-center gap-1.5 px-2.5 py-1 rounded text-sm text-secondary sidebar-bg border border-theme hover:opacity-80'>
+          {theme}
+        </button>
+      </div>
+
+      {error && <Error message={error} onRetry={openFile} />}
       {!filePath && !isLoading && <Welcome onOpen={openFile} />}
 
       {html && !isLoading && !error && (

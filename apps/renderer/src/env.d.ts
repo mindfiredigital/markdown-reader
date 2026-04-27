@@ -1,8 +1,9 @@
-import { MarkdownReaderAPI } from '@package/shared-types';
+import { MarkdownReaderAPI, ThemeType } from '@package/shared-types';
 
 declare global {
   interface Window {
     api: MarkdownReaderAPI;
+    theme: ThemeType;
   }
 }
 
