@@ -10,11 +10,14 @@ import { useWatcher } from './hooks/useWatcher';
 import { saveScrollPos, getScrollPos } from './renderer/scroll';
 import { Toast } from './components/Toast';
 import { useTheme } from './hooks/useTheme';
+import { BuiltThemeType } from './types/component-types';
+
 
 
 
 export default function App() {
-const { html, filePath, error, isLoading, openFile, toc, reloadFile } = useFile();  const { theme, toggleTheme } = useTheme();
+const { html, filePath, error, isLoading, openFile, toc, reloadFile } = useFile();  
+const { theme, toggleTheme,setTheme } = useTheme();
   const {activeId,scrollToHeading}=useTOC(toc);
   const [sidebarOpen,setSidebarOpen]=useState(true);
   const [showToast, setShowToast]=useState(false);
@@ -83,9 +86,14 @@ const { html, filePath, error, isLoading, openFile, toc, reloadFile } = useFile(
       {isLoading && <Loading />}
       <div className='flex justify-between items-center px-4 py-2 border-b border-theme'>
         <span className='text-sm font-medium'>Markdown Reader</span>
-        <button onClick={toggleTheme} className='flex items-center gap-1.5 px-2.5 py-1 rounded text-sm text-secondary sidebar-bg border border-theme hover:opacity-80'>
-          {theme}
-        </button>
+        <select value={theme} onChange={(e)=>setTheme(e.target.value as BuiltThemeType)} className='px-2 py-1 border border-theme rounded '>
+          <option value="github-light">Light</option>
+          <option value="github-dark">Dark</option>
+          <option value="notion">Notion</option>
+          <option value="nord">Nord</option>
+          <option value="minimal">Minimal</option>
+          <option value="dracula">Dracula</option>
+        </select>
       </div>
 
       {error && <Error message={error} onRetry={openFile} />}
