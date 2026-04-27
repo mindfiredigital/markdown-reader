@@ -15,6 +15,8 @@ export type MarkdownReaderAPI = {
   getSettings(): Promise<Settings>;
   saveSettings(settings: Settings[]): Promise<void>;
   getAppVersion(): Promise<string>;
+  onFileChanged: (callback: (path: string) => void) => void;
+  removeFileChangedListener: () => void;
 };
 
 // initial setting
