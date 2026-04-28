@@ -1,10 +1,11 @@
+
 import { ReaderProps } from "../types/component-types"
 
-export function Reader({html}:ReaderProps){
+export function Reader({html,getHiglightedHtml}:ReaderProps){
   return(
     <div
       className="prose max-w-3xl mx-auto py-12 px-6"
-      dangerouslySetInnerHTML={{__html : html}}
+      dangerouslySetInnerHTML={{__html :getHiglightedHtml(html) }}
     />
   )
 }

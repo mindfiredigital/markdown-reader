@@ -1,5 +1,5 @@
 import { SidebarProps } from "../types/component-types";
-import { getItemClasses } from "../utils/item-classes";
+import { getItemClasses } from "../utils/helpers/sidebar-helper";
 
 //sidebar component
 export function Sidebar({tocItems,activeId,onSelect,isVisible=true}:SidebarProps){

@@ -1,4 +1,4 @@
-import { APPTHEMES } from '../utils/app-themes';
+import { APPTHEMES } from '../utils/constants/theme-constants';
 export interface ErrorProps {
   message: string;
   onRetry: () => void;
@@ -6,6 +6,7 @@ export interface ErrorProps {
 
 export interface ReaderProps {
   html: string;
+  getHiglightedHtml: (html: string) => string;
 }
 
 export interface WelcomeProps {
@@ -48,4 +49,27 @@ export interface ToastProps {
   show: boolean;
   onDone: () => void;
   duration?: number;
+}
+
+export interface UseSearchProps {
+  query: string;
+  currentMatch: number;
+  matchCount: number;
+  isSearchOpen: boolean;
+  openSearch: () => void;
+  closeSearch: () => void;
+  setQuery: (q: string) => void;
+  goToNextMatch: () => void;
+  goToPrevMatch: () => void;
+  getHiglightedHtml: (html: string) => string;
+}
+
+export interface SearchBarProps {
+  query: string;
+  matchCount: number;
+  currentMatch: number;
+  onQueryChange: (q: string) => void;
+  onNext: () => void;
+  onPrev: () => void;
+  onClose: () => void;
 }

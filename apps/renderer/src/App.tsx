@@ -11,6 +11,8 @@ import { saveScrollPos, getScrollPos } from './renderer/scroll';
 import { Toast } from './components/Toast';
 import { useTheme } from './hooks/useTheme';
 import { BuiltThemeType } from './types/component-types';
+import { useSearch } from './hooks/useSearch';
+import { SearchBar } from './components/SearchBar';
 
 
 
@@ -21,6 +23,7 @@ const { theme, toggleTheme,setTheme } = useTheme();
   const {activeId,scrollToHeading}=useTOC(toc);
   const [sidebarOpen,setSidebarOpen]=useState(true);
   const [showToast, setShowToast]=useState(false);
+  const {query,matchCount,currentMatch,isSearchOpen,openSearch,closeSearch,setQuery,goToNextMatch,goToPrevMatch,getHiglightedHtml}=useSearch(html);
 
   const contentRef=useRef<HTMLDivElement>(null);
 
@@ -41,6 +44,11 @@ const { theme, toggleTheme,setTheme } = useTheme();
       if ((e.metaKey || e.ctrlKey) && e.key === 't') {
         e.preventDefault();
         toggleTheme();
+      }
+
+      if((e.metaKey || e.ctrlKey) && e.key==='f'){
+        e.preventDefault();
+        openSearch();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -84,6 +92,9 @@ const { theme, toggleTheme,setTheme } = useTheme();
   return (
     <div className="h-screen flex flex-col app-bg">
       {isLoading && <Loading />}
+       {isSearchOpen &&(
+        <SearchBar query={query} matchCount={matchCount} currentMatch={currentMatch} onQueryChange={setQuery} onNext={goToNextMatch} onPrev={goToPrevMatch} onClose={closeSearch}/>
+      )}
       <div className='flex justify-between items-center px-4 py-2 border-b border-theme'>
         <span className='text-sm font-medium'>Markdown Reader</span>
         <select value={theme} onChange={(e)=>setTheme(e.target.value as BuiltThemeType)} className='px-2 py-1 border border-theme rounded '>
@@ -109,7 +120,7 @@ const { theme, toggleTheme,setTheme } = useTheme();
           />
 
           <main ref={contentRef} className="flex-1 overflow-y-auto px-8 py-6" onScroll={scroll}>
-            <Reader html={html} />
+            <Reader html={html} getHiglightedHtml={getHiglightedHtml} />
           </main>
         </div>
       )}
