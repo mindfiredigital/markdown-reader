@@ -41,3 +41,9 @@ export interface ToastProps {
   onDone: () => void;
   duration?: number;
 }
+
+export interface StatusBarProps {
+  filePath: string;
+  theme: string;
+  fontSize: number;
+}
