@@ -89,3 +89,8 @@ export const WIDTH_MAP: Record<ReadingWidth, string> = {
   wide: '1024px',
   full: '100%',
 };
+export interface StatusBarProps {
+  filePath: string;
+  theme: string;
+  fontSize: number;
+}
