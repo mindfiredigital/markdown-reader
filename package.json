@@ -30,6 +30,11 @@
     "win": {
       "target": "nsis"
     },
+    "publish": [
+      {
+        "provider": "github"
+      }
+    ],
     "asar": true
   },
   "keywords": [],
