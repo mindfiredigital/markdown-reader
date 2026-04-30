@@ -6,7 +6,6 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "pnpm exec tsc",
-    "typecheck": "tsc --noEmit",
     "lint": "eslint ."
   },
   "type": "module",
