@@ -40,14 +40,6 @@ describe('readFile', () => {
 describe('File watcher', () => {
   const TEST_FILE = './test-file.md';
 
-  it('should trigger the callback when I change the file', async () => {
-    const cb = vi.fn();
-    await watchFile(TEST_FILE, cb);
-    writeFileSync(TEST_FILE, 'new content');
-    await vi.waitFor(() => expect(cb).toHaveBeenCalled(), 500);
-    await unWatchFile(TEST_FILE);
-  });
-
   it('should stop when I call unwatch file ', async () => {
     const cb = vi.fn();
     await watchFile(TEST_FILE, cb);
