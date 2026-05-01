@@ -31,6 +31,18 @@
     "win": {
       "target": "nsis"
     },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Utility"
+    },
     "publish": [
       {
         "provider": "github"
