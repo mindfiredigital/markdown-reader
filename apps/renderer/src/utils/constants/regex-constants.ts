@@ -25,3 +25,8 @@ export const BLOCK_MERMAID_REGEX =
 export const BLOCK_MATH_REGEX = /\$\$([\s\S]+?)\$\$/g;
 
 export const INLINE_MATH_REGEX = /(?<!\\)\$([^$\n]+?)\$/g;
+
+export const CALLOUT_REGEX = {
+  CALLOUT_TYPE: /\[!(\w+)\]/i,
+  BLOCKQUOTE: /<blockquote>([\s\S]*?)<\/blockquote>/gi,
+};

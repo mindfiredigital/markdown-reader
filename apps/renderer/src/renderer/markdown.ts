@@ -1,4 +1,5 @@
 import { getMarkdown } from '../config/marked';
+import { parseCallouts } from './callout';
 import { processAllMath } from './katex';
 import { processMermaid } from './mermaid';
 
@@ -12,5 +13,7 @@ export async function renderMarkdown(markdownText: string): Promise<string> {
   let result = await marked.parse(markdownText);
   result = processAllMath(result);
   result = await processMermaid(result);
+  result = parseCallouts(result);
+
   return result;
 }
