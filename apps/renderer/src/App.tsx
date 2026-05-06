@@ -10,18 +10,18 @@ import { useWatcher } from './hooks/useWatcher';
 import { saveScrollPos, getScrollPos } from './renderer/scroll';
 import { Toast } from './components/Toast';
 import { useTheme } from './hooks/useTheme';
-import { BuiltThemeType } from './types/component-types';
 import { useSearch } from './hooks/useSearch';
 import { SearchBar } from './components/SearchBar';
 import { useSettings } from './hooks/useSettings';
 import { StatusBar } from './components/StatusBar';
+import { MENU_EVENTS } from '@package/shared-constants';
 
 
 
 
 export default function App() {
 const { html, filePath, error, isLoading, openFile, toc, reloadFile,recentFiles,loadFile } = useFile();  
-const { theme, toggleTheme,setTheme } = useTheme();
+const { theme, toggleTheme } = useTheme();
   const {activeId,scrollToHeading}=useToc(toc);
   const [sidebarOpen,setSidebarOpen]=useState(true);
   const [showToast, setShowToast]=useState(false);
@@ -29,9 +29,24 @@ const { theme, toggleTheme,setTheme } = useTheme();
   const {increaseFontSize,decreaseFontSize,resetFontSize,fontSize}=useSettings();
 
   const contentRef=useRef<HTMLDivElement>(null);
-
   const debounceTimer=useRef<number | undefined>(undefined);
   const scrollTimer=useRef<number | undefined>(undefined);
+
+useEffect(() => {
+  if (!window.api?.onMenuEvent) return;
+  window.api.onMenuEvent(MENU_EVENTS.OPEN_FILE,      () => void openFile());
+  window.api.onMenuEvent(MENU_EVENTS.SEARCH_DOCUMENT,() => openSearch());
+  window.api.onMenuEvent(MENU_EVENTS.TOGGLE_TOC,     () => setSidebarOpen(p => !p));
+  window.api.onMenuEvent(MENU_EVENTS.CYCLE_THEME,    () => toggleTheme());
+  window.api.onMenuEvent(MENU_EVENTS.ZOOM_IN,        () => increaseFontSize());
+  window.api.onMenuEvent(MENU_EVENTS.ZOOM_OUT,       () => decreaseFontSize());
+  window.api.onMenuEvent(MENU_EVENTS.ZOOM_RESET,     () => resetFontSize());
+  return () => {
+    if (window.api?.removeMenuListeners) {
+      window.api.removeMenuListeners();
+    }
+  };
+}, [openFile, openSearch, toggleTheme, increaseFontSize, decreaseFontSize, resetFontSize]);
 
   //key board shorcut
   useEffect(() => {
@@ -122,17 +137,6 @@ const { theme, toggleTheme,setTheme } = useTheme();
           onClose={closeSearch}
         />
       )}
-      <header className='flex justify-between items-center px-4 py-2 border-b border-border-theme shrink-0'>
-        <span className='text-sm font-medium'>Markdown Reader</span>
-        <select value={theme} onChange={(e) => setTheme(e.target.value as BuiltThemeType)} className="px-2 py-1 text-sm bg-surface border border-border-theme rounded text-text-base focus:outline-none">
-          <option value="github-light">Light</option>
-          <option value="github-dark">Dark</option>
-          <option value="notion">Notion</option>
-          <option value="nord">Nord</option>
-          <option value="minimal">Minimal</option>
-          <option value="dracula">Dracula</option>
-        </select>
-      </header>
 
       {error && <Error message={error} onRetry={openFile} />}
 
