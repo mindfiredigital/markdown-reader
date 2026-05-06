@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import { registerIPCHandlers } from './ipc';
 import { WINDOW_CONSTANTS } from './utils/window-constants';
 import { PATHS } from './utils/path-constants';
+import { registerMenu } from './register-menu';
 
 // register all IPC before window is created
 registerIPCHandlers();
@@ -29,6 +30,7 @@ function createWindow(): void {
 
 // electron ready window
 app.whenReady().then(() => {
+  registerMenu();
   createWindow();
 
   //re create window when dock icon clicked in macOs
