@@ -17,39 +17,6 @@
     "test": "pnpm -r run test",
     "test:coverage": "pnpm -r run test:coverage"
   },
-  "build": {
-    "appId": "com.markdown.reader",
-    "productName": "Markdown Reader",
-    "directories": {
-      "output": "release"
-    },
-    "files": [
-      "out/**/*",
-      "node_modules/**/*",
-      "package.json"
-    ],
-    "win": {
-      "target": "nsis"
-    },
-    "mac": {
-      "target": [
-        "dmg"
-      ],
-      "category": "public.app-category.productivity"
-    },
-    "linux": {
-      "target": [
-        "AppImage"
-      ],
-      "category": "Utility"
-    },
-    "publish": [
-      {
-        "provider": "github"
-      }
-    ],
-    "asar": true
-  },
   "keywords": [],
   "author": "Mindfire-digital",
   "contributors": [],

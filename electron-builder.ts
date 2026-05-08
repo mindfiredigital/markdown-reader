@@ -1,19 +1,19 @@
 import type { Configuration } from 'electron-builder';
 
 const config: Configuration = {
-  appId: 'com.markdown-reader',
+  appId: 'com.markdown.reader',
   productName: 'Markdown Reader',
   directories: {
     output: 'release',
   },
-  files: ['out/**/*', 'node_modules/**/*', 'package.json', 'assets/**/*'],
+  files: ['out/**/*', 'package.json', 'assets/**/*'],
   asar: true,
   fileAssociations: [
     {
       ext: ['md', 'markdown'],
       name: 'Markdown File',
       description: 'Markdown document',
-      icon: 'assets/icon',
+      icon: 'assets/icon.ico',
       rank: 'Owner',
     },
   ],
