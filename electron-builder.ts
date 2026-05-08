@@ -26,10 +26,17 @@ const config: Configuration = {
   asar: true,
   fileAssociations: [
     {
-      ext: ['md', 'markdown'],
+      ext: 'md',
       name: 'Markdown File',
       description: 'Markdown document',
-      icon: 'assets/icon.ico',
+      icon: 'assets/icons/512x512.png',
+      rank: 'Owner',
+    },
+    {
+      ext: 'markdown',
+      name: 'Markdown File',
+      description: 'Markdown document',
+      icon: 'assets/icons/512x512.png',
       rank: 'Owner',
     },
   ],
