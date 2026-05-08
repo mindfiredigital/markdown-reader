@@ -4,7 +4,7 @@ import { Icons } from "../utils/constants/icon-contants";
 
 export function StatusBar({ filePath, theme, fontSize }: StatusBarProps) {
   const zoomPercent = Math.round((fontSize / 16) * 100);
-  const displayName = filePath ? basename(filePath) : 'No file open';
+  const displayName = filePath ? basename(filePath) : '_';
 
   return (
     <footer className="flex h-8 shrink-0 items-center justify-between border-t border-border-theme bg-surface px-4 text-[11px] text-text-muted backdrop-blur">

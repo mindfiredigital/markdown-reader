@@ -1,4 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
+vi.mock('electron', () => ({
+  app: {
+    isPackaged: false,
+  },
+}));
 import { parseFilePathFromArgv } from '../src/cli';
 
 describe('cli test', () => {

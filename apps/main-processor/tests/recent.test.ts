@@ -1,4 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
+vi.mock('electron', () => ({
+  app: {
+    isPackaged: false,
+  },
+}));
 import { RecentFile } from '@package/shared-types';
 import { addToRecentList } from '../src/recent/addToRecentList';
 import { getUniqueRecentFile } from '../src/recent/getUniqueRecentFile';
