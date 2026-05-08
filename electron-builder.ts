@@ -63,6 +63,7 @@ const config: Configuration = {
     target: ['AppImage', 'deb'],
     category: 'Utility',
     mimeTypes: ['text/markdown'],
+    maintainer: 'Mindfire Digital ashminita12@gmail.com',
   },
 };
 
