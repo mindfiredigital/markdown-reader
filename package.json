@@ -11,7 +11,7 @@
     "dist": "pnpm build && electron-builder",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "changeset:auto": "node create-auto-changeset.js",
+    "changeset:auto": "node .github/create-auto-changeset.js",
     "lint": "pnpm -r run lint",
     "typecheck": "pnpm -r run typecheck",
     "test": "pnpm -r run test",
