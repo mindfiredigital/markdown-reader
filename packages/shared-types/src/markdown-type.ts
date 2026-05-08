@@ -20,6 +20,8 @@ export type MarkdownReaderAPI = {
   removeFileChangedListener: () => void;
   onMenuEvent: (event: string, callback: () => void) => void;
   removeMenuListeners: () => void;
+  onOpenFilePath(callback: (path: string) => void): void;
+  removeOpenFilePathListener(): void;
 };
 
 // initial setting
