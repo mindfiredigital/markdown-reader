@@ -2,7 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 import { MarkdownReaderAPI } from '@package/shared-types';
 import { IPC_CONSTANTS } from '@package/shared-constants';
 import { BRIDGE_NAME } from '@package/shared-constants';
-import { MENU_EVENT_LIST } from '@package/shared-constants/dist/src/menu-constants';
+import { MENU_EVENT_LIST } from '@package/shared-constants';
 
 const apiContract: MarkdownReaderAPI = {
   readFile: (path) => ipcRenderer.invoke(IPC_CONSTANTS.READ_FILE, path),
@@ -25,6 +25,14 @@ const apiContract: MarkdownReaderAPI = {
     MENU_EVENT_LIST.forEach((event) => {
       ipcRenderer.removeAllListeners(event);
     }),
+  onOpenFilePath: (callback: (path: string) => void): void => {
+    ipcRenderer.on(IPC_CONSTANTS.OPEN_FILE_PATH, (_event, path: string) => {
+      callback(path);
+    });
+  },
+  removeOpenFilePathListener: (): void => {
+    ipcRenderer.removeAllListeners(IPC_CONSTANTS.OPEN_FILE_PATH);
+  },
 };
 
 // bridge between renderer and main
