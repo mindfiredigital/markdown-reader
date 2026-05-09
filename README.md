@@ -280,39 +280,6 @@ This automatically:
 
 ---
 
-## Performance Goals
-
-- Cold start under 800ms
-- Fast Markdown rendering
-- Low memory usage
-- Offline-first architecture
-
----
-
-## Security
-
-- DOM sanitization enabled
-- Secure Electron preload architecture
-- No remote code execution
-- No telemetry
-
----
-
-## Contributing
-
-1. Fork the repository
-2. Create feature branch
-3. Commit changes using [Conventional Commits](https://www.conventionalcommits.org)
-4. Open Pull Request
-
-**Example commit:**
-
-```bash
-feat(renderer): add in-document search
-```
-
----
-
 ## License
 
 ISC License
