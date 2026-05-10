@@ -45,3 +45,260 @@ markdown-reader is a dedicated native desktop Markdown reader:
 - Multiple built-in themes
 - Fully offline — zero cloud, zero telemetry, zero accounts
 - Built entirely on the JS/TS ecosystem — no Rust, no Go, no C++
+
+## Features
+
+- Native desktop Markdown reader
+- Fully offline-first experience
+- GitHub Flavored Markdown (GFM) support
+- Live file watching & auto reload
+- Multiple built-in themes
+- Syntax highlighting with Shiki
+- KaTeX math rendering
+- Mermaid diagram support
+- In-document search
+- Sidebar Table of Contents
+- File explorer & recent files
+- Keyboard shortcuts
+- Native OS integration
+- Cross-platform builds
+
+---
+
+## Supported Markdown Features
+
+- Headings (H1–H6)
+- Ordered & unordered lists
+- Task lists
+- Blockquotes
+- Tables
+- Horizontal rules
+- Inline code
+- Fenced code blocks
+- Images
+- Links
+- Footnotes
+- Inline HTML
+- KaTeX math
+- Mermaid diagrams
+
+---
+
+## Tech Stack
+
+| Layer               | Technology    |
+| ------------------- | ------------- |
+| Desktop runtime     | Electron      |
+| Frontend            | React         |
+| Language            | TypeScript    |
+| Build tool          | electron-vite |
+| Styling             | Tailwind CSS  |
+| Markdown parser     | Marked        |
+| Syntax highlighting | Shiki         |
+| Math rendering      | KaTeX         |
+| Diagram rendering   | Mermaid       |
+| Testing             | Vitest        |
+| Package manager     | pnpm          |
+
+---
+
+## Project Structure
+
+```
+markdown-reader/
+├── apps/
+│   ├── main-processor/
+│   ├── preload/
+│   └── renderer/
+│
+├── packages/
+│   ├── shared-constants/
+│   └── shared-types/
+│
+├── assets/
+├── release/
+└── .github/
+```
+
+---
+
+## Development Setup
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/mindfire-test/markdown-reader
+cd markdown-reader
+```
+
+### 2. Install Dependencies
+
+```bash
+pnpm install
+```
+
+### 3. Start Development Server
+
+```bash
+pnpm dev
+```
+
+---
+
+## Available Scripts
+
+### Development
+
+```bash
+pnpm dev
+```
+
+Starts Electron + Vite development environment.
+
+### Production Build
+
+```bash
+pnpm build
+```
+
+Builds Electron main, preload, and renderer processes.
+
+### Create Local Installer
+
+```bash
+pnpm dist
+```
+
+Builds production installer locally without publishing.
+
+### Publish Release
+
+```bash
+pnpm dist:publish
+```
+
+Builds and publishes release artifacts to GitHub Releases.
+
+### Run Tests
+
+```bash
+pnpm test
+```
+
+### Run Coverage
+
+```bash
+pnpm test:coverage
+```
+
+### Run Lint
+
+```bash
+pnpm lint
+```
+
+### Run Typecheck
+
+```bash
+pnpm typecheck
+```
+
+---
+
+## Release Workflow
+
+This project uses GitHub Actions for CI/CD.
+
+### CI Pipeline
+
+Runs automatically on:
+
+- Pull requests
+- Pushes to `main` & `dev`
+
+Checks include:
+
+- Build
+- Lint
+- Typecheck
+- Tests
+
+### Release Pipeline
+
+Production releases are created using Git tags.
+
+**Example:**
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+This automatically:
+
+- Builds installers
+- Creates GitHub Release
+- Uploads release artifacts
+
+### Supported Release Formats
+
+| Platform | Format              |
+| -------- | ------------------- |
+| Windows  | `.exe`              |
+| Linux    | `.AppImage`, `.deb` |
+| macOS    | `.dmg`              |
+
+---
+
+## Keyboard Shortcuts
+
+| Shortcut           | Action                        |
+| ------------------ | ----------------------------- |
+| `Ctrl / Cmd + O`   | Open File                     |
+| `Ctrl / Cmd + F`   | Search                        |
+| `Ctrl / Cmd + +`   | Zoom In                       |
+| `Ctrl / Cmd + -`   | Zoom Out                      |
+| `Ctrl / Cmd + 0`   | Reset Zoom                    |
+| `Ctrl / Cmd + T`   | Switch Theme                  |
+| `Cmd/Ctrl+Shift+O` | Open folder                   |
+| `Cmd/Ctrl+W`       | Close current tab             |
+| `Ctrl+ [`          | Toggle TOC sidebar            |
+| `Ctrl + \`         | Backslash Toggle file browser |
+| `Ctrl+Tab`         | Next tab                      |
+| `Ctrl+Shift+Tab`   | Previous tab                  |
+
+---
+
+## Themes
+
+- GitHub Light
+- GitHub Dark
+- Dracula
+- Nord
+- Notion
+- Minimal
+
+---
+
+## License
+
+ISC License
+
+---
+
+## Author
+
+**Mindfire Digital**
+
+---
+
+## Future Roadmap
+
+- PDF export
+- HTML export
+- Multi-tab support improvements
+- Plugin system
+- Workspace support
+- Better Mermaid rendering
+- Performance optimizations
+- Accessibility improvements
