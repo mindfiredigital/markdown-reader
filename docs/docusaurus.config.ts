@@ -4,17 +4,14 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Markdown Reader',
-  tagline: 'markdown-reader - Adobe Acrobat for markdown files',
+  tagline: 'PDF-reader comfort for Markdown files.',
   favicon: 'img/logo.png',
-
   url: 'https://your-docusaurus-site.example.com',
   baseUrl: '/',
-
   organizationName: 'mindfiredigital',
   projectName: 'markdown-reader',
-
   onBrokenLinks: 'throw',
-
+  onBrokenMarkdownLinks: 'warn',
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -22,10 +19,12 @@ const config: Config = {
 
   presets: [
     [
-      'classic',
+      '@docusaurus/preset-classic',
       {
         docs: {
           sidebarPath: './sidebars.ts',
+          editUrl: undefined,
+          sidebarCollapsed: true,
         },
         blog: false,
         theme: {
@@ -37,8 +36,29 @@ const config: Config = {
 
   themeConfig: {
     image: 'img/docusaurus-social-card.jpg',
+    metadata: [
+      {
+        name: 'description',
+        content:
+          'Markdown Reader is a native desktop app for opening, reading, searching, and exporting Markdown files on Windows, macOS, and Linux.',
+      },
+      {
+        name: 'keywords',
+        content:
+          'Markdown Reader, desktop markdown viewer, markdown app, Electron, TypeScript, GFM, Mermaid, KaTeX, offline markdown reader',
+      },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: 'Markdown Reader' },
+      {
+        name: 'twitter:description',
+        content:
+          'A dedicated native reader for Markdown files — fast, offline, and built for docs.',
+      },
+    ],
     colorMode: {
-      respectPrefersColorScheme: true,
+      defaultMode: 'dark',
+      disableSwitch: false,
+      respectPrefersColorScheme: false,
     },
     navbar: {
       title: 'Markdown Reader',
@@ -49,24 +69,36 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'docs',
+          sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'Documentation',
         },
         {
-          href: 'https://github.com/mindfire-test/markdown-reader',
-          label: 'GitHub',
+          type: 'docsVersionDropdown',
+          position: 'right',
+        },
+        {
+          href: 'https://github.com/mindfiredigital/markdown-reader',
+          className: 'header--github-link',
+          'aria-label': 'GitHub repository',
           position: 'right',
         },
       ],
     },
-    footer: {
-      style: 'dark',
-      copyright: `Copyright © ${new Date().getFullYear()} Mindfire Markdown Reader`,
-    },
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      magicComments: [
+        {
+          className: 'theme-code-block-highlighted-line',
+          line: 'highlight-next-line',
+          block: { start: 'highlight-start', end: 'highlight-end' },
+        },
+        {
+          className: 'code-block-error-line',
+          line: 'error-next-line',
+        },
+      ],
     },
   } satisfies Preset.ThemeConfig,
 };
