@@ -1,19 +1,70 @@
 .heroBanner {
-  padding: 4rem 0;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  padding: 1rem 0;
+  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
+
+  @media (min-width: 640px) {
+    padding: 1.5rem 0;
+    max-width: 90%;
+  }
+  
+  @media (min-width: 1024px) {
+    padding: 2rem 0;
+    max-width: 1200px;
+  }
+}
+
+.heroTitle {
+  font-size: 4.5rem;
+  letter-spacing: -0.05em;
+  background-clip: text;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  max-width: 650px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+  color: #99000d;
+
+  [data-theme='dark'] {
+    color: var(--primary);
+    color: #fb6a4a;
+  }
 }
 
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2.5rem 1rem;
+@media (max-width: 996px) {
+  .heroTitle {
+    font-size: 4.5rem;
   }
 }
 
+@media (max-width: 768px) {
+  .heroBanner {
+    padding: 6rem 0;
+  }
+  .heroTitle {
+    font-size: 3.5rem;
+  }
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
+}
