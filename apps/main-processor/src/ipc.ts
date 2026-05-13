@@ -9,6 +9,7 @@ import {
 import { IPC_CONSTANTS } from '@package/shared-constants';
 import { getRecentFiles } from './recent/getRecentFile';
 import { addRecentFile } from './recent/addRecentFile';
+import { exportHTML } from './export/exportHtml';
 
 //registers all IPC handlers for main process
 export function registerIPCHandlers(): void {
@@ -120,5 +121,9 @@ export function registerIPCHandlers(): void {
       throw new Error('Invalid folder path');
     }
     return await getFolder(folderPath);
+  });
+
+  ipcMain.handle('exportHTML', async (_default, html: string, css: string, outPath: string) => {
+    await exportHTML(html, css, outPath);
   });
 }
