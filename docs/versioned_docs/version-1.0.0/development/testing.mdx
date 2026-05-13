@@ -1,0 +1,36 @@
+# Testing
+
+Tests should protect the reader experience and prevent regressions.
+
+## What to test
+
+Prioritize tests for:
+
+- Markdown rendering helpers
+- DOM sanitization
+- search logic
+- theme switching
+- zoom and reading width settings
+- file watching behavior
+- IPC contracts
+- export helpers
+
+## Recommended commands
+
+```bash
+pnpm test
+pnpm typecheck
+pnpm lint
+pnpm build
+```
+
+## Testing rule
+
+For new features, write the logic tests first, then add component tests for the UI behavior.
+
+Example:
+
+1. Write `useSearch.test.ts`.
+2. Implement `useSearch.ts`.
+3. Write `SearchBar.test.tsx`.
+4. Wire the search UI into the app.

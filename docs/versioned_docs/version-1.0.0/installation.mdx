@@ -1,0 +1,53 @@
+# Installation
+
+Choose the build for your operating system. The homepage download buttons point directly to files in the website's `static/downloads` folder, so users can download the installer without leaving the docs site.
+
+## Direct downloads
+
+| Platform | File type | Website path |
+| --- | --- | --- |
+| Windows | `.exe` installer | `/downloads/markdown-reader-windows.exe` |
+| macOS | `.dmg` package | `/downloads/markdown-reader-macos.dmg` |
+| Linux | `.AppImage` or `.deb` | `/downloads/markdown-reader-linux.AppImage` |
+
+:::info
+The zip I returned includes the download cards and OS icons. Add the real installer files into `static/downloads/` using the same names above, or change the links in `src/components/Homepage/downloads.tsx`.
+:::
+
+## Windows
+
+1. Download the Windows installer.
+2. Run `markdown-reader-windows.exe`.
+3. Follow the setup wizard.
+4. Open any `.md` file with Markdown Reader.
+
+## macOS
+
+1. Download the macOS `.dmg`.
+2. Open the disk image.
+3. Drag Markdown Reader into Applications.
+4. Launch the app from Applications.
+
+## Linux
+
+For AppImage:
+
+```bash
+chmod +x markdown-reader-linux.AppImage
+./markdown-reader-linux.AppImage
+```
+
+For Debian-based systems, provide a `.deb` package when available:
+
+```bash
+sudo dpkg -i markdown-reader-linux.deb
+```
+
+## Open from the command line
+
+After installation, Markdown Reader can support command-line opening:
+
+```bash
+markdown-reader README.md
+markdown-reader ~/docs/notes.md
+```

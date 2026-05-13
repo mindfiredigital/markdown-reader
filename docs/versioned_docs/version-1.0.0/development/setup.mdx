@@ -1,0 +1,38 @@
+# Development setup
+
+Markdown Reader uses the JavaScript and TypeScript ecosystem.
+
+## Prerequisites
+
+- Node.js 18 or later
+- pnpm
+- Git
+
+## Install dependencies
+
+```bash
+pnpm install
+```
+
+## Start the docs site
+
+```bash
+pnpm start
+```
+
+## Build the docs site
+
+```bash
+pnpm build
+```
+
+## Packages used by the docs website
+
+The homepage uses the same style as the reference site, so keep these packages installed:
+
+```bash
+pnpm add framer-motion lucide-react clsx tailwind-merge react-icons ogl gsap
+pnpm add -D tailwindcss @tailwindcss/postcss @tailwindcss/typography postcss
+```
+
+If you use the returned zip as-is, these dependencies are already present in `package.json` because the site is based on the reference docs package.

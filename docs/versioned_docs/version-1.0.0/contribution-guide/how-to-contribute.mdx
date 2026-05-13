@@ -1,0 +1,114 @@
+# How to contribute
+
+Thank you for helping improve Markdown Reader. This guide explains how to set up the project, make a focused change, and submit a clean pull request.
+
+## Code of conduct
+
+Before contributing, please read the [Code of Conduct](./code-of-conduct).
+
+## Find something to work on
+
+Start with the issue tracker. Good first contributions include:
+
+- documentation improvements
+- small UI fixes
+- keyboard shortcut fixes
+- Markdown rendering edge cases
+- test coverage for existing behavior
+- platform packaging fixes
+
+If you want to add a larger feature, open an issue first so maintainers can discuss the approach before you spend time implementing it.
+
+## Contribution workflow
+
+### 1. Fork and clone
+
+```bash
+git clone https://github.com/your-username/markdown-reader.git
+cd markdown-reader
+```
+
+### 2. Install dependencies
+
+```bash
+pnpm install
+```
+
+### 3. Create a branch
+
+Use a short branch name that describes the work.
+
+```bash
+git checkout -b feat/folder-search
+# or
+git checkout -b fix/mermaid-rendering
+```
+
+### 4. Make a focused change
+
+Keep one pull request tied to one issue or one clear improvement. Avoid mixing unrelated work such as styling, refactors, and feature changes in the same PR.
+
+### 5. Add tests
+
+Add tests for behavior that can break later.
+
+Good areas for tests:
+
+- Markdown parsing
+- sanitization
+- search highlighting
+- keyboard shortcuts
+- settings persistence
+- export helper functions
+
+### 6. Run checks locally
+
+```bash
+pnpm test
+pnpm typecheck
+pnpm build
+```
+
+### 7. Commit with Conventional Commits
+
+Use a clear commit message.
+
+```bash
+git add .
+git commit -m "feat(renderer): add folder-wide search results"
+```
+
+Useful commit types:
+
+- `feat` for new features
+- `fix` for bug fixes
+- `docs` for documentation
+- `test` for tests
+- `refactor` for internal code improvements
+- `chore` for maintenance
+
+### 8. Open a pull request
+
+Push your branch and open a PR against the main repository.
+
+```bash
+git push origin feat/folder-search
+```
+
+In the PR description, include:
+
+- what changed
+- why it changed
+- screenshots or recordings for UI changes
+- tests you ran
+- linked issue number
+
+## Code review process
+
+Maintainers may request changes. Push updates to the same branch and the pull request will update automatically.
+
+A PR is easier to review when it is small, tested, and clearly explained.
+
+## Licensing
+
+By contributing to Markdown Reader, you agree that your contributions will be licensed under the project license.
