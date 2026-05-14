@@ -31,26 +31,29 @@ export function Sidebar({tocItems,activeId,onSelect,isVisible=true, onClose }: S
 
           return (
             <li key={item.id}>
-              <button type="button" onClick={()=>onSelect(item.id)} className={getItemClasses(item,activeId)} aria-current={item.id===activeId?"location":undefined}>
-                <span className="inline-flex items-center gap-1">
+              <div className="flex items-center w-full">
                   {expandable && (
-                    <span
+                    <button
+                    type="button"
+                    aria-expanded={!collapsed}
+                    aria-label={`${collapsed ? 'Expand' : 'Collapse'} ${item.text}`}
                       onClick={(event) => {
                         event.stopPropagation();
                         toggleItem(item.id);
                       }}
-                      className="inline-flex text-text-muted hover:text-text-base"
+                      className="inline-flex p-1 text-text-muted hover:text-text-base transition-colors shrink-0"
                     >
                       {collapsed ? (
                         <Icons.ChevronRight size={20} />
                       ) : (
                         <Icons.ChevronDown size={20} />
                       )}
-                    </span>
+                    </button>
                   )}
+                <button type="button" onClick={()=>onSelect(item.id)} className={`${getItemClasses(item, activeId)} text-left w-full`} aria-current={item.id===activeId?"location":undefined}>
                   <span>{item.text}</span>
-                </span>
               </button>
+              </div>
             </li>
           )})}
       </ul>
