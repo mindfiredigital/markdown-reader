@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SearchBarProps } from '../types/component-types';
 import { btnClass } from '../utils/constants/style-constants';
+import { Icons } from '../utils/constants/icon-contants';
 // search bar component
 export function SearchBar({
   query,
@@ -43,7 +44,7 @@ export function SearchBar({
         ref={inputRef}
         type="text"
         value={localQuery}
-        className="w-44 px-2.5 py-1 text-xs rounded border border-border-theme bg-bg text-text-base placeholder:text-text-muted outline-none focus:ring-2 focus:ring-accent transition-shadow"
+        className="w-56 px-3 py-1.5 text-sm rounded border border-border-theme bg-bg text-text-base placeholder:text-text-muted outline-none focus:ring-2 focus:ring-accent transition-shadow"
         onChange={(e) => setLoacalQuery(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Search in the document"
@@ -53,19 +54,19 @@ export function SearchBar({
      {query && (
         <div className="flex items-center gap-2">
           {matchCount > 0 ? (
-            <span className="min-w-11.25 font-mono text-xs text-text-muted">
+            <span className="min-w-15 font-mono text-sm text-text-muted">
               {currentMatch} / {matchCount}
             </span>
           ) : (
-            <span className="text-xs text-error">No results</span>
+            <span className="min-w-15 text-sm text-error">No results</span>
           )}
         </div>
       )}
 
       <div className="flex gap-1">
-        <button onClick={onPrev} aria-label="Previous match" className={btnClass}>prev</button>
-        <button onClick={onNext} aria-label="Next match" className={btnClass}>next</button>
-        <button onClick={onClose} aria-label="Close search" className={btnClass}>close</button>
+        <button onClick={onPrev} aria-label="Previous match" className={btnClass}><Icons.ArrowUp size={18} /></button>
+        <button onClick={onNext} aria-label="Next match" className={btnClass}><Icons.ArrowDown size={18} /></button>
+        <button onClick={onClose} aria-label="Close search" className={btnClass}><Icons.X size={18} /></button>
       </div>
     </div>
   );
