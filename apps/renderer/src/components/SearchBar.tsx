@@ -29,17 +29,17 @@ export function SearchBar({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && e.shiftKey) {
       e.preventDefault();
-      onPrev();
+        onPrev();
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      onNext();
+        onNext();
     } else if (e.key === 'Escape') {
       onClose();
     }
   };
 
   return (
-    <div className="fixed top-0 right-0 z-50 flex items-center gap-2 p-2 bg-surface border border-border-theme rounded-bl-lg shadow-lg">
+    <div role="search" aria-label="Document Search" className="fixed top-0 right-0 z-50 flex items-center gap-2 p-2 bg-surface border border-border-theme rounded-bl-lg shadow-lg">
       <input
         ref={inputRef}
         type="text"
@@ -52,10 +52,12 @@ export function SearchBar({
       />
 
      {query && (
-        <div className="flex items-center gap-2">
+        <div role="status" aria-live="polite" className="flex items-center gap-2">
           {matchCount > 0 ? (
             <span className="min-w-15 font-mono text-sm text-text-muted">
-              {currentMatch} / {matchCount}
+              <span className="sr-only">Match</span> {currentMatch} 
+              <span aria-hidden="true"> / </span> 
+              <span className="sr-only">of</span> {matchCount}
             </span>
           ) : (
             <span className="min-w-15 text-sm text-error">No results</span>
@@ -63,7 +65,7 @@ export function SearchBar({
         </div>
       )}
 
-      <div className="flex gap-1">
+      <div className="flex gap-1" role="group" aria-label="Search navigation">
         <button onClick={onPrev} aria-label="Previous match" className={btnClass}><Icons.ArrowUp size={18} /></button>
         <button onClick={onNext} aria-label="Next match" className={btnClass}><Icons.ArrowDown size={18} /></button>
         <button onClick={onClose} aria-label="Close search" className={btnClass}><Icons.X size={18} /></button>
