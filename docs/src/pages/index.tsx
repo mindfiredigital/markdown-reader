@@ -17,7 +17,7 @@ export default function Home(): ReactElement {
         <div style={{ position: 'relative', zIndex: 1 }}>
           <HeroSection />
           <section
-            className="relative rounded-t-3xl border border-border/60 backdrop-blur overflow-hidden bg-[linear-gradient(to_bottom_right,color-mix(in_oklab,var(--background),transparent_30%),color-mix(in_oklab,var(--background),transparent_10%))] after:bg-[radial-gradient(1200px_600px_at_50%_40%,transparent_35%,rgba(0,0,0,0.08)_85%)] after:opacity-60 before:content-[''] before:absolute before:inset-[-35%] before:pointer-events-none before:blur-[70px] before:opacity-55 before:bg-[radial-gradient(700px_360px_at_20%_15%,color-mix(in_oklab,var(--primary),transparent),transparent),radial-gradient(700px_360px_at_80%_20%,color-mix(in_oklab,var(--primary),transparent),transparent),radial-gradient(520px_260px_at_50%_110%,color-mix(in_oklab,var(--primary),transparent),transparent)]"
+            className="relative backdrop-blur overflow-hidden bg-[linear-gradient(to_bottom_right,color-mix(in_oklab,var(--background),transparent_30%),color-mix(in_oklab,var(--background),transparent_10%))] after:bg-[radial-gradient(1200px_600px_at_50%_40%,transparent_35%,rgba(0,0,0,0.08)_85%)] after:opacity-60 before:content-[''] before:absolute before:inset-[-35%] before:pointer-events-none before:blur-[70px] before:opacity-55 before:bg-[radial-gradient(700px_360px_at_20%_15%,color-mix(in_oklab,var(--primary),transparent),transparent),radial-gradient(700px_360px_at_80%_20%,color-mix(in_oklab,var(--primary),transparent),transparent),radial-gradient(520px_260px_at_50%_110%,color-mix(in_oklab,var(--primary),transparent),transparent)]"
           >
             <FeaturedComponents />
             <WhyMarkdownReaderSection />
