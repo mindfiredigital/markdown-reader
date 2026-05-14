@@ -13,7 +13,7 @@ export function SearchBar({
   onClose,
 }: SearchBarProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [localQuery,setLoacalQuery]=useState(query);
+  const [localQuery,setLocalQuery]=useState(query);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -45,7 +45,7 @@ export function SearchBar({
         type="text"
         value={localQuery}
         className="w-56 px-3 py-1.5 text-sm rounded border border-border-theme bg-bg text-text-base placeholder:text-text-muted outline-none focus:ring-2 focus:ring-accent transition-shadow"
-        onChange={(e) => setLoacalQuery(e.target.value)}
+        onChange={(e) => setLocalQuery(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Search in the document"
         aria-label="Search in document"
