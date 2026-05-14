@@ -1,8 +1,0 @@
-packages:
-  - "apps/*"
-  - "packages/*"
-  - "docs"
-allowBuilds:
-  electron: true
-  electron-winstaller: true
-  esbuild: true
