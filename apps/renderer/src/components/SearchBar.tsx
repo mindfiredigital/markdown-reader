@@ -24,19 +24,29 @@ export function SearchBar({
       onQueryChange(localQuery);
     },300);
     return ()=>clearTimeout(handler)
-  },[localQuery,onQueryChange])
+  },[localQuery,onQueryChange]);
+
+  const prevDisable=matchCount===0 || currentMatch<=1;
+  const nextDisable=matchCount===0 || currentMatch>=matchCount;
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && e.shiftKey) {
       e.preventDefault();
+      if (!prevDisable){
         onPrev();
+      }
     } else if (e.key === 'Enter') {
       e.preventDefault();
+      if (!nextDisable){
         onNext();
+      }
     } else if (e.key === 'Escape') {
       onClose();
     }
   };
+
+
+  const newButtonClass=(isDisable:boolean)=>`${btnClass} ${isDisable? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`;
 
   return (
     <div role="search" aria-label="Document Search" className="fixed top-0 right-0 z-50 flex items-center gap-2 p-2 bg-surface border border-border-theme rounded-bl-lg shadow-lg">
@@ -66,9 +76,9 @@ export function SearchBar({
       )}
 
       <div className="flex gap-1" role="group" aria-label="Search navigation">
-        <button onClick={onPrev} aria-label="Previous match" className={btnClass}><Icons.ArrowUp size={18} /></button>
-        <button onClick={onNext} aria-label="Next match" className={btnClass}><Icons.ArrowDown size={18} /></button>
-        <button onClick={onClose} aria-label="Close search" className={btnClass}><Icons.X size={18} /></button>
+        <button onClick={onPrev} disabled={prevDisable} aria-label="Previous match" className={newButtonClass(prevDisable)}><Icons.ArrowUp size={18} /></button>
+        <button onClick={onNext} disabled={nextDisable} aria-label="Next match" className={newButtonClass(nextDisable)}><Icons.ArrowDown size={18} /></button>
+        <button onClick={onClose} aria-label="Close search" className={newButtonClass(false)}><Icons.X size={18} /></button>
       </div>
     </div>
   );
