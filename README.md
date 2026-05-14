@@ -127,7 +127,7 @@ markdown-reader/
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/mindfire-test/markdown-reader
+git clone https://github.com/mindfiredigital/markdown-reader
 cd markdown-reader
 ```
 

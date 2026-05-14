@@ -123,8 +123,6 @@ This rule helps maintain:
 
 ---
 
----
-
 ## Code Review Process
 
 - Once your PR is submitted, one or more maintainers will review it.
