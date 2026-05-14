@@ -15,7 +15,8 @@ if (fs.existsSync(CHANGESET_DIR)) {
   fs.mkdirSync(CHANGESET_DIR);
 }
 
-const commitMessage = execSync('git log -1 --format=%s').toString().trim();
+const commitMessage =
+  process.env.COMMIT_MESSAGE || execSync('git log -1 --format=%s').toString().trim();
 console.log(`Processing commit message: "${commitMessage}"`);
 
 const isBreaking = /!:/.test(commitMessage) || commitMessage.includes('BREAKING CHANGE');

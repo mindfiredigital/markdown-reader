@@ -25,7 +25,7 @@ if (fileContent.includes('type: major')) bumpType = 'major';
 else if (fileContent.includes('type: minor')) bumpType = 'minor';
 
 console.log(`Running dynamic version increment: [pnpm version ${bumpType}]...`);
-execSync(`pnpm version ${bumpType} --no-git-tag-version`);
+execSync(`pnpm version ${bumpType} --no-git-tag-version`, { stdio: 'inherit' });
 
 // Append text entry directly into CHANGELOG.md cleanly
 const summaryText = fileContent.split('---')[2]?.trim() || 'Internal production improvements.';

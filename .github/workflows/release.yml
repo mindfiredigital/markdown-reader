@@ -44,6 +44,8 @@ jobs:
 
       - name: Generate changeset from commit message
         run: pnpm changeset:auto
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
 
       - name: Create Release version
         run: pnpm changeset:version
@@ -58,7 +60,7 @@ jobs:
         id: commit-version
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
-            git add package.json pnpm-lock.yaml CHANGELOG.md
+            git add package.json pnpm-lock.yaml CHANGELOG.md .changeset
             git commit -m "chore(release): version packages [skip ci]" --no-verify
             
             # 1. Create the local Git tag
