@@ -1,33 +1,35 @@
----
-title: Introduction
-sidebar_position: 1
----
+# Introduction
 
-# Markdown Reader
+Markdown Reader is a native desktop application for opening and reading Markdown files like finished documents.
 
-Markdown Reader is a native desktop application for opening and reading Markdown files beautifully.
+The idea is simple: **PDF Reader - but for Markdown files.**
 
-It is designed to feel like a dedicated document reader for `.md` files: clean typography, fast navigation, tabs, search, themes, diagrams, math, and file watching.
+Developers, writers, students, and teams use `.md` files every day for READMEs, specs, notes, changelogs, API docs, and internal documentation. Most tools either open Markdown as raw text, treat it as something to edit, or require a browser-style workflow. Markdown Reader focuses on the reading experience.
 
-## One-line pitch
+## What Markdown Reader is for
 
-**PDF Reader, but for Markdown files.**
+Markdown Reader is built for people who regularly open `.md` and `.markdown` files and want a calm, dedicated reading tool.
 
-## Who it is for
+It is useful for:
 
-- Developers reading READMEs, changelogs, API notes, and technical specs
-- Writers reviewing Markdown drafts before publishing
-- Students reading notes written in Markdown
-- Teams that want a simple offline Markdown viewer
+- project READMEs and contributor guides
+- technical specifications and architecture notes
+- study notes and long-form Markdown documents
+- changelogs, release notes, and API documentation
+- documentation folders with many linked Markdown files
 
-## What makes it different
+## What it is not
 
-Markdown Reader is focused on reading, not editing. It avoids editor-style distractions and gives Markdown files a dedicated desktop experience.
+Markdown Reader is intentionally **not** a Markdown editor, note-taking vault, or cloud workspace.
 
-## Current release
+It does not try to replace VS Code, Obsidian, GitHub, or a documentation website. It gives Markdown files the same kind of dedicated reading experience that PDF files already have.
 
-The current public release is **v1.0.0**.
+## Core promise
 
-Download builds from the GitHub Releases page:
+Markdown Reader should feel:
 
-[Download Markdown Reader](https://github.com/mindfire-test/markdown-reader/releases)
+- fast to open
+- comfortable to read
+- reliable with large Markdown files
+- simple enough for everyday use
+- powerful enough for technical documents

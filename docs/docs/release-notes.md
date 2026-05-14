@@ -29,7 +29,7 @@ Initial public release of Markdown Reader.
 
 Download the latest builds from GitHub Releases:
 
-[GitHub Releases](https://github.com/mindfire-test/markdown-reader/releases)
+[GitHub Releases](https://github.com/mindfiredigital/markdown-reader/releases)
 
 ### Known limitations
 
