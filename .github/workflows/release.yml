@@ -64,19 +64,20 @@ jobs:
             # 1. Create the local Git tag
             git tag ${{ steps.package-version.outputs.tag }}
             
-            # 2. Push the branch commit (Fixed the broken URL syntax)
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com${{ github.repository }}.git HEAD:${{ github.ref_name }}
+            # 2. Push the branch commit (Fixed syntax using clean slashes and variable structures)
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref_name }}
             
-            # 3. Push the tag to GitHub
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com{{ github.repository }}.git ${{ steps.package-version.outputs.tag }}
+            # 3. Push the tag to GitHub remote
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git ${{ steps.package-version.outputs.tag }}
             
             echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
           else
-            # Safeguard: If no files changed, ensure the tag still exists on GitHub for the release step
+            # Safeguard: Force-tag if nothing changed to give the publish step a stable target point
             git tag -f ${{ steps.package-version.outputs.tag }}
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com{{ github.repository }}.git ${{ steps.package-version.outputs.tag }} --force
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git ${{ steps.package-version.outputs.tag }} --force
             echo "sha=${{ github.sha }}" >> $GITHUB_OUTPUT
           fi
+
 
   build:
     name: Build (${{ matrix.os }})
