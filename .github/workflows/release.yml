@@ -38,8 +38,8 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
 
       - name: Generate changeset from commit message
         run: pnpm changeset:auto
@@ -60,7 +60,7 @@ jobs:
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
             git add package.json pnpm-lock.yaml CHANGELOG.md .changeset
-            git commit -m "chore(release): version packages [skip ci]" --no-verify
+            git commit -m "chore(release): release ${{ steps.package-version.outputs.tag }} [skip ci]" --no-verify
             
             # 1. Create the local Git tag
             git tag ${{ steps.package-version.outputs.tag }}
@@ -154,7 +154,11 @@ jobs:
           name: Markdown Reader Release ${{ needs.version_and_tag.outputs.tag }}
           draft: false
           prerelease: false
-          generate_release_notes: true
+          generate_release_notes: false
+          body: |
+            Automated release for Markdown Reader.
+
+            See CHANGELOG.md for the full release notes.
           files: |
             release-artifacts/*.exe
             release-artifacts/*.dmg

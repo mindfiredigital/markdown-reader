@@ -27,7 +27,7 @@ else if (fileContent.includes('type: minor')) bumpType = 'minor';
 console.log(`Running dynamic version increment: [pnpm version ${bumpType}]...`);
 execSync(`pnpm version ${bumpType} --no-git-tag-version`, { stdio: 'inherit' });
 
-// Append text entry directly into CHANGELOG.md cleanly
+// Append text entry directly into CHANGELOG.md
 const summaryText = fileContent.split('---')[2]?.trim() || 'Internal production improvements.';
 const pkgVersion = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
 const changelogLine = `\n## ${pkgVersion}\n- ${summaryText}\n`;
