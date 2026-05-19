@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import React,{ useEffect, useState, useRef, useCallback } from 'react';
 import { useFile } from './hooks/useFile';
 import { Welcome } from './components/Welcome';
 import { Reader } from './components/Reader';
@@ -22,6 +22,7 @@ import { extractTOC } from './renderer/toc';
 import { Icons } from './utils/constants/icon-contants';
 import { useShortcuts } from './hooks/useShortcuts';
 import { useMenuEvents } from './hooks/useMenuEvents';
+import { extractDroppedMdpath } from './renderer/drag-drop';
 
 export default function App() {
   const {  error, isLoading, openFile, toc,recentFiles,loadFile } =useFile();
@@ -39,6 +40,8 @@ export default function App() {
   const contentRef=useRef<HTMLDivElement>(null);
   const debounceTimer=useRef<number | undefined>(undefined);
   const scrollTimer=useRef<number | undefined>(undefined);
+  const [isDraggingFile,setIsDraggingFile]=useState(false);
+
 
   const openFolder = useCallback(async () => {
     const folderPath = await window.api.openFolderDialog();
@@ -118,6 +121,19 @@ const closeActiveTab = useCallback(() => {
       window.api.removeOpenFilePathListener();
     };
   }, [loadFileInTab]);
+
+  useEffect(()=>{
+    const preventDefaultDrag=(e:DragEvent)=>{
+      e.preventDefault();
+    };
+    window.addEventListener('dragover',preventDefaultDrag);
+    window.addEventListener('drop',preventDefaultDrag);
+
+    return ()=>{
+      window.removeEventListener('dragover',preventDefaultDrag);
+      window.removeEventListener('drop',preventDefaultDrag);
+    }
+  },[]);
 
   useMenuEvents({
   onOpenFile: openFileDialog,
@@ -203,9 +219,46 @@ useShortcuts({
   });
 }, [activeTab?.id, activeTab?.html]);
 
+  const handleDragEnter=useCallback((e:React.DragEvent<HTMLDivElement>)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDraggingFile(true);
+    },[]);
+
+  const handleDragOver=useCallback((e:React.DragEvent<HTMLDivElement>)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        e.dataTransfer.dropEffect='copy';
+        setIsDraggingFile(true);
+    },[]);
+
+  const handleDragLeave=useCallback((e:React.DragEvent<HTMLDivElement>)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(e.currentTarget.contains(e.relatedTarget as Node)){
+            return;
+        }
+        setIsDraggingFile(false);
+    },[]);
+
+  const handleDrop=useCallback((e:React.DragEvent<HTMLDivElement>)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDraggingFile(false);
+        const droppedPath=extractDroppedMdpath(e.dataTransfer);
+        if(droppedPath){
+            void loadFileInTab(droppedPath);
+        }
+    },[loadFileInTab])
+
   return (
     <>
-      <div className="h-screen flex flex-col bg-bg text-text-base">
+      <div className="h-screen flex flex-col bg-bg text-text-base"  onDragEnter={handleDragEnter} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
+        {isDraggingFile &&(
+          <div className='pointer-events-none fixed inset-0 z-50 flex items-center justify-center border-2 border-dashed border-accent bg-bg/80ntext-text-base'>
+            <div className='rounded-xl border border-border-theme bg-surface px-6 py-4 text-sm font-medium shadow-lg'>Drop Markdown file to open</div>
+          </div>
+        )}
         {isLoading && <Loading />}
         {isSearchOpen && (
           <SearchBar
