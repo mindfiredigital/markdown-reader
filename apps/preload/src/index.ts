@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import { MarkdownReaderAPI } from '@package/shared-types';
 import { IPC_CONSTANTS } from '@package/shared-constants';
 import { BRIDGE_NAME } from '@package/shared-constants';
@@ -33,6 +33,7 @@ const apiContract: MarkdownReaderAPI = {
   removeOpenFilePathListener: (): void => {
     ipcRenderer.removeAllListeners(IPC_CONSTANTS.OPEN_FILE_PATH);
   },
+  getPathForFile: (file: File) => webUtils.getPathForFile(file),
 };
 
 // bridge between renderer and main

@@ -22,6 +22,7 @@ export type MarkdownReaderAPI = {
   removeMenuListeners: () => void;
   onOpenFilePath(callback: (path: string) => void): void;
   removeOpenFilePathListener(): void;
+  getPathForFile(file: File): string;
 };
 
 // initial setting
