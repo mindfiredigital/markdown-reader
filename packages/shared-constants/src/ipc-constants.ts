@@ -15,4 +15,7 @@ export const IPC_CONSTANTS = {
   TOGGLE_MODE: 'dark-mode:toggle',
   SYSTEM_MODE: 'dark-mode:system',
   OPEN_FILE_PATH: 'open-file-path',
+  SHOW_SAVE_DIALOG: 'showSaveDialog',
+  EXPORT_HTML: 'exportHtml',
+  EXPORT_PDF: 'exportPDF',
 } as const;
