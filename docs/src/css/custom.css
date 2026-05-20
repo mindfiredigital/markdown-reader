@@ -1,0 +1,225 @@
+@import 'tailwindcss';
+
+:root {
+  --ifm-color-primary: #ff0000;
+  --ifm-color-primary-dark: #cc0511;
+  --ifm-color-primary-darker: #b70510;
+  --ifm-color-primary-darkest: #99040d;
+  --ifm-color-primary-light: #f01622;
+  --ifm-color-primary-lighter: #f33a45;
+  --ifm-color-primary-lightest: #f7777f;
+
+  --ifm-background-color: #ffffff;
+  --ifm-code-font-size: 95%;
+  --ifm-paragraph-margin-bottom: 0rem;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.14);
+
+  --background: #ffffff;
+  --foreground: #1c1e21;
+  --primary: 0 100% 50%;
+  --primary-foreground: #ffffff;
+  --muted: #e0e0e0;
+  --muted-foreground: #3e3e3e;
+  --border: #e0e0e0;
+}
+
+[data-theme='dark'] {
+  --ifm-background-color: #000000;
+  --ifm-color-primary: hsl(0 100% 50%);
+  --ifm-color-primary-dark: hsl(357 73% 55%);
+  --ifm-color-primary-darker: hsl(357 63% 48%);
+  --ifm-color-primary-darkest: hsl(357 56% 40%);
+  --ifm-color-primary-light: hsl(0 100% 67%);
+  --ifm-color-primary-lighter: hsl(0 100% 75%);
+  --ifm-color-primary-lightest: hsl(0 100% 84%);
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.27);
+
+  --background: #000000;
+  --foreground: #ffffff;
+  --primary: 0 100% 50%;
+  --primary-foreground: #121212;
+  --muted: #424242;
+  --muted-foreground: #a3a3a3;
+  --border: #424242;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+}
+
+/* Layout */
+.navbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  box-shadow: none;
+  backdrop-filter: blur(10px);
+  background: color-mix(in oklab, var(--background) 75%, transparent);
+}
+
+@media (min-width: 1024px) {
+  .navbar {
+    padding: 2rem;
+  }
+}
+
+.navbar-sidebar--show {
+  backdrop-filter: none;
+}
+
+.footer {
+  background: transparent;
+  border-top-color: var(--border);
+}
+
+.breadcrumbs,
+.breadcrumbs__item {
+  display: flex;
+  align-items: center;
+}
+
+/* GitHub navbar icon */
+.header--github-link {
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  margin-right: 4px;
+  border-radius: 50%;
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.header--github-link::before {
+  content: '';
+  display: block;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") no-repeat center;
+}
+
+html[data-theme='dark'] .header--github-link::before {
+  filter: invert(1);
+}
+
+.header--github-link:hover {
+  transform: translateY(-1px) scale(1.08);
+  opacity: 1;
+  background: transparent;
+}
+
+/* Hero */
+.hero-clean-bg {
+  background:
+    radial-gradient(circle at top left, rgba(240, 22, 34, 0.16), transparent 34%),
+    radial-gradient(circle at top right, rgba(247, 119, 127, 0.12), transparent 30%),
+    linear-gradient(180deg, rgba(10, 10, 12, 0.98), rgba(10, 10, 12, 1));
+}
+
+[data-theme='light'] .hero-clean-bg {
+  background:
+    radial-gradient(circle at top left, rgba(240, 22, 34, 0.1), transparent 34%),
+    radial-gradient(circle at top right, rgba(247, 119, 127, 0.1), transparent 30%),
+    linear-gradient(180deg, #ffffff, #fff7f7);
+}
+
+/* Feature cards */
+.feature-card-clean {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  background: color-mix(in oklab, var(--background) 94%, transparent);
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  box-shadow: 0 12px 42px rgba(0, 0, 0, 0.08);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.feature-card-clean:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in oklab, var(--ifm-color-primary) 34%, var(--border));
+  box-shadow: 0 18px 56px rgba(0, 0, 0, 0.14);
+}
+
+.feature-icon-clean {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.9rem;
+  background: color-mix(in oklab, var(--ifm-color-primary) 10%, transparent);
+  border: 1px solid color-mix(in oklab, var(--ifm-color-primary) 18%, transparent);
+}
+
+/* MDX / docs cards */
+.markdown-reader-doc-card {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 18px;
+  padding: 1.25rem;
+  background: color-mix(in oklab, var(--ifm-background-color) 94%, transparent);
+}
+
+.markdown-reader-doc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+/* default Markdown list styling */
+.markdown ol {
+  list-style-type: decimal;
+  padding-left: 1.75rem;
+}
+
+.markdown ul {
+  list-style-type: disc;
+  padding-left: 1.75rem;
+}
+
+.markdown li {
+  margin-bottom: 0.4rem;
+}
+
+.markdown li > p {
+  margin-bottom: 0.25rem;
+}
+
+/* Keep sidebar TOC clean */
+.table-of-contents,
+.table-of-contents ul,
+.table-of-contents ol {
+  list-style: none;
+  padding-left: 0;
+}
+
+.table-of-contents > li > ul > li {
+  margin-left: 0;
+}
+
+/* utilities */
+.text-mono,
+.text-mono * {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px color-mix(in oklab, hsl(var(--primary)) 14%, transparent);
+  border-radius: 8px;
+}

@@ -1,0 +1,35 @@
+.heroBanner {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  background: transparent;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem 0;
+}
+
+.componentShowcase {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .heroContent {
+    max-width: 90%;
+    padding: 1.5rem 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .heroContent {
+    max-width: 1200px;
+    padding: 2rem 0;
+  }
+}
