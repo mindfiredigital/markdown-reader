@@ -1,13 +1,23 @@
 import { describe, it, expect } from 'vitest';
 import { extractDroppedMdpath } from '../../src/renderer/drag-drop';
 
-const makeTransfer = (files: { name: string; path: string }[]) =>
-  ({
-    files: {
-      length: files.length,
-      item: (i: number) => files[i] ?? null,
-    },
-  }) as unknown as DataTransfer;
+const makeTransfer = (files: { name: string; path: string }[]) => {
+  const filesMock = {
+    length: files.length,
+    item: (i: number) => files[i] ?? null,
+    ...files.reduce(
+      (acc, file, index) => {
+        acc[index] = file;
+        return acc;
+      },
+      {} as Record<number, any>
+    ),
+  };
+
+  return {
+    files: filesMock,
+  } as unknown as DataTransfer;
+};
 
 describe('extract dropped md file path', () => {
   it('it should return path of a dropped .md file', () => {
