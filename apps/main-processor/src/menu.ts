@@ -26,6 +26,10 @@ export function buildMenuTemplate(): MenuItemConstructorOptions[] {
           click: send(MENU_EVENTS.CLOSE_TAB),
         },
         { type: 'separator' },
+        {
+          label: MENU_LABELS.EXPORT_HTML,
+          click: send(MENU_EVENTS.EXPORT_HTML),
+        },
         { role: 'quit' },
       ],
     },
