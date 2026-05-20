@@ -22,6 +22,8 @@ export type MarkdownReaderAPI = {
   removeMenuListeners: () => void;
   onOpenFilePath(callback: (path: string) => void): void;
   removeOpenFilePathListener(): void;
+  showSaveDialog(options?: { defaultExt?: string; defaultPath?: string }): Promise<string | null>;
+  exportHTML(html: string, css: string, outputPath: string): Promise<string>;
 };
 
 // initial setting
