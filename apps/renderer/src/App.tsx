@@ -108,7 +108,14 @@ const closeActiveTab = useCallback(() => {
     payload: { tabId: state.activeTabId },
   });
 }, [state.activeTabId, dispatch]);
-  
+
+const exportHtml = useCallback(async () => {
+  if (!activeTab) return;
+  const outPath = await window.api.showSaveDialog({ defaultExt: "html" });
+  if (!outPath) return;
+  const css = document.getElementById("app-styles")?.textContent || "";
+  await window.api.exportHTML(activeTab.html, css, outPath);
+}, [activeTab]);
 
   useEffect(() => {
     window.api.onOpenFilePath((path) => {
@@ -133,6 +140,7 @@ const closeActiveTab = useCallback(() => {
   onNextTab: goToNextTab,
   onPreviousTab: goToPreviousTab,
   onCloseTab: closeActiveTab,
+  onExportHtml:exportHtml
 });
 
 useShortcuts({
