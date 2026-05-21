@@ -185,3 +185,7 @@ export interface UseShortcutsProps {
   onToggleSidebar: () => void;
   onToggleFileBrowser: () => void;
 }
+
+export interface ElectronFile extends File {
+  path: string;
+}

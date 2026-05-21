@@ -1,3 +1,4 @@
+export { MARKDOWN_FILE_PATTERN } from './path-constants.js';
 export { SHORTCUTS } from './keyboard-constants.js';
 export { MENU_LABELS, MENU_EVENTS, MENU_EVENT_LIST } from './menu-constants.js';
 export { THEMES } from './theme-constants.js';

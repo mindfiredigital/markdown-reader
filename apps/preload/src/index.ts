@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import { MarkdownReaderAPI } from '@package/shared-types';
 import { IPC_CONSTANTS } from '@package/shared-constants';
 import { BRIDGE_NAME } from '@package/shared-constants';
@@ -42,6 +42,7 @@ const apiContract: MarkdownReaderAPI = {
     ipcRenderer.invoke(IPC_CONSTANTS.EXPORT_PDF, html, css, outputPath),
   exportDOCX: (html, css, outputPath) =>
     ipcRenderer.invoke(IPC_CONSTANTS.EXPORT_DOCX, html, css, outputPath),
+  getPathForFile: (file: File) => webUtils.getPathForFile(file),
 };
 
 // bridge between renderer and main

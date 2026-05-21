@@ -26,6 +26,7 @@ export type MarkdownReaderAPI = {
   exportHTML(html: string, css: string, outputPath: string): Promise<void>;
   exportPDF(html: string, css: string, outputPath: string): Promise<void>;
   exportDOCX(html: string, css: string, outputPath: string): Promise<void>;
+  getPathForFile(file: File): string;
 };
 
 // initial setting
