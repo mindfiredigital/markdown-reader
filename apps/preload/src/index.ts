@@ -36,7 +36,12 @@ const apiContract: MarkdownReaderAPI = {
   showSaveDialog: (options) => ipcRenderer.invoke(IPC_CONSTANTS.SHOW_SAVE_DIALOG, options),
 
   exportHTML: (html, css, outputPath) =>
-    ipcRenderer.invoke(IPC_CONSTANTS.EXPORT_HTML, { html, css, outputPath }),
+    ipcRenderer.invoke(IPC_CONSTANTS.EXPORT_HTML, html, css, outputPath),
+
+  exportPDF: (html, css, outputPath) =>
+    ipcRenderer.invoke(IPC_CONSTANTS.EXPORT_PDF, html, css, outputPath),
+  exportDOCX: (html, css, outputPath) =>
+    ipcRenderer.invoke(IPC_CONSTANTS.EXPORT_DOCX, html, css, outputPath),
 };
 
 // bridge between renderer and main
