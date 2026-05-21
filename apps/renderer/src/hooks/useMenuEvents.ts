@@ -17,6 +17,8 @@ export function useMenuEvents({
   onPreviousTab,
   onCloseTab,
   onExportHtml,
+  onExportPdf,
+  onExportDocx,
 }: UseMenuEventsProps) {
   useEffect(() => {
     if (!window.api?.onMenuEvent) return;
@@ -35,6 +37,8 @@ export function useMenuEvents({
     window.api.onMenuEvent(MENU_EVENTS.PREVIOUS_TAB, onPreviousTab);
     window.api.onMenuEvent(MENU_EVENTS.CLOSE_TAB, onCloseTab);
     window.api.onMenuEvent(MENU_EVENTS.EXPORT_HTML, onExportHtml);
+    window.api.onMenuEvent(MENU_EVENTS.EXPORT_PDF, onExportPdf);
+    window.api.onMenuEvent(MENU_EVENTS.EXPORT_DOCX, onExportDocx);
 
     return () => {
       window.api.removeMenuListeners?.();

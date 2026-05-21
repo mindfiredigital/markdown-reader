@@ -22,6 +22,7 @@ import { extractTOC } from './renderer/toc';
 import { Icons } from './utils/constants/icon-contants';
 import { useShortcuts } from './hooks/useShortcuts';
 import { useMenuEvents } from './hooks/useMenuEvents';
+import exportCss from './styles/export.css?raw';
 
 export default function App() {
   const {  error, isLoading, openFile, toc,recentFiles,loadFile } =useFile();
@@ -113,8 +114,31 @@ const exportHtml = useCallback(async () => {
   if (!activeTab) return;
   const outPath = await window.api.showSaveDialog({ defaultExt: "html" });
   if (!outPath) return;
-  const css = document.getElementById("app-styles")?.textContent || "";
+  const css = exportCss;
   await window.api.exportHTML(activeTab.html, css, outPath);
+}, [activeTab]);
+
+const exportPdf= useCallback(async () => {
+    if (!activeTab) return;
+    const outPath = await window.api.showSaveDialog({ defaultExt: "pdf" });
+    if (!outPath) return;
+    const css = exportCss;
+    await window.api.exportPDF(activeTab.html, css, outPath);
+  },[activeTab]);
+
+  const handleExportDocx = useCallback(async () => {
+  if (!activeTab) return;
+
+  const outPath = await window.api.showSaveDialog({
+    defaultExt: 'docx',
+  });
+  if (!outPath) return;
+  const css = exportCss;
+  await window.api.exportDOCX(
+    activeTab.html,
+    css,
+    outPath
+  );
 }, [activeTab]);
 
   useEffect(() => {
@@ -140,7 +164,9 @@ const exportHtml = useCallback(async () => {
   onNextTab: goToNextTab,
   onPreviousTab: goToPreviousTab,
   onCloseTab: closeActiveTab,
-  onExportHtml:exportHtml
+  onExportHtml:exportHtml,
+  onExportPdf:exportPdf,
+  onExportDocx:handleExportDocx
 });
 
 useShortcuts({

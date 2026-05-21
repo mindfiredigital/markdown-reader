@@ -168,6 +168,8 @@ export interface UseMenuEventsProps {
   onPreviousTab: () => void;
   onCloseTab: () => void;
   onExportHtml: () => void;
+  onExportPdf: () => void;
+  onExportDocx: () => void;
 }
 
 export interface UseShortcutsProps {
