@@ -18,4 +18,5 @@ export const IPC_CONSTANTS = {
   SHOW_SAVE_DIALOG: 'showSaveDialog',
   EXPORT_HTML: 'exportHtml',
   EXPORT_PDF: 'exportPDF',
+  EXPORT_DOCX: 'exportDOCX',
 } as const;
