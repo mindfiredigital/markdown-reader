@@ -30,6 +30,15 @@ export function buildMenuTemplate(): MenuItemConstructorOptions[] {
           label: MENU_LABELS.EXPORT_HTML,
           click: send(MENU_EVENTS.EXPORT_HTML),
         },
+        {
+          label: MENU_LABELS.EXPORT_PDF,
+          click: send(MENU_EVENTS.EXPORT_PDF),
+        },
+        {
+          label: MENU_LABELS.EXPORT_DOCX,
+          click: send(MENU_EVENTS.EXPORT_DOCX),
+        },
+        { type: 'separator' },
         { role: 'quit' },
       ],
     },

@@ -10,6 +10,8 @@ import { IPC_CONSTANTS } from '@package/shared-constants';
 import { getRecentFiles } from './recent/getRecentFile';
 import { addRecentFile } from './recent/addRecentFile';
 import { exportHTML } from './export/exportHtml';
+import { exportPDF } from './export/exportPdf';
+import { exportDOCX } from './export/exportDocx';
 
 //registers all IPC handlers for main process
 export function registerIPCHandlers(): void {
@@ -123,7 +125,36 @@ export function registerIPCHandlers(): void {
     return await getFolder(folderPath);
   });
 
-  ipcMain.handle('exportHTML', async (_default, html: string, css: string, outPath: string) => {
-    await exportHTML(html, css, outPath);
+  ipcMain.handle(
+    IPC_CONSTANTS.EXPORT_HTML,
+    async (_default, html: string, css: string, outPath: string) => {
+      await exportHTML(html, css, outPath);
+    }
+  );
+
+  ipcMain.handle(IPC_CONSTANTS.SHOW_SAVE_DIALOG, async (_e, opts: { defaultExt: string }) => {
+    const result = await dialog.showSaveDialog({
+      filters: [
+        {
+          name: opts.defaultExt.toUpperCase() + ' File',
+          extensions: [opts.defaultExt],
+        },
+      ],
+    });
+    return result.canceled ? null : result.filePath;
   });
+
+  ipcMain.handle(
+    IPC_CONSTANTS.EXPORT_PDF,
+    async (_e, html: string, css: string, outPath: string) => {
+      await exportPDF(html, css, outPath);
+    }
+  );
+
+  ipcMain.handle(
+    IPC_CONSTANTS.EXPORT_DOCX,
+    async (_e, html: string, css: string, outPath: string) => {
+      await exportDOCX(html, css, outPath);
+    }
+  );
 }
