@@ -8,60 +8,78 @@ import {
   GitBranchIcon,
 } from 'lucide-react';
 import { downloads } from '@site/src/utils/constants/download-constants';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 export function HeroSection() {
+  const videoUrl = useBaseUrl('/video/hero.mp4');
   return (
     <section aria-label="Hero" className="relative overflow-hidden hero-clean-bg w-full">
       <header className={clsx(styles.heroBanner, 'flex items-center justify-center py-16 sm:py-20')}>
         <div className={clsx(styles.heroContent, 'w-full relative z-10')}>
-          <div className="max-w-5xl mx-auto px-6 flex flex-col items-center justify-center text-center">
-            <motion.div
-              className="w-full flex flex-col items-center justify-center text-center mb-6"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.15 }}
-            >
-              <h1
-                className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-foreground text-center"
-                style={{ lineHeight: 1.1 }}
-              >
-                Read Markdown, <br className="hidden sm:inline" />
-                <span>like opening a </span>
-                <span className="text-primary font-semibold">document.</span>
-              </h1>
+          <div className="max-w-7xl mx-auto px-6 flex flex-col items-center justify-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center w-full text-center lg:text-left">
+              <div className="flex flex-col items-center lg:items-start justify-center">
+                <motion.div
+                  className="w-full flex flex-col items-center lg:items-start justify-center mb-6"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.15 }}
+                >
+                  <h1
+                    className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground"
+                    style={{ lineHeight: 1.1 }}
+                  >
+                    Read Markdown, <br className="hidden sm:inline" />
+                    <span>like opening a </span>
+                    <span className="text-primary font-semibold">document.</span>
+                  </h1>
 
-              <div className="mt-6 w-full max-w-2xl mx-auto flex justify-center">
-                <p className="text-base sm:text-lg text-muted-foreground font-medium leading-relaxed tracking-normal">
-                  A native desktop reader for <span className="text-foreground font-semibold">.md files</span> - built for clean reading, table of contents, search, themes, Mermaid, KaTeX, export, and offline-first privacy.
-                </p>
+                  <div className="mt-6 w-full max-w-2xl mx-auto lg:mx-0">
+                    <p className="text-base sm:text-lg text-muted-foreground font-medium leading-relaxed tracking-normal">
+                      A native desktop reader for <span className="text-foreground font-semibold">.md files</span> - built for clean reading, table of contents, search, themes, Mermaid, KaTeX, export, and offline-first privacy.
+                    </p>
+                  </div>
+                </motion.div>
+                <motion.div
+                  className="flex flex-wrap justify-center lg:justify-start gap-3.5 mt-2"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  <Link to="/docs/installation" className="no-underline">
+                    <button className="inline-flex items-center justify-center bg-primary hover:bg-primary/90 text-white font-medium h-11 px-6 text-sm rounded-xl shadow-sm cursor-pointer transition-colors duration-200 border-0">
+                      Get Started <ArrowRight className="ml-1.5 h-4 w-4" strokeWidth={2.5} />
+                    </button>
+                  </Link>
+
+                  <a
+                    href="/docs/introduction"
+                    className="no-underline"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <button className="inline-flex items-center justify-center bg-background/50 hover:bg-background/80 text-foreground border border-border/80 font-medium h-11 px-6 text-sm rounded-xl shadow-sm cursor-pointer transition-colors duration-200">
+                      <GitBranchIcon className="mr-1.5 h-4 w-4" strokeWidth={2.5} />
+                      GitHub
+                    </button>
+                  </a>
+                </motion.div>
               </div>
-            </motion.div>
-            <motion.div
-              className="flex flex-wrap justify-center gap-3.5 mt-2"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <Link to="/docs/installation" className="no-underline">
-                <button className="inline-flex items-center justify-center bg-primary hover:bg-primary/90 text-white font-medium h-11 px-6 text-sm rounded-xl shadow-sm cursor-pointer transition-colors duration-200 border-0">
-                  Get Started <ArrowRight className="ml-1.5 h-4 w-4" strokeWidth={2.5} />
-                </button>
-              </Link>
-
-              <a
-                href="/docs/introduction"
-                className="no-underline"
-                target="_blank"
-                rel="noreferrer"
+              <motion.div
+                 className="w-full px-2"
+                 initial={{ opacity: 0, y: 18 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ duration: 0.6, delay: 0.42 }}
               >
-                <button className="inline-flex items-center justify-center bg-background/50 hover:bg-background/80 text-foreground border border-border/80 font-medium h-11 px-6 text-sm rounded-xl shadow-sm cursor-pointer transition-colors duration-200">
-                  <GitBranchIcon className="mr-1.5 h-4 w-4" strokeWidth={2.5} />
-                  GitHub
-                </button>
-              </a>
-            </motion.div>
+                 <div className="relative rounded-2xl border border-border/60 bg-background/40 p-2 shadow-2xl overflow-hidden">
+                      <video autoPlay loop muted playsInline preload="metadata" className="w-full rounded-xl">
+                        <source src={videoUrl} type="video/mp4" />
+                      </video>
+                  </div>
+              </motion.div>
+            </div>
             <motion.div
-              className="mt-16 w-full max-w-3xl mx-auto border border-border/60 bg-background/40 backdrop-blur-md rounded-xl p-5 shadow-sm"
+              className="mt-16 sm:mt-20 w-full max-w-3xl mx-auto border border-border/60 bg-background/40 backdrop-blur-md rounded-xl p-5 shadow-sm"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.45 }}
