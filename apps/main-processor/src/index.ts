@@ -5,6 +5,7 @@ import { registerIPCHandlers } from './ipc';
 import { PATHS } from './utils/path-constants';
 import { registerMenu } from './register-menu';
 import { parseFilePathFromArgv } from './cli';
+import { setupAutoUpdater } from './updater';
 
 let mainWindow: BrowserWindow | null = null;
 let pendingFilePath: string | null = null;
@@ -34,6 +35,8 @@ function createWindow(): void {
       nodeIntegration: false,
     },
   });
+
+  setupAutoUpdater(mainWindow);
 
   if (process.env.ELECTRON_RENDERER_URL) {
     mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL);

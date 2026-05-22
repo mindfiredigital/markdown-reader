@@ -17,4 +17,5 @@ export const IPC_CONSTANTS = {
   OPEN_FILE_PATH: 'open-file-path',
   UPDATE_AVAILABLE: 'update-available',
   DOWNLOAD_UPDATE: 'download-update',
+  UPDATE_DOWNLOADED: 'update-downloaded',
 } as const;
