@@ -21,8 +21,9 @@
     "vitest": "^4.1.5"
   },
   "dependencies": {
-    "chokidar": "^5.0.0",
+    "@package/shared-constants": "workspace:*",
     "@package/shared-types": "workspace:*",
-    "@package/shared-constants": "workspace:*"
+    "chokidar": "^5.0.0",
+    "electron-updater": "^6.8.3"
   }
 }

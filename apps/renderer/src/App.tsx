@@ -23,6 +23,7 @@ import { Icons } from './utils/constants/icon-contants';
 import { useShortcuts } from './hooks/useShortcuts';
 import { useMenuEvents } from './hooks/useMenuEvents';
 import { extractDroppedMdpath } from './renderer/drag-drop';
+import { UpdateBanner } from './components/UpdateBanner';
 
 export default function App() {
   const {  error, isLoading, openFile, toc,recentFiles,loadFile } =useFile();
@@ -279,6 +280,7 @@ useShortcuts({
             onClose={(id) => dispatch({ type: 'CLOSE_TAB', payload: { tabId: id } })}
           />
         )}
+        <UpdateBanner/>
 
         {error && <Error message={error} onRetry={openFile} />}
 

@@ -34,6 +34,13 @@ const apiContract: MarkdownReaderAPI = {
     ipcRenderer.removeAllListeners(IPC_CONSTANTS.OPEN_FILE_PATH);
   },
   getPathForFile: (file: File) => webUtils.getPathForFile(file),
+
+  onUpdateAvailable: (callback: (version: string) => void) => {
+    ipcRenderer.on(IPC_CONSTANTS.UPDATE_AVAILABLE, (_event, version: string) => {
+      callback(version);
+    });
+  },
+  downloadUpdate: () => ipcRenderer.send(IPC_CONSTANTS.DOWNLOAD_UPDATE),
 };
 
 // bridge between renderer and main

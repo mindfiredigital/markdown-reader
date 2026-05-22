@@ -15,4 +15,7 @@ export const IPC_CONSTANTS = {
   TOGGLE_MODE: 'dark-mode:toggle',
   SYSTEM_MODE: 'dark-mode:system',
   OPEN_FILE_PATH: 'open-file-path',
+  UPDATE_AVAILABLE: 'update-available',
+  DOWNLOAD_UPDATE: 'download-update',
+  UPDATE_DOWNLOADED: 'update-downloaded',
 } as const;
