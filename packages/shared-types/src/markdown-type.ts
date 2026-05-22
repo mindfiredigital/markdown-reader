@@ -23,6 +23,8 @@ export type MarkdownReaderAPI = {
   onOpenFilePath(callback: (path: string) => void): void;
   removeOpenFilePathListener(): void;
   getPathForFile(file: File): string;
+  onUpdateAvailable: (callback: (version: string) => void) => void;
+  downloadUpdate: () => void;
 };
 
 // initial setting
