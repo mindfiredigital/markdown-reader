@@ -33,6 +33,15 @@ const apiContract: MarkdownReaderAPI = {
   removeOpenFilePathListener: (): void => {
     ipcRenderer.removeAllListeners(IPC_CONSTANTS.OPEN_FILE_PATH);
   },
+  showSaveDialog: (options) => ipcRenderer.invoke(IPC_CONSTANTS.SHOW_SAVE_DIALOG, options),
+
+  exportHTML: (html, css, outputPath) =>
+    ipcRenderer.invoke(IPC_CONSTANTS.EXPORT_HTML, html, css, outputPath),
+
+  exportPDF: (html, css, outputPath) =>
+    ipcRenderer.invoke(IPC_CONSTANTS.EXPORT_PDF, html, css, outputPath),
+  exportDOCX: (html, css, outputPath) =>
+    ipcRenderer.invoke(IPC_CONSTANTS.EXPORT_DOCX, html, css, outputPath),
   getPathForFile: (file: File) => webUtils.getPathForFile(file),
 
   onUpdateAvailable: (callback: (version: string) => void) => {

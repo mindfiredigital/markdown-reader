@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { validateMarkdownFile, validatePath, validateSender } from '../src/utils/ipc-validation';
+import {
+  validateMarkdownFile,
+  validatePath,
+  validateSender,
+} from '../src/utils/constants/ipc-validation';
 
 // mocking the url
 function mockEvent(url: string) {

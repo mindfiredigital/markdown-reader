@@ -8,6 +8,7 @@ export const MENU_LABELS = {
   EXPORT: 'Export',
   EXPORT_HTML: 'Export as HTML',
   EXPORT_PDF: 'Export as PDF',
+  EXPORT_DOCX: 'Export as Docx',
   TABLE_OF_CONTENTS: 'Table of Contents',
   FILE_BROWSER: 'File Browser',
   FOCUS_MODE: 'Focuse Mode',
@@ -38,6 +39,7 @@ export const MENU_EVENTS = {
   SEARCH_FOLDER: 'menu:search-folder',
   EXPORT_HTML: 'menu:export-html',
   EXPORT_PDF: 'menu:export-pdf',
+  EXPORT_DOCX: 'menu:export-docx',
 } as const;
 
 export const MENU_EVENT_LIST = Object.values(MENU_EVENTS);

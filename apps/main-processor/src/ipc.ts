@@ -1,10 +1,17 @@
 import { ipcMain, dialog } from 'electron';
 import { readFile, unWatchFile, watchFile } from './file';
 import { getFolder } from './folder';
-import { validateMarkdownFile, validatePath, validateSender } from './utils/ipc-validation';
+import {
+  validateMarkdownFile,
+  validatePath,
+  validateSender,
+} from './utils/constants/ipc-validation';
 import { IPC_CONSTANTS } from '@package/shared-constants';
 import { getRecentFiles } from './recent/getRecentFile';
 import { addRecentFile } from './recent/addRecentFile';
+import { exportHTML } from './export/exportHtml';
+import { exportPDF } from './export/exportPdf';
+import { exportDOCX } from './export/exportDocx';
 
 //registers all IPC handlers for main process
 export function registerIPCHandlers(): void {
@@ -117,4 +124,61 @@ export function registerIPCHandlers(): void {
     }
     return await getFolder(folderPath);
   });
+
+  ipcMain.handle(
+    IPC_CONSTANTS.EXPORT_HTML,
+    async (event, html: string, css: string, outPath: string) => {
+      if (!validateSender(event)) {
+        throw new Error('Untrusted sender');
+      }
+
+      if (!validatePath(outPath)) {
+        throw new Error('Invalid folder path');
+      }
+      await exportHTML(html, css, outPath);
+    }
+  );
+
+  ipcMain.handle(IPC_CONSTANTS.SHOW_SAVE_DIALOG, async (event, opts: { defaultExt: string }) => {
+    if (!validateSender(event)) {
+      throw new Error('Untrusted sender');
+    }
+    const result = await dialog.showSaveDialog({
+      filters: [
+        {
+          name: opts.defaultExt.toUpperCase() + ' File',
+          extensions: [opts.defaultExt],
+        },
+      ],
+    });
+    return result.canceled ? null : result.filePath;
+  });
+
+  ipcMain.handle(
+    IPC_CONSTANTS.EXPORT_PDF,
+    async (event, html: string, css: string, outPath: string) => {
+      if (!validateSender(event)) {
+        throw new Error('Untrusted sender');
+      }
+
+      if (!validatePath(outPath)) {
+        throw new Error('Invalid folder path');
+      }
+      await exportPDF(html, css, outPath);
+    }
+  );
+
+  ipcMain.handle(
+    IPC_CONSTANTS.EXPORT_DOCX,
+    async (event, html: string, css: string, outPath: string) => {
+      if (!validateSender(event)) {
+        throw new Error('Untrusted sender');
+      }
+
+      if (!validatePath(outPath)) {
+        throw new Error('Invalid folder path');
+      }
+      await exportDOCX(html, css, outPath);
+    }
+  );
 }

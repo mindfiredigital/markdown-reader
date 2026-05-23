@@ -16,14 +16,18 @@
   "license": "ISC",
   "packageManager": "pnpm@10.33.0",
   "devDependencies": {
+    "@types/html-to-docx": "^1.8.1",
     "@types/node": "^25.6.0",
     "@vitest/coverage-v8": "^4.1.5",
+    "playwright": "^1.60.0",
     "vitest": "^4.1.5"
   },
   "dependencies": {
     "@package/shared-constants": "workspace:*",
     "@package/shared-types": "workspace:*",
     "chokidar": "^5.0.0",
+    "core-util-is": "^1.0.3",
+    "html-to-docx": "^1.8.0",
     "electron-updater": "^6.8.3"
   }
 }

@@ -1,5 +1,5 @@
 import { RecentFile } from '@package/shared-types';
-import { MAX_RECENT } from '../utils/path-constants';
+import { MAX_RECENT } from '../utils/constants/path-constants';
 
 export function getUniqueRecentFile(files: RecentFile[]): RecentFile[] {
   const seen = new Set<string>();
