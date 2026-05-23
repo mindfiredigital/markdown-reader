@@ -127,12 +127,22 @@ export function registerIPCHandlers(): void {
 
   ipcMain.handle(
     IPC_CONSTANTS.EXPORT_HTML,
-    async (_default, html: string, css: string, outPath: string) => {
+    async (event, html: string, css: string, outPath: string) => {
+      if (!validateSender(event)) {
+        throw new Error('Untrusted sender');
+      }
+
+      if (!validatePath(outPath)) {
+        throw new Error('Invalid folder path');
+      }
       await exportHTML(html, css, outPath);
     }
   );
 
-  ipcMain.handle(IPC_CONSTANTS.SHOW_SAVE_DIALOG, async (_e, opts: { defaultExt: string }) => {
+  ipcMain.handle(IPC_CONSTANTS.SHOW_SAVE_DIALOG, async (event, opts: { defaultExt: string }) => {
+    if (!validateSender(event)) {
+      throw new Error('Untrusted sender');
+    }
     const result = await dialog.showSaveDialog({
       filters: [
         {
@@ -146,14 +156,28 @@ export function registerIPCHandlers(): void {
 
   ipcMain.handle(
     IPC_CONSTANTS.EXPORT_PDF,
-    async (_e, html: string, css: string, outPath: string) => {
+    async (event, html: string, css: string, outPath: string) => {
+      if (!validateSender(event)) {
+        throw new Error('Untrusted sender');
+      }
+
+      if (!validatePath(outPath)) {
+        throw new Error('Invalid folder path');
+      }
       await exportPDF(html, css, outPath);
     }
   );
 
   ipcMain.handle(
     IPC_CONSTANTS.EXPORT_DOCX,
-    async (_e, html: string, css: string, outPath: string) => {
+    async (event, html: string, css: string, outPath: string) => {
+      if (!validateSender(event)) {
+        throw new Error('Untrusted sender');
+      }
+
+      if (!validatePath(outPath)) {
+        throw new Error('Invalid folder path');
+      }
       await exportDOCX(html, css, outPath);
     }
   );
