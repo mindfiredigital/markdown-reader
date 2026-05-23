@@ -2,6 +2,7 @@ import { BrowserWindow } from 'electron';
 import { writeFile } from 'node:fs/promises';
 import { buildDocument } from './buildDocument';
 import { sanitizeCss } from './sanitizeCss';
+import { inlineImages } from './inlineImage';
 
 export async function exportPDF(bodyHtml: string, css: string, outputPath: string): Promise<void> {
   const pdfWindow = new BrowserWindow({
@@ -12,7 +13,8 @@ export async function exportPDF(bodyHtml: string, css: string, outputPath: strin
   });
 
   try {
-    const html = buildDocument(bodyHtml, sanitizeCss(css));
+    const htmlWithInlineImages = await inlineImages(bodyHtml);
+    const html = buildDocument(htmlWithInlineImages, sanitizeCss(css));
 
     await pdfWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`);
 
