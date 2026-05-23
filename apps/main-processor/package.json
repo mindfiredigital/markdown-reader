@@ -27,6 +27,7 @@
     "@package/shared-types": "workspace:*",
     "chokidar": "^5.0.0",
     "core-util-is": "^1.0.3",
-    "html-to-docx": "^1.8.0"
+    "html-to-docx": "^1.8.0",
+    "electron-updater": "^6.8.3"
   }
 }
