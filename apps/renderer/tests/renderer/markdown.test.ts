@@ -43,4 +43,16 @@ describe('renderMarkdown', () => {
     const result = await renderMarkdown('');
     expect(typeof result).toBe('string');
   });
+
+  it('should not be able to remove iframe tags before sanitization', async () => {
+    const html = await renderMarkdown(`<iframe src="https://example.com"></iframe>`);
+    expect(html).toContain('<iframe');
+  });
+
+  it('it should not be able to remove dangerous inline event handlers before dom purification', async () => {
+    const html = await renderMarkdown(`
+      <img src="x" onerror="alert('xss')" />
+    `);
+    expect(html).toContain('onerror');
+  });
 });
