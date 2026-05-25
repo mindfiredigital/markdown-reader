@@ -1,4 +1,4 @@
-import React,{ useEffect, useState, useRef, useCallback } from 'react';
+import React,{ useEffect, useState, useRef } from 'react';
 import { useFile } from './hooks/useFile';
 import { Welcome } from './components/Welcome';
 import { Reader } from './components/Reader';
@@ -6,15 +6,12 @@ import { Loading } from './components/Loading';
 import { Error } from './components/Error';
 import { useToc } from './hooks/useTOC';
 import { Sidebar } from './components/Sidebar';
-import { useWatcher } from './hooks/useWatcher';
-import { saveScrollPos, getScrollPos } from './renderer/scroll';
 import { Toast } from './components/Toast';
 import { useTheme } from './hooks/useTheme';
 import { useSearch } from './hooks/useSearch';
 import { SearchBar } from './components/SearchBar';
 import { useSettings } from './hooks/useSettings';
 import { StatusBar } from './components/StatusBar';
-import { FileType } from '@package/shared-types';
 import { FileBrowser } from './components/FileBrowser';
 import { TabBar } from './components/TabBar';
 import { useTabStore } from './hooks/useTabStore';
@@ -22,9 +19,16 @@ import { extractTOC } from './renderer/toc';
 import { Icons } from './utils/constants/icon-contants';
 import { useShortcuts } from './hooks/useShortcuts';
 import { useMenuEvents } from './hooks/useMenuEvents';
-import exportCss from './styles/export.css?raw';
-import { extractDroppedMdpath } from './renderer/drag-drop';
 import { UpdateBanner } from './components/UpdateBanner';
+import { useExport } from './hooks/useExport';
+import { useDragDrop } from './hooks/useDragDrop';
+import { useTabNavigation } from './hooks/useTabNavigation';
+import { DragDrop } from './components/DragDrop';
+import { useLayout } from './hooks/useLayout';
+import { useFileActions } from './hooks/useFileActions';
+import { useOpenFilePath } from './hooks/useOpenFilePath';
+import { useFilePersistence } from './hooks/useFilePersistence';
+import { ReaderToolbar } from './components/ReaderToolbar';
 
 export default function App() {
   const {  error, isLoading, openFile, toc,recentFiles,loadFile } =useFile();
@@ -34,138 +38,21 @@ export default function App() {
   const {activeId,scrollToHeading}=useToc(toc);
   const {increaseFontSize,decreaseFontSize,resetFontSize,fontSize}=useSettings();
   const {query,matchCount,currentMatch,isSearchOpen,openSearch,closeSearch,setQuery,goToNextMatch,goToPrevMatch,getHiglightedHtml} = useSearch(activeTab?.html ?? '');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showToast, setShowToast] = useState(false);
-  const [folderTree, setFolderTree] = useState<FileType | null>(null);
-  const [fileBrowserOpen, setFileBrowserOpen] = useState(false);
-  const [focusMode, setFocusMode] = useState(false);
   const contentRef=useRef<HTMLDivElement>(null);
-  const debounceTimer=useRef<number | undefined>(undefined);
-  const scrollTimer=useRef<number | undefined>(undefined);
-  const [isDraggingFile,setIsDraggingFile]=useState(false);
-
-
-  const openFolder = useCallback(async () => {
-    const folderPath = await window.api.openFolderDialog();
-    if (!folderPath) return;
-    const tree = await window.api.readFolder(folderPath);
-    setFolderTree(tree);
-    setFileBrowserOpen(true);
-  }, []);
-
-  const loadFileInTab = useCallback(
-    async (path: string) => {
-      const result = await loadFile(path);
-      if (!result) return;
-      dispatch({
-        type: 'OPEN_TAB',
-        payload: {
-          filePath: result.filePath,
-          html: result.html,
-        },
-      });
-    },
-    [loadFile, dispatch]
-  );
-  const openFileDialog = useCallback(() => {
-  void window.api.openFileDialog().then((chosenPath) => {
-    if (chosenPath) {
-      void loadFileInTab(chosenPath);
-    }
-  });
-}, [loadFileInTab]);
-
-const toggleSidebar = useCallback(() => {
-  setSidebarOpen((prev) => !prev);
-}, []);
-
-const toggleFileBrowser = useCallback(() => {
-  setFileBrowserOpen((prev) => !prev);
-}, []);
-
-const toggleFocusMode = useCallback(() => {
-  setFocusMode((prev) => !prev);
-}, []);
-
-const goToNextTab = useCallback(() => {
-  const idx = state.tabs.findIndex((tab) => tab.id === state.activeTabId);
-  const next = state.tabs[idx + 1] || state.tabs[0];
-
-  if (next) {
-    dispatch({ type: 'SWITCH_TAB', payload: { tabId: next.id } });
-  }
-}, [state.tabs, state.activeTabId, dispatch]);
-
-const goToPreviousTab = useCallback(() => {
-  const idx = state.tabs.findIndex((tab) => tab.id === state.activeTabId);
-  const prev = state.tabs[idx - 1] || state.tabs[state.tabs.length - 1];
-
-  if (prev) {
-    dispatch({ type: 'SWITCH_TAB', payload: { tabId: prev.id } });
-  }
-}, [state.tabs, state.activeTabId, dispatch]);
-
-const closeActiveTab = useCallback(() => {
-  if (!state.activeTabId) return;
-
-  dispatch({
-    type: 'CLOSE_TAB',
-    payload: { tabId: state.activeTabId },
-  });
-}, [state.activeTabId, dispatch]);
-
-const exportHtml = useCallback(async () => {
-  if (!activeTab) return;
-  const outPath = await window.api.showSaveDialog({ defaultExt: "html" });
-  if (!outPath) return;
-  const css = exportCss;
-  await window.api.exportHTML(activeTab.html, css, outPath);
-}, [activeTab]);
-
-const exportPdf= useCallback(async () => {
-    if (!activeTab) return;
-    const outPath = await window.api.showSaveDialog({ defaultExt: "pdf" });
-    if (!outPath) return;
-    const css = exportCss;
-    await window.api.exportPDF(activeTab.html, css, outPath);
-  },[activeTab]);
-
-  const handleExportDocx = useCallback(async () => {
-  if (!activeTab) return;
-
-  const outPath = await window.api.showSaveDialog({
-    defaultExt: 'docx',
-  });
-  if (!outPath) return;
-  const css = exportCss;
-  await window.api.exportDOCX(
-    activeTab.html,
-    css,
-    outPath
-  );
-}, [activeTab]);
-
-  useEffect(() => {
-    window.api.onOpenFilePath((path) => {
-      void loadFileInTab(path);
-    });
-    return () => {
-      window.api.removeOpenFilePathListener();
-    };
-  }, [loadFileInTab]);
-
+  const {exportHtml,exportPdf,exportDocx}=useExport(activeTab);
+  const {goToNextTab,goToPreviousTab,closeActiveTab}=useTabNavigation(state.tabs,state.activeTabId,dispatch);
+  const {sidebarOpen,setSidebarOpen,fileBrowserOpen,setFileBrowserOpen,focusMode,toggleFocusMode,toggleSidebar,toggleFileBrowser}=useLayout();
+  const {folderTree,openFolder,loadFileInTab,openFileDialog}=useFileActions({loadFile,dispatch});
+  const {isDraggingFile,handleDragEnter,handleDragOver,handleDragLeave,handleDrop}=useDragDrop(loadFileInTab);
+  useOpenFilePath(loadFileInTab);
+  const {scroll}=useFilePersistence({activeTab,loadFile,dispatch,contentRef,setShowToast});
+  
   useEffect(()=>{
-    const preventDefaultDrag=(e:DragEvent)=>{
-      e.preventDefault();
-    };
-    window.addEventListener('dragover',preventDefaultDrag);
-    window.addEventListener('drop',preventDefaultDrag);
-
-    return ()=>{
-      window.removeEventListener('dragover',preventDefaultDrag);
-      window.removeEventListener('drop',preventDefaultDrag);
+    if(folderTree){
+      setFileBrowserOpen(true);
     }
-  },[]);
+  },[folderTree,setFileBrowserOpen]);
 
   useMenuEvents({
   onOpenFile: openFileDialog,
@@ -183,7 +70,7 @@ const exportPdf= useCallback(async () => {
   onCloseTab: closeActiveTab,
   onExportHtml:exportHtml,
   onExportPdf:exportPdf,
-  onExportDocx:handleExportDocx
+  onExportDocx:exportDocx
 });
 
 useShortcuts({
@@ -199,100 +86,13 @@ useShortcuts({
   onToggleSidebar: toggleSidebar,
   onToggleFileBrowser: toggleFileBrowser,
 });
-  const handleFileChange = useCallback(() => {
-    if(!activeTab) return;
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
-    }
-    debounceTimer.current = window.setTimeout(async () => {
-      const currentScroll = contentRef.current?.scrollTop ?? 0;
-      const result =await loadFile(activeTab.filePath);
-      if(!result) return;
-      dispatch({
-      type: 'UPDATE_TAB_STATE',
-      payload: {
-        tabId: activeTab.id,
-        html: result.html,
-      },
-    });
-      requestAnimationFrame(() => {
-        if (contentRef.current) {
-          contentRef.current.scrollTop = currentScroll;
-        }
-      });
-      setShowToast(true);
-    }, 150);
-  }, [activeTab,loadFile,dispatch]);
- const scroll = () => {
-  if (!activeTab || !contentRef.current) return;
-
-  if (scrollTimer.current) {
-    clearTimeout(scrollTimer.current);
-  }
-
-  scrollTimer.current = window.setTimeout(() => {
-    saveScrollPos(activeTab.filePath, contentRef.current!.scrollTop);
-
-    dispatch({
-      type: 'UPDATE_TAB_STATE',
-      payload: {
-        tabId: activeTab.id,
-        scrollTop: contentRef.current?.scrollTop ?? 0,
-      },
-    });
-  }, 100);
-};
-  useWatcher(activeTab?.filePath ??'', handleFileChange);
-  useEffect(() => {
-  if (!activeTab || !contentRef.current) return;
-
-  requestAnimationFrame(() => {
-    if (contentRef.current) {
-      contentRef.current.scrollTop =
-        activeTab.scrollTop ?? getScrollPos(activeTab.filePath);
-    }
-  });
-}, [activeTab?.id, activeTab?.html]);
-
-  const handleDragEnter=useCallback((e:React.DragEvent<HTMLDivElement>)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDraggingFile(true);
-    },[]);
-
-  const handleDragOver=useCallback((e:React.DragEvent<HTMLDivElement>)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        e.dataTransfer.dropEffect='copy';
-        setIsDraggingFile(true);
-    },[]);
-
-  const handleDragLeave=useCallback((e:React.DragEvent<HTMLDivElement>)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        if(e.currentTarget.contains(e.relatedTarget as Node)){
-            return;
-        }
-        setIsDraggingFile(false);
-    },[]);
-
-  const handleDrop=useCallback((e:React.DragEvent<HTMLDivElement>)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDraggingFile(false);
-        const droppedPath=extractDroppedMdpath(e.dataTransfer);
-        if(droppedPath){
-            void loadFileInTab(droppedPath);
-        }
-    },[loadFileInTab])
+  
 
   return (
     <>
       <div className="h-screen flex flex-col bg-bg text-text-base"  onDragEnter={handleDragEnter} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
         {isDraggingFile &&(
-          <div className='pointer-events-none fixed inset-0 z-50 flex items-center justify-center border-2 border-dashed border-accent bg-bg/80ntext-text-base'>
-            <div className='rounded-xl border border-border-theme bg-surface px-6 py-4 text-sm font-medium shadow-lg'>Drop Markdown file to open</div>
-          </div>
+          <DragDrop/>
         )}
         {isLoading && <Loading />}
         {isSearchOpen && (
@@ -354,44 +154,7 @@ useShortcuts({
               />
             )}
             {!focusMode && (
-              <div className="absolute right-5 top-5 z-30 flex items-center gap-1 rounded-xl border border-border-theme bg-surface px-2 py-1 shadow-sm">
-                <button
-                  onClick={decreaseFontSize}
-                  className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
-                  aria-label="Zoom out"
-                >
-                  <Icons.ZoomOut size={18} />
-                </button>
-
-                <button
-                  onClick={resetFontSize}
-                  className="min-w-12 rounded-md px-2 py-1 text-xs font-medium text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
-                >
-                  {fontSize}px
-                </button>
-
-                <button
-                  onClick={increaseFontSize}
-                  className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
-                  aria-label="Zoom in"
-                >
-                  <Icons.ZoomIn size={18} />
-                </button>
-
-                <div className="mx-1 h-5 w-px bg-border-theme" />
-
-                <button
-                  onClick={toggleTheme}
-                  className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
-                  aria-label="Toggle theme"
-                >
-                  {theme === 'github-dark' || theme === 'dracula' || theme === 'nord' ? (
-                    <Icons.Sun size={18} />
-                  ) : (
-                    <Icons.Moon size={18} />
-                  )}
-                </button>
-              </div>
+              <ReaderToolbar fontSize={fontSize} theme={theme} onZoomIn={increaseFontSize} onZoomOut={decreaseFontSize} onZoomReset={resetFontSize} onToggleTheme={toggleTheme}/>
             )}
             <main 
             ref={contentRef} 
