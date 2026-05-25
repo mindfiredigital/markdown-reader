@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { UseSearchProps } from '../types/component-types';
+import { UseSearchProps } from '../types/hook-types';
 import { findMatches, highlightMatches } from '../utils/helpers/search-helper';
 import { HTML_PATTERNS } from '../utils/constants/regex-constants';
 
