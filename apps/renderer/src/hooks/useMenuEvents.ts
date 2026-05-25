@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { MENU_EVENTS } from '@package/shared-constants';
-import { UseMenuEventsProps } from '../types/component-types';
+import { UseMenuEventsProps } from '../types/hook-types';
 
 export function useMenuEvents({
   onOpenFile,

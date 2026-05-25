@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { UseShortcutsProps } from '../types/component-types';
+import { UseShortcutsProps } from '../types/hook-types';
 
 export function useShortcuts({
   onOpenFile,
