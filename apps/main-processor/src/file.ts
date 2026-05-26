@@ -13,6 +13,7 @@ export async function readFile(filePath: string): Promise<string> {
 }
 
 const currentWatchers = new Map<string, FSWatcher>();
+const debounceTimers = new Map<string, NodeJS.Timeout>();
 //file watching logic
 export async function watchFile(
   filePath: string,
@@ -36,7 +37,22 @@ export async function watchFile(
   await new Promise<void>((resolve) => {
     watcher.on('ready', resolve);
   });
-  watcher.on('change', onChange);
+  watcher.on('change', () => {
+    const existingTimer = debounceTimers.get(filePath);
+    if (existingTimer) {
+      clearTimeout(existingTimer);
+    }
+
+    const timer = setTimeout(() => {
+      if (!currentWatchers.has(filePath)) {
+        debounceTimers.delete(filePath);
+        return;
+      }
+      debounceTimers.delete(filePath);
+      onChange();
+    }, 100);
+    debounceTimers.set(filePath, timer);
+  });
   watcher.on('unlink', () => {
     void unWatchFile(filePath).then(() => onDeleted?.());
   });
@@ -49,7 +65,19 @@ export async function watchFile(
 
 //unwatch file
 export async function unWatchFile(filePath: string): Promise<void> {
+  const timer = debounceTimers.get(filePath);
+  if (timer) {
+    clearTimeout(timer);
+    debounceTimers.delete(filePath);
+  }
   if (!currentWatchers.has(filePath)) return;
   await currentWatchers.get(filePath)!.close();
   currentWatchers.delete(filePath);
+}
+
+export function getWatcherDiagnostics(): { watchers: number; debounceTimers: number } {
+  return {
+    watchers: currentWatchers.size,
+    debounceTimers: debounceTimers.size,
+  };
 }

@@ -2,6 +2,7 @@ import { vi, describe, expect, it, beforeAll, afterAll } from 'vitest';
 import { writeFileSync, unlinkSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { getWatcherDiagnostics } from '../src/file';
 
 import { readFile, watchFile, unWatchFile } from '../src/file';
 
@@ -47,6 +48,7 @@ describe('File watcher', () => {
     writeFileSync(TEST_FILE, 'change after unwatch');
     await new Promise((r) => setTimeout(r, 200));
     expect(cb).not.toHaveBeenCalled();
+    expect(getWatcherDiagnostics().debounceTimers).toBe(0);
   });
 
   it('should protect from double call', async () => {
@@ -60,5 +62,14 @@ describe('File watcher', () => {
 
   it('should not crash if I unwatch a file which is not watched', async () => {
     await expect(unWatchFile('fake-file.txt')).resolves.toBeUndefined();
+  });
+
+  it('should clean debounce timer references after unwatching', async () => {
+    const cb = vi.fn();
+    await watchFile(TEST_FILE, cb);
+    writeFileSync(TEST_FILE, 'change with pending debounce');
+    await new Promise((r) => setTimeout(r, 25));
+    await unWatchFile(TEST_FILE);
+    expect(getWatcherDiagnostics().debounceTimers).toBe(0);
   });
 });
