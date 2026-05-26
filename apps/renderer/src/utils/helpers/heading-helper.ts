@@ -12,8 +12,10 @@ export function getHeadingId(text: string): string {
 
 // assigns id to the headings
 export function heading({ text, depth }: HeadingProps) {
+  const plainText = stripHtml(text);
   const id = getHeadingId(text);
-  return `<h${depth} id="${id}">${text}</h${depth}>\n`;
+  const safeText = escapeHtml(plainText);
+  return `<h${depth} id="${id}">${safeText}</h${depth}>\n`;
 }
 
 //removes inline html
