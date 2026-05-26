@@ -8,6 +8,15 @@ vi.mock('node:fs/promises', () => ({
   stat: vi.fn(),
 }));
 
+// Mocking the ipc validation module
+vi.mock('../src/utils/constants/ipc-validation', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../src/utils/constants/ipc-validation')>();
+  return {
+    ...actual,
+    validatePath: vi.fn(actual.validatePath),
+  };
+});
+
 // mocking the url
 function mockEvent(url: string) {
   return {
@@ -46,6 +55,7 @@ describe('ipc - validation test', () => {
   it('throws an error if file escapes the allowed root directory', async () => {
     const maliciousPath = '/etc/passwd.md';
     const allowedRoot = '/app/user/docs';
+    vi.mocked(validatePath).mockReturnValue(true);
     vi.mocked(realpath).mockResolvedValueOnce(maliciousPath).mockResolvedValueOnce(allowedRoot);
     vi.mocked(stat).mockResolvedValue({ isFile: () => true } as any);
     await expect(resolveMarkdownFilePath('../../etc/passwd.md', allowedRoot)).rejects.toThrow(
