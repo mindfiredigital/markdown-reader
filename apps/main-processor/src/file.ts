@@ -1,5 +1,6 @@
 import { readFile as fsReadFile } from 'node:fs/promises';
 import chokidar, { type FSWatcher } from 'chokidar';
+import { WatchFileOptions } from './types/watch-file-types';
 
 //file read logic
 export async function readFile(filePath: string): Promise<string> {
@@ -13,10 +14,15 @@ export async function readFile(filePath: string): Promise<string> {
 
 const currentWatchers = new Map<string, FSWatcher>();
 //file watching logic
-export async function watchFile(filePath: string, onChange: () => void): Promise<void> {
+export async function watchFile(
+  filePath: string,
+  options: WatchFileOptions | (() => void)
+): Promise<void> {
+  const { onChange, onDeleted, onError } =
+    typeof options === 'function' ? { onChange: options } : options;
+
   if (currentWatchers.has(filePath)) {
-    await currentWatchers.get(filePath)!.close();
-    currentWatchers.delete(filePath);
+    await unWatchFile(filePath);
   }
 
   const watcher = chokidar.watch(filePath, {
@@ -31,6 +37,13 @@ export async function watchFile(filePath: string, onChange: () => void): Promise
     watcher.on('ready', resolve);
   });
   watcher.on('change', onChange);
+  watcher.on('unlink', () => {
+    void unWatchFile(filePath).then(() => onDeleted?.());
+  });
+  watcher.on('error', (error) => {
+    const watcherError = error instanceof Error ? error : new Error(String(error));
+    void unWatchFile(filePath).then(() => onError?.(watcherError));
+  });
   currentWatchers.set(filePath, watcher);
 }
 
