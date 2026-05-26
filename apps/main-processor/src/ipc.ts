@@ -1,17 +1,18 @@
 import { ipcMain, dialog } from 'electron';
 import { readFile, unWatchFile, watchFile } from './file';
 import { getFolder } from './folder';
-import {
-  validateMarkdownFile,
-  validatePath,
-  validateSender,
-} from './utils/constants/ipc-validation';
+import { validatePath, validateSender, allowedFolderRoots } from './utils/constants/ipc-validation';
 import { IPC_CONSTANTS } from '@package/shared-constants';
 import { getRecentFiles } from './recent/getRecentFile';
 import { addRecentFile } from './recent/addRecentFile';
 import { exportHTML } from './export/exportHtml';
 import { exportPDF } from './export/exportPdf';
 import { exportDOCX } from './export/exportDocx';
+import {
+  resolveMarkdownFilePath,
+  resolveDirectoryPath,
+  resolveWatchedMarkdownPath,
+} from './utils/helper/ipc-path-resolver';
 
 //registers all IPC handlers for main process
 export function registerIPCHandlers(): void {
@@ -20,14 +21,8 @@ export function registerIPCHandlers(): void {
     if (!validateSender(event)) {
       throw new Error('Untrusted sender');
     }
-    if (!validatePath(filePath)) {
-      throw new Error('Invalid file path');
-    }
-
-    if (!validateMarkdownFile(filePath)) {
-      throw new Error('Only markdown files allowed');
-    }
-    return await readFile(filePath);
+    const safeFilePath = await resolveMarkdownFilePath(filePath);
+    return await readFile(safeFilePath);
   });
 
   // opens the file path
@@ -48,10 +43,7 @@ export function registerIPCHandlers(): void {
     }
     const selected = result.filePaths[0];
     if (!selected) return null;
-    if (!validateMarkdownFile(selected)) {
-      throw new Error('Only markdown files allowed');
-    }
-    return selected;
+    return await resolveMarkdownFilePath(selected);
   });
 
   // watches a file
@@ -59,11 +51,9 @@ export function registerIPCHandlers(): void {
     if (!validateSender(event)) {
       throw new Error('Untrusted sender');
     }
-    if (!validatePath(filePath)) {
-      throw new Error('Invalid File Path');
-    }
-    await watchFile(filePath, () => {
-      event.sender.send('file-changed', filePath);
+    const safeFilePath = await resolveWatchedMarkdownPath(filePath);
+    await watchFile(safeFilePath, () => {
+      event.sender.send(IPC_CONSTANTS.FILE_CHANGED, safeFilePath);
     });
   });
 
@@ -72,10 +62,8 @@ export function registerIPCHandlers(): void {
     if (!validateSender(event)) {
       throw new Error('Untrusted sender');
     }
-    if (!validatePath(filePath)) {
-      throw new Error('Invalid file path');
-    }
-    await unWatchFile(filePath);
+    const safeFilePath = await resolveMarkdownFilePath(filePath);
+    await unWatchFile(safeFilePath);
   });
 
   //get recent files
@@ -91,10 +79,8 @@ export function registerIPCHandlers(): void {
     if (!validateSender(event)) {
       throw new Error('Untrusted sender');
     }
-    if (!validatePath(filePath)) {
-      throw new Error('Invalid file path');
-    }
-    await addRecentFile(filePath);
+    const safeFilePath = await resolveMarkdownFilePath(filePath);
+    await addRecentFile(safeFilePath);
   });
 
   ipcMain.handle(IPC_CONSTANTS.OPEN_FOLDER_DIALOG, async (event) => {
@@ -111,7 +97,10 @@ export function registerIPCHandlers(): void {
       return null;
     }
 
-    return result.filePaths[0] ?? null;
+    if (!result.filePaths[0]) return null;
+    const safeFolderPath = await resolveDirectoryPath(result.filePaths[0]);
+    allowedFolderRoots.add(safeFolderPath);
+    return safeFolderPath;
   });
 
   ipcMain.handle(IPC_CONSTANTS.READ_FOLDER, async (event, folderPath: string) => {
@@ -119,10 +108,9 @@ export function registerIPCHandlers(): void {
       throw new Error('Untrusted sender');
     }
 
-    if (!validatePath(folderPath)) {
-      throw new Error('Invalid folder path');
-    }
-    return await getFolder(folderPath);
+    const safeFolderPath = await resolveDirectoryPath(folderPath);
+    allowedFolderRoots.add(safeFolderPath);
+    return await getFolder(safeFolderPath);
   });
 
   ipcMain.handle(
