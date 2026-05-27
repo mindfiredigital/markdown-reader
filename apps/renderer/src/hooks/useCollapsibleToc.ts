@@ -4,13 +4,6 @@ import { TOCType } from '../types/component-types';
 export function useCollapsibleToc(tocItems: TOCType[]) {
   const [collapsedItems, setCollapsedItems] = useState<Record<string, boolean>>({});
 
-  const toggleItem = useCallback((id: string) => {
-    setCollapsedItems((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  }, []);
-
   const childMap = useMemo(() => {
     const map: Record<string, boolean> = {};
     for (let i = 0; i < tocItems.length; i++) {
@@ -21,6 +14,20 @@ export function useCollapsibleToc(tocItems: TOCType[]) {
     }
     return map;
   }, [tocItems]);
+
+  const toggleItem = useCallback(
+    (id: string) => {
+      setCollapsedItems((prev) => {
+        const item = tocItems.find((t) => t?.id === id);
+        const isCurrentlyCollapsed = prev[id] ?? Boolean(item && item.level >= 2 && childMap[id]);
+        return {
+          ...prev,
+          [id]: !isCurrentlyCollapsed,
+        };
+      });
+    },
+    [tocItems, childMap]
+  );
 
   const visibleItems = useMemo(() => {
     const visible: TOCType[] = [];

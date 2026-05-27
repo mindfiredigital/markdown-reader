@@ -20,15 +20,19 @@ describe('Table of Contents Hook Tests', () => {
 
   test('should hide nested sub items when their parent is collapsed', () => {
     const { result } = renderHook(() => useCollapsibleToc(sampleDocumentItems));
+    expect(result.current.visibleItems.length).toBe(3);
+    act(() => {
+      result.current.toggleItem('section-1.1');
+    });
     expect(result.current.visibleItems.length).toBe(4);
+    const containsSubSection = result.current.visibleItems.some(
+      (item) => item.id === 'subsection-1.1.1'
+    );
+    expect(containsSubSection).toBe(true);
     act(() => {
       result.current.toggleItem('section-1.1');
     });
     expect(result.current.visibleItems.length).toBe(3);
-    const containsSubSection = result.current.visibleItems.some(
-      (item) => item.id === 'subsection-1.1.1'
-    );
-    expect(containsSubSection).toBe(false);
   });
 
   test('should handle completely empty lists without crashing the app', () => {
