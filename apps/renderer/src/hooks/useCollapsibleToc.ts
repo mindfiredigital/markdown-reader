@@ -37,7 +37,8 @@ export function useCollapsibleToc(tocItems: TOCType[]) {
         }
       }
       visible.push(item);
-      if (collapsedItems[item.id]) {
+      const collapsed = collapsedItems[item.id] ?? (item.level >= 2 && childMap[item.id]);
+      if (collapsed) {
         activeHiddenLevel = item.level;
       }
     }
@@ -51,8 +52,13 @@ export function useCollapsibleToc(tocItems: TOCType[]) {
     [childMap]
   );
 
-  const isCollapsed = useCallback((id: string) => Boolean(collapsedItems[id]), [collapsedItems]);
-
+  const isCollapsed = useCallback(
+    (id: string) => {
+      const item = tocItems.find((tocItem) => tocItem.id === id);
+      return Boolean(collapsedItems[id] ?? (item && item.level >= 2 && childMap[id]));
+    },
+    [childMap, collapsedItems, tocItems]
+  );
   return {
     visibleItems,
     toggleItem,
