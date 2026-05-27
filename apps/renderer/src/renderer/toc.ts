@@ -1,27 +1,26 @@
+import { lexer } from 'marked';
 import { TOCType } from '../types/component-types';
-import { getHeadingId, stripHtml } from '../utils/helpers/heading-helper';
-import { HTML_PATTERNS } from '../utils/constants/regex-constants';
+import { getHeadingId, isHeadingToken, headingText } from '../utils/helpers/heading-helper';
 
 // extracts table of content from HTML string
 export function extractTOC(html: string): TOCType[] {
   const items: TOCType[] = [];
   const idCount = new Map<string, number>();
-  let match: RegExpExecArray | null;
-  while ((match = HTML_PATTERNS.HEADINGS.exec(html)) !== null) {
-    const level = parseInt(match[1] ?? '1', 10) as 1 | 2 | 3;
-    const attrs = match[2] ?? '';
-    const rawtext = match[3] ?? '';
+  const tokens = lexer(html);
 
-    const strip = stripHtml(rawtext).trim();
-    if (!strip) continue;
-    const matchId = HTML_PATTERNS.ID_ATTRIBUTE.exec(attrs);
-    const firstid = matchId?.[1] ?? getHeadingId(strip);
+  for (const token of tokens) {
+    if (!isHeadingToken(token)) continue;
+
+    const level = Math.min(token.depth, 3) as 1 | 2 | 3;
+    const text = headingText(token);
+    if (!text) continue;
+    const firstid = getHeadingId(text);
 
     const count = idCount.get(firstid) ?? 0;
     idCount.set(firstid, count + 1);
     const id = count === 0 ? firstid : `${firstid}-${count}`;
 
-    items.push({ id, text: strip, level });
+    items.push({ id, text, level });
   }
   return items;
 }

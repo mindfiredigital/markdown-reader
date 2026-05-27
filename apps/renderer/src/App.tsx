@@ -34,8 +34,9 @@ export default function App() {
   const {  error, isLoading, openFile, toc,recentFiles,loadFile } =useFile();
   const { state, dispatch } = useTabStore();
   const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId) ?? null;
+  const activeToc=activeTab?.toc?? toc;
   const { theme, toggleTheme} = useTheme();
-  const {activeId,scrollToHeading}=useToc(toc);
+  const {activeId,scrollToHeading}=useToc(activeToc);
   const {increaseFontSize,decreaseFontSize,resetFontSize,fontSize}=useSettings();
   const {query,matchCount,currentMatch,isSearchOpen,openSearch,closeSearch,setQuery,goToNextMatch,goToPrevMatch,getHiglightedHtml} = useSearch(activeTab?.html ?? '');
   const [showToast, setShowToast] = useState(false);
@@ -146,7 +147,7 @@ useShortcuts({
             )}
             {!focusMode && (
               <Sidebar
-                tocItems={extractTOC(activeTab.html)}
+                tocItems={activeToc}
                 activeId={activeId}
                 onSelect={scrollToHeading}
                 isVisible={sidebarOpen}
