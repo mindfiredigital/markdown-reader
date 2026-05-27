@@ -11,4 +11,6 @@ export const PATHS = {
 
 export const MAX_RECENT = 20;
 
+export const MAX_FOLDER_DEPTH = 10;
+
 export const MARKDOWN_FILE_PATTERN = /\.(md|markdown)$/i;
