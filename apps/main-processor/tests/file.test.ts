@@ -72,4 +72,14 @@ describe('File watcher', () => {
     await unWatchFile(TEST_FILE);
     expect(getWatcherDiagnostics().debounceTimers).toBe(0);
   });
+
+  it('does not call callback for a file unwatched during debounce', async () => {
+    const cb = vi.fn();
+    await watchFile(TEST_FILE, cb);
+    writeFileSync(TEST_FILE, 'change before immediate unwatch');
+    await new Promise((r) => setTimeout(r, 25));
+    await unWatchFile(TEST_FILE);
+    await new Promise((r) => setTimeout(r, 200));
+    expect(cb).not.toHaveBeenCalled();
+  });
 });
