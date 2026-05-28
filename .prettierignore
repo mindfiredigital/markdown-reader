@@ -2,3 +2,8 @@ node_modules
 dist
 .next
 build
+out/
+release/
+coverage/
+docs/.docusaurus/
+docs/build/

@@ -1,8 +1,40 @@
-node_modules
-dist
-build
-.env
-out 
-coverage
-release
+# Dependencies
+node_modules/
+
+# Build outputs
+out/
+dist/
+build/
+release/
+*.tgz
 .vite/
+
+# Electron builder
+.cache/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test coverage
+coverage/
+
+# Docusaurus
+docs/.docusaurus/
+docs/build/
