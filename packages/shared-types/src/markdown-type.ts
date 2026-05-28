@@ -1,6 +1,6 @@
-import { FileType } from './file-types';
-import { RecentFile } from './recentfile-type';
-import { Settings } from './settings-type';
+import { FileType } from './file-types.js';
+import { RecentFile } from './recentfile-type.js';
+import { Settings } from './settings-type.js';
 
 // markdown reader api
 export type MarkdownReaderAPI = {
@@ -29,12 +29,4 @@ export type MarkdownReaderAPI = {
   getPathForFile(file: File): string;
   onUpdateAvailable: (callback: (version: string) => void) => void;
   downloadUpdate: () => void;
-};
-
-// initial setting
-export const DEFAULT_SETTINGS: Settings = {
-  theme: 'github-light',
-  fontSize: 16,
-  readingWidth: 'default',
-  showLineNumbers: false,
 };
