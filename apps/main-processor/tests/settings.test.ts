@@ -11,6 +11,6 @@ describe('settings validation', () => {
   });
 
   it('rejects invalid values', () => {
-    expect(() => validateSettings({ fontSize: 100 })).toThrow('Invalid font size');
+    expect(() => validateSettings({ fontSize: 100 })).toThrow('Invalid fontSize');
   });
 });
