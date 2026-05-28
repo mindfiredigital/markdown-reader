@@ -41,6 +41,7 @@ export interface UseMenuEventsProps {
   onExportHtml: () => void;
   onExportPdf: () => void;
   onExportDocx: () => void;
+  onOpenSettings: () => void;
 }
 
 export interface UseShortcutsProps {
@@ -55,6 +56,7 @@ export interface UseShortcutsProps {
   onZoomReset: () => void;
   onToggleSidebar: () => void;
   onToggleFileBrowser: () => void;
+  onOpenSettings: () => void;
 }
 
 export interface UseSearchProps {

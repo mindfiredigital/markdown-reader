@@ -19,6 +19,7 @@ export function useMenuEvents({
   onExportHtml,
   onExportPdf,
   onExportDocx,
+  onOpenSettings,
 }: UseMenuEventsProps) {
   useEffect(() => {
     if (!window.api?.onMenuEvent) return;
@@ -39,6 +40,7 @@ export function useMenuEvents({
     window.api.onMenuEvent(MENU_EVENTS.EXPORT_HTML, onExportHtml);
     window.api.onMenuEvent(MENU_EVENTS.EXPORT_PDF, onExportPdf);
     window.api.onMenuEvent(MENU_EVENTS.EXPORT_DOCX, onExportDocx);
+    window.api.onMenuEvent(MENU_EVENTS.OPEN_SETTINGS, onOpenSettings);
 
     return () => {
       window.api.removeMenuListeners?.();
@@ -58,5 +60,8 @@ export function useMenuEvents({
     onPreviousTab,
     onCloseTab,
     onExportHtml,
+    onExportPdf,
+    onExportDocx,
+    onOpenSettings,
   ]);
 }
