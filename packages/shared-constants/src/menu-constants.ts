@@ -20,6 +20,7 @@ export const MENU_LABELS = {
   PREVIOUS_TAB: 'Previous Tab',
   SEARCH_DOCUMENT: 'Search In Document',
   SEARCH_FOLDER: 'Search in Folder',
+  SETTINGS: 'Settings',
 } as const;
 
 export const MENU_EVENTS = {
@@ -40,6 +41,7 @@ export const MENU_EVENTS = {
   EXPORT_HTML: 'menu:export-html',
   EXPORT_PDF: 'menu:export-pdf',
   EXPORT_DOCX: 'menu:export-docx',
+  OPEN_SETTINGS: 'menu:open:settings',
 } as const;
 
 export const MENU_EVENT_LIST = Object.values(MENU_EVENTS);

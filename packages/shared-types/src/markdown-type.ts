@@ -1,6 +1,6 @@
 import { FileType } from './file-types.js';
 import { RecentFile } from './recentfile-type.js';
-import { Settings } from './settings-type.js';
+import { AppSettings } from './settings-type.js';
 
 // markdown reader api
 export type MarkdownReaderAPI = {
@@ -13,8 +13,8 @@ export type MarkdownReaderAPI = {
   getRecentFiles(): Promise<RecentFile[]>;
   addRecentFile(path: string): Promise<void>;
   clearRecentFiles(): Promise<void>;
-  getSettings(): Promise<Settings>;
-  saveSettings(settings: Settings[]): Promise<void>;
+  getSettings(): Promise<AppSettings>;
+  saveSettings(settings: Partial<AppSettings>): Promise<AppSettings>;
   getAppVersion(): Promise<string>;
   onFileChanged: (callback: (path: string) => void) => void;
   removeFileChangedListener: () => void;
