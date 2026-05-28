@@ -60,6 +60,10 @@ export function buildMenuTemplate(): MenuItemConstructorOptions[] {
           accelerator: SHORTCUTS.FOCUS_MODE,
           click: send(MENU_EVENTS.FOCUS_MODE),
         },
+        {
+          label: MENU_LABELS.SETTINGS,
+          click: send(MENU_EVENTS.OPEN_SETTINGS),
+        },
         { type: 'separator' },
         {
           label: MENU_LABELS.CYCLE_THEME,
