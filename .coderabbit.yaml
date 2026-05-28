@@ -1,0 +1,367 @@
+# ---------------------------------------------------------------------------
+# CodeRabbit Configuration for mindfiredigital/markdown-reader
+#
+# Stack   : Electron + React + TypeScript + Vite + Tailwind CSS
+# Tooling : pnpm + Vitest + ESLint + Prettier + electron-vite
+# Pattern : Electron desktop app monorepo with main, preload, renderer, shared packages, and Docusaurus docs
+#
+# Validate : https://docs.coderabbit.ai/configuration/yaml-validator
+# Reference: https://docs.coderabbit.ai/reference/configuration
+# ---------------------------------------------------------------------------
+
+language: 'en-US'
+
+# Max 250 characters
+tone_instructions: 'Senior Electron/React/TypeScript Markdown Reader reviewer. Be concise and specific. Prioritise IPC safety, preload boundaries, markdown sanitisation, accessibility, tests, and packaging. Suggest concrete fixes and praise good patterns.'
+
+early_access: false
+
+# ---------------------------------------------------------------------------
+# REVIEWS
+# ---------------------------------------------------------------------------
+reviews:
+  profile: 'assertive'
+  request_changes_workflow: true
+
+  # PR description enrichment
+  high_level_summary: true
+  high_level_summary_instructions: >
+    Summarise the PR as a concise bullet-point list. Group changes by:
+    (1) Electron main/preload/renderer changes,
+    (2) Markdown rendering, search, export, or file-system behaviour,
+    (3) Shared packages and type/API changes,
+    (4) Tooling, CI, docs, or packaging changes.
+    End with a "Breaking changes" section (write "None" if absent).
+  high_level_summary_in_walkthrough: false
+  # Walkthrough & diagnostics
+  collapse_walkthrough: false
+  changed_files_summary: true
+  sequence_diagrams: true
+  estimate_code_review_effort: true
+  assess_linked_issues: true
+  related_issues: true
+  related_prs: true
+
+  # Labels
+  suggested_labels: true
+  auto_apply_labels: false
+  labeling_instructions:
+    - label: 'electron'
+      instructions: 'Apply when the PR touches Electron main, preload, builder, updater, or electron-vite configuration.'
+    - label: 'renderer'
+      instructions: 'Apply when the PR changes React renderer UI, hooks, state, styles, or markdown preview behaviour under apps/renderer/.'
+    - label: 'preload'
+      instructions: 'Apply when the PR changes apps/preload/ or the contextBridge API exposed to the renderer.'
+    - label: 'ipc'
+      instructions: 'Apply when the PR adds, removes, or modifies IPC channels, IPC validation, menu events, or bridge constants.'
+    - label: 'markdown'
+      instructions: 'Apply when the PR changes markdown parsing, sanitisation, syntax highlighting, KaTeX, Mermaid, callouts, footnotes, or TOC logic.'
+    - label: 'export'
+      instructions: 'Apply when the PR changes HTML, PDF, DOCX, image inlining, CSS sanitisation, or export templates.'
+    - label: 'file-system'
+      instructions: 'Apply when the PR touches file/folder reading, recent files, watchers, path handling, or search over local folders.'
+    - label: 'a11y'
+      instructions: 'Apply when the PR touches keyboard shortcuts, focus management, ARIA, screen-reader behaviour, or interactive UI semantics.'
+    - label: 'docs'
+      instructions: 'Apply when the PR changes README, Markdown docs, Docusaurus content, or documentation assets.'
+    - label: 'tests'
+      instructions: 'Apply when the PR adds or modifies Vitest test files, test setup, mocks, or coverage configuration.'
+    - label: 'build'
+      instructions: 'Apply when the PR changes electron-vite, electron-builder, package scripts, TypeScript configs, or CI workflows.'
+    - label: 'dependencies'
+      instructions: 'Apply when the PR bumps, adds, removes, or relocates npm/pnpm dependencies.'
+    - label: 'shared-api'
+      instructions: 'Apply when the PR changes packages/shared-types or packages/shared-constants public exports.'
+    - label: 'security'
+      instructions: 'Apply when the PR touches sanitisation, IPC validation, path validation, update/download flows, secrets, or dependency scanning.'
+
+  # Reviewer suggestions
+  suggested_reviewers: true
+  auto_assign_reviewers: false
+
+  # Commit status
+  commit_status: true
+  fail_commit_status: false
+  review_status: true
+  review_details: true
+
+  # Display
+  poem: false
+  in_progress_fortune: false
+
+  # Auto-review triggers
+  auto_review:
+    enabled: true
+    base_branches:
+      - main
+      - dev
+
+  # Files excluded from review (still cloned for context)
+  path_filters:
+    - '!out/**'
+    - '!dist/**'
+    - '!build/**'
+    - '!coverage/**'
+    - '!release/**'
+    - '!node_modules/**'
+    - '!docs/.docusaurus/**'
+    - '!docs/build/**'
+    - '!pnpm-lock.yaml'
+    - '!**/*.snap'
+    - '!**/__snapshots__/**'
+    - '!**/*.zip'
+    - '!assets/**/*.ico'
+    - '!assets/**/*.icns'
+    - '!assets/**/*.png'
+    - '!docs/static/**/*.png'
+    - '!docs/static/**/*.ico'
+    - '!docs/static/**/*.mp4'
+
+  # Path-specific review instructions
+  path_instructions:
+    - path: 'apps/main-processor/src/**/*.ts'
+      instructions: |
+        ## Electron Main Process Review Checklist
+
+        ### IPC & Security
+        - Every ipcMain.handle channel must be defined in shared constants and exposed through a typed preload API.
+        - Validate all renderer-provided paths, settings payloads, search queries, and export inputs before file-system access.
+        - Do not expose Node, Electron internals, or unrestricted file-system operations to the renderer.
+        - Avoid shell execution and remote downloads unless the source, destination, and error handling are explicit.
+
+        ### File System & Watchers
+        - Use async file APIs where practical and handle missing files, permission errors, symlinks, and deleted watched files.
+        - Clean up chokidar/watch subscriptions and IPC listeners to prevent leaks.
+        - Keep recent-file and settings writes atomic enough to avoid corrupting JSON on failure.
+
+        ### Export Behaviour
+        - HTML/PDF/DOCX export must sanitise untrusted HTML/CSS and resolve local images safely.
+        - Browser/Playwright export paths must close pages/contexts on both success and failure.
+        - Generated files should preserve user content without executing embedded scripts.
+
+    - path: 'apps/preload/src/**/*.ts'
+      instructions: |
+        ## Preload Review Checklist
+
+        - Expose only the typed MarkdownReaderAPI via contextBridge; do not leak ipcRenderer directly.
+        - Each listener registration must return a precise unsubscribe function.
+        - Prefer invoke/send wrappers with constant channel names from packages/shared-constants.
+        - Keep payload types aligned with packages/shared-types and avoid any.
+        - Do not expose broad methods that accept arbitrary IPC channel names unless validated against an allow-list.
+
+    - path: 'apps/renderer/src/components/**/*.tsx'
+      instructions: |
+        ## Renderer Component Review Checklist
+
+        ### React & TypeScript
+        - Props should be typed with named interfaces or shared component types.
+        - Avoid any; prefer unknown, discriminated unions, or explicit domain types.
+        - Use functional components and hooks only.
+        - Keep expensive markdown/search/UI derived values behind useMemo only when it avoids real repeated work.
+
+        ### Accessibility & UX
+        - Interactive controls must use semantic elements and visible focus states.
+        - Keyboard shortcuts must not break normal text input or screen-reader expectations.
+        - File tree, tabs, toolbar, search, and sidebar interactions must work without a mouse.
+        - Loading and error states should be visible, specific, and recoverable.
+
+        ### Styling
+        - Prefer existing CSS variables and theme constants over ad hoc colours.
+        - Ensure light/dark theme changes preserve WCAG 2.1 AA contrast.
+        - Avoid inline style hacks when a reusable CSS class or token already exists.
+
+    - path: 'apps/renderer/src/hooks/**/*.ts'
+      instructions: |
+        ## Renderer Hook Review Checklist
+
+        - Effects must have complete dependency arrays and deterministic cleanup.
+        - IPC/menu/file watcher subscriptions must unsubscribe on unmount or dependency change.
+        - Hooks that call the preload API should handle rejected promises and stale responses.
+        - Avoid storing derived state when it can be computed safely from source state.
+        - Search, file actions, export, and shortcut hooks must handle empty input and missing API methods.
+
+    - path: 'apps/renderer/src/renderer/**/*.ts'
+      instructions: |
+        ## Markdown Rendering Review Checklist
+
+        - Sanitise untrusted markdown HTML before rendering or exporting.
+        - Do not allow script execution through raw HTML, Mermaid, KaTeX, links, images, or generated anchors.
+        - Keep marked extensions deterministic and covered by tests for edge cases.
+        - Mermaid and KaTeX processing should fail gracefully without breaking the full document render.
+        - TOC/heading IDs must be stable and avoid collisions.
+
+    - path: 'apps/renderer/src/store/**/*.ts'
+      instructions: |
+        - State updates must be immutable and safe under concurrent tab/file actions.
+        - Tab IDs and active-tab logic must stay stable when files are opened, closed, renamed, or reloaded.
+        - Persisted state must handle older or malformed data without crashing the renderer.
+
+    - path: 'apps/renderer/src/**/*.test.tsx'
+      instructions: |
+        ## Renderer Test Checklist (Vitest + Testing Library)
+
+        - Prefer getByRole and user-event for UI interactions.
+        - Cover loading, empty, error, and keyboard-only states for changed components.
+        - Mock the preload API explicitly instead of relying on global implementation details.
+        - Markdown renderer tests should include unsafe HTML, links, images, code blocks, Mermaid, KaTeX, and malformed input when relevant.
+
+    - path: 'apps/main-processor/tests/**/*.ts'
+      instructions: |
+        ## Main Process Test Checklist
+
+        - Cover success and failure paths for file-system, IPC, export, settings, search, and recent-file logic.
+        - Tests that touch disk should use isolated temp directories and clean up after themselves.
+        - Mock Electron APIs, dialogs, menus, and updater behaviour explicitly.
+        - Include path traversal, missing file, permission, and malformed payload cases when relevant.
+
+    - path: 'packages/shared-types/src/**/*.ts'
+      instructions: |
+        - Treat exported types as the contract between main, preload, and renderer.
+        - Public API changes must be backwards-compatible or clearly called out as breaking.
+        - Prefer precise payload/result types over broad string, object, unknown, or any shapes.
+        - Keep index.ts exports intentional and avoid leaking internal helper types.
+
+    - path: 'packages/shared-constants/src/**/*.ts'
+      instructions: |
+        - IPC/menu/keyboard/theme constants must remain single-source-of-truth values.
+        - New IPC constants should be paired with handler, preload wrapper, renderer usage, and tests.
+        - Keyboard shortcut changes must consider platform differences and conflicts with browser/editor defaults.
+        - Keep exported names consistent and avoid duplicate literal channel strings.
+
+    - path: 'apps/renderer/src/index.css'
+      instructions: |
+        - Theme variables should preserve contrast across light and dark modes.
+        - Prose styles must not make rendered markdown unreadable for tables, code blocks, blockquotes, lists, and links.
+        - Avoid global selectors that unintentionally affect Electron shell UI controls.
+
+    - path: 'electron.vite.config.ts'
+      instructions: |
+        - Verify main, preload, and renderer entry points remain correctly separated.
+        - Main/preload builds should externalise Node/Electron dependencies where needed.
+        - Renderer build must not import Node-only modules or Electron main-process packages.
+        - Check sourcemap, minification, and external settings for production packaging impact.
+
+    - path: 'electron-builder.ts'
+      instructions: |
+        - Verify appId, productName, files, asar, icons, targets, and publish/update settings are production-safe.
+        - Ensure build output excludes source-only, test, coverage, and cache files.
+        - Platform-specific signing/notarisation settings must not hardcode secrets.
+        - Auto-update configuration must match the updater code and release workflow.
+
+    - path: 'package.json'
+      instructions: |
+        - Root scripts should keep lint, typecheck, test, coverage, build, and dist working across pnpm workspaces.
+        - Dependencies should live in the package that imports them.
+        - Electron, builder, Vite, TypeScript, React, and testing dependency bumps require compatibility notes.
+        - Keep packageManager pinned and pnpm workspace usage consistent.
+
+    - path: 'apps/*/package.json'
+      instructions: |
+        - Package scripts should align with root pnpm -r commands.
+        - Dependencies must be declared in the app/package that imports them.
+        - Test, lint, typecheck, and build commands should fail on errors.
+        - Avoid placing runtime dependencies in devDependencies when bundled code imports them at runtime.
+
+    - path: 'tsconfig*.json'
+      instructions: |
+        - strict: true must remain enabled.
+        - noUncheckedIndexedAccess and exactOptionalPropertyTypes should stay enabled unless there is a clear reason.
+        - Module, target, and moduleResolution choices must match electron-vite and package boundaries.
+        - Path aliases must stay consistent with Vite, Electron, and workspace package resolution.
+
+    - path: 'apps/**/tsconfig.json'
+      instructions: |
+        - App tsconfigs should extend the root base config where appropriate.
+        - Include/exclude patterns must cover source, tests, and ambient declarations intentionally.
+        - Renderer types should include DOM where needed; main/preload types should not accidentally rely on browser globals.
+
+    - path: 'eslint.config.*'
+      instructions: |
+        - Ensure TypeScript parsing covers all workspace TS/TSX files.
+        - React hooks rules should be active for renderer code.
+        - no-console should be warn or error outside intentional CLI/debug code.
+        - Flag disabled rules that reduce TypeScript type safety or hide runtime errors.
+
+    - path: '.github/workflows/**'
+      instructions: |
+        - Actions must be pinned to version tags, not @main.
+        - Secrets must use ${{ secrets.* }} and never be hardcoded.
+        - pnpm version should be pinned in pnpm/action-setup.
+        - CI must include install, lint, typecheck, tests, and Electron build/package coverage.
+        - Security scans should fail for high/critical findings unless explicitly justified.
+
+    - path: 'docs/**/*.md'
+      instructions: |
+        - Code examples must use fenced code blocks with a language tag.
+        - Relative links should point to existing files or Docusaurus routes.
+        - Product docs should match current keyboard shortcuts, markdown support, export formats, and installation steps.
+
+    - path: 'docs/**/*.{ts,tsx,mdx}'
+      instructions: |
+        - Docusaurus pages/components should avoid browser-only APIs during static build unless guarded.
+        - Public docs must not expose secrets, private release URLs, or unsupported installation commands.
+        - Keep examples consistent with the current app UI and package scripts.
+
+    - path: '**/*.md'
+      instructions: |
+        - Use clear headings and fenced code blocks with language tags.
+        - Verify relative links and image references.
+        - Keep user-facing docs accurate for Electron desktop usage, markdown rendering, export, and privacy behaviour.
+
+    - path: 'pnpm-workspace.yaml'
+      instructions: |
+        - Workspace package globs must include apps, packages, and docs intentionally.
+        - allowBuilds entries should be minimal and justified for packages that need install-time build scripts.
+
+  # Static analysis tools (nested under reviews per schema)
+  tools:
+    eslint:
+      enabled: true
+    biome:
+      enabled: false
+    markdownlint:
+      enabled: true
+    actionlint:
+      enabled: true
+    gitleaks:
+      enabled: true
+    htmlhint:
+      enabled: true
+    checkov:
+      enabled: true
+    languagetool:
+      enabled: true
+      enabled_rules:
+        - 'OXFORD_COMMA'
+        - 'EN_QUOTES'
+        - 'COMMA_PARENTHESIS_WHITESPACE'
+      disabled_categories:
+        - 'TYPOGRAPHY'
+    yamllint:
+      enabled: true
+    ast-grep:
+      essential_rules: true
+
+# ---------------------------------------------------------------------------
+# CHAT
+# ---------------------------------------------------------------------------
+chat:
+  auto_reply: true
+
+# ---------------------------------------------------------------------------
+# KNOWLEDGE BASE
+# ---------------------------------------------------------------------------
+knowledge_base:
+  opt_out: false
+  web_search:
+    enabled: true
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - 'CONTRIBUTING.md'
+      - 'README.md'
+      - 'docs/**/*.md'
+      - 'docs/docs/**/*.md'
+      - 'docs/versioned_docs/**/*.md'
+  learnings:
+    scope: auto
