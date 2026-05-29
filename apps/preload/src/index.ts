@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer, webUtils } from 'electron';
+import { contextBridge, ipcRenderer, IpcRendererEvent, webUtils } from 'electron';
 import { MarkdownReaderAPI } from '@package/shared-types';
 import { IPC_CONSTANTS } from '@package/shared-constants';
 import { BRIDGE_NAME } from '@package/shared-constants';
@@ -20,7 +20,11 @@ const apiContract: MarkdownReaderAPI = {
   onFileChanged: (callback: (path: string) => void) =>
     ipcRenderer.on(IPC_CONSTANTS.FILE_CHANGED, (_event, path: string) => callback(path)),
   removeFileChangedListener: () => ipcRenderer.removeAllListeners(IPC_CONSTANTS.FILE_CHANGED),
-  onMenuEvent: (event: string, callback: () => void) => ipcRenderer.on(event, () => callback()),
+  onMenuEvent: (event: string, callback: (payload?: unknown) => void) => {
+    const handler = (_event: IpcRendererEvent, payload?: unknown) => callback(payload);
+    ipcRenderer.on(event, handler);
+    return () => ipcRenderer.removeListener(event, handler);
+  },
   removeMenuListeners: () =>
     MENU_EVENT_LIST.forEach((event) => {
       ipcRenderer.removeAllListeners(event);

@@ -18,7 +18,7 @@ export type MarkdownReaderAPI = {
   getAppVersion(): Promise<string>;
   onFileChanged: (callback: (path: string) => void) => void;
   removeFileChangedListener: () => void;
-  onMenuEvent: (event: string, callback: () => void) => void;
+  onMenuEvent: (event: string, callback: (payload?: unknown) => void) => () => void;
   removeMenuListeners: () => void;
   onOpenFilePath(callback: (path: string) => void): void;
   removeOpenFilePathListener(): void;
