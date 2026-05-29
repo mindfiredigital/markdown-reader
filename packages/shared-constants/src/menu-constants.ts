@@ -21,6 +21,7 @@ export const MENU_LABELS = {
   SEARCH_DOCUMENT: 'Search In Document',
   SEARCH_FOLDER: 'Search in Folder',
   SETTINGS: 'Settings',
+  THEME: 'Theme',
 } as const;
 
 export const MENU_EVENTS = {
@@ -42,6 +43,7 @@ export const MENU_EVENTS = {
   EXPORT_PDF: 'menu:export-pdf',
   EXPORT_DOCX: 'menu:export-docx',
   OPEN_SETTINGS: 'menu:open:settings',
+  SET_THEME: 'menu:set-theme',
 } as const;
 
 export const MENU_EVENT_LIST = Object.values(MENU_EVENTS);
