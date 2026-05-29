@@ -35,7 +35,7 @@ export default function App() {
   const { state, dispatch } = useTabStore();
   const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId) ?? null;
   const activeToc=activeTab?.toc?? toc;
-  const { theme, toggleTheme} = useTheme();
+  const { theme, toggleTheme,setTheme} = useTheme();
   const {activeId,scrollToHeading}=useToc(activeToc);
   const {settings,increaseFontSize,decreaseFontSize,resetFontSize,fontSize,updateSettings}=useSettings();
   const {query,matchCount,currentMatch,isSearchOpen,openSearch,closeSearch,setQuery,goToNextMatch,goToPrevMatch,getHiglightedHtml} = useSearch(activeTab?.html ?? '');
@@ -79,7 +79,8 @@ export default function App() {
   onExportHtml:exportHtml,
   onExportPdf:exportPdf,
   onExportDocx:exportDocx,
-  onOpenSettings:()=>setSettingsOpen(true)
+  onOpenSettings:()=>setSettingsOpen(true),
+  onSetTheme:setTheme
 });
 
 useShortcuts({

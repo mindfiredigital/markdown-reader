@@ -1,4 +1,5 @@
 import React from 'react';
+import { Theme } from './component-types';
 import { TOCType } from './component-types';
 import { Tab, TabAction } from './component-types';
 
@@ -42,6 +43,7 @@ export interface UseMenuEventsProps {
   onExportPdf: () => void;
   onExportDocx: () => void;
   onOpenSettings: () => void;
+  onSetTheme: (theme: Theme) => void;
 }
 
 export interface UseShortcutsProps {

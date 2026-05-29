@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { MENU_EVENTS } from '@package/shared-constants';
 import { UseMenuEventsProps } from '../types/hook-types';
-
+import { Theme } from '../types/component-types';
 export function useMenuEvents({
   onOpenFile,
   onOpenFolder,
@@ -20,6 +20,7 @@ export function useMenuEvents({
   onExportPdf,
   onExportDocx,
   onOpenSettings,
+  onSetTheme,
 }: UseMenuEventsProps) {
   useEffect(() => {
     if (!window.api?.onMenuEvent) return;
@@ -41,6 +42,11 @@ export function useMenuEvents({
     window.api.onMenuEvent(MENU_EVENTS.EXPORT_PDF, onExportPdf);
     window.api.onMenuEvent(MENU_EVENTS.EXPORT_DOCX, onExportDocx);
     window.api.onMenuEvent(MENU_EVENTS.OPEN_SETTINGS, onOpenSettings);
+    window.api.onMenuEvent(MENU_EVENTS.SET_THEME, (theme) => {
+      if (typeof theme === 'string') {
+        onSetTheme(theme as Theme);
+      }
+    });
 
     return () => {
       window.api.removeMenuListeners?.();
@@ -63,5 +69,6 @@ export function useMenuEvents({
     onExportPdf,
     onExportDocx,
     onOpenSettings,
+    onSetTheme,
   ]);
 }
