@@ -15,6 +15,7 @@ const apiContract: MarkdownReaderAPI = {
   getSettings: () => ipcRenderer.invoke(IPC_CONSTANTS.GET_SETTINGS),
   saveSettings: (settings) => ipcRenderer.invoke(IPC_CONSTANTS.SAVE_SETTINGS, settings),
   getAppVersion: () => ipcRenderer.invoke(IPC_CONSTANTS.GET_APP_VERSION),
+  searchFolder: (path, query) => ipcRenderer.invoke(IPC_CONSTANTS.SEARCH_FOLDER, path, query),
   watchFile: (path) => ipcRenderer.invoke(IPC_CONSTANTS.WATCH_FILE, path),
   unWatchFile: (path) => ipcRenderer.invoke(IPC_CONSTANTS.UNWATCH_FILE, path),
   onFileChanged: (callback: (path: string) => void) =>

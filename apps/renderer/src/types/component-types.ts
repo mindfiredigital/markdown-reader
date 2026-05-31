@@ -1,7 +1,7 @@
 import React from 'react';
 import { APPTHEMES } from '../utils/constants/theme-constants';
 import { RecentFile } from '@package/shared-types/dist/src/recentfile-type';
-import { FileType } from '@package/shared-types';
+import { FileType, FolderSearchResult } from '@package/shared-types';
 export interface ErrorProps {
   message: string;
   onRetry: () => void;
@@ -64,6 +64,13 @@ export interface SearchBarProps {
   onNext: () => void;
   onPrev: () => void;
   onClose: () => void;
+  mode?: 'document' | 'folder';
+  folderResults?: FolderSearchResult[];
+  isSearchingFolder?: boolean;
+  onOpenFolderResult?: (result: FolderSearchResult) => void;
+  hasFolder?: boolean;
+  caseSensitive?: boolean;
+  onToggleCaseSensitive?: () => void;
 }
 
 export type ReadingWidth = 'narrow' | 'default' | 'wide' | 'full';
@@ -99,6 +106,7 @@ export interface Tab {
   filePath: string;
   fileName: string;
   html: string;
+  toc?: TOCType[];
   scrollTop: number;
   fontSize: number;
 }
@@ -109,7 +117,7 @@ export interface TabState {
 }
 
 export type TabAction =
-  | { type: 'OPEN_TAB'; payload: { filePath: string; html?: string } }
+  | { type: 'OPEN_TAB'; payload: { filePath: string; html?: string; toc?: TOCType[] } }
   | { type: 'CLOSE_TAB'; payload: { tabId: string } }
   | { type: 'SWITCH_TAB'; payload: { tabId: string } }
   | {
@@ -117,6 +125,7 @@ export type TabAction =
       payload: {
         tabId: string;
         html?: string;
+        toc?: TOCType[];
         scrollTop?: number;
         fontSize?: number;
       };

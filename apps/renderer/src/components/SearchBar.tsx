@@ -11,6 +11,11 @@ export function SearchBar({
   onNext,
   onPrev,
   onClose,
+  mode = 'document',
+  folderResults = [],
+  isSearchingFolder = false,
+  onOpenFolderResult,
+  hasFolder = true,
 }: SearchBarProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [localQuery,setLocalQuery]=useState(query);
@@ -19,6 +24,10 @@ export function SearchBar({
     inputRef.current?.focus();
   }, []);
 
+  useEffect(() => {
+    setLocalQuery(query);
+  }, [query]);
+
   useEffect(()=>{
     const handler=setTimeout(()=>{
       onQueryChange(localQuery);
@@ -26,8 +35,9 @@ export function SearchBar({
     return ()=>clearTimeout(handler)
   },[localQuery,onQueryChange]);
 
-  const prevDisable=matchCount===0 || currentMatch<=1;
-  const nextDisable=matchCount===0 || currentMatch>=matchCount;
+  const isFolderMode = mode === 'folder';
+  const prevDisable=isFolderMode || matchCount===0 || currentMatch<=1;
+  const nextDisable=isFolderMode || matchCount===0 || currentMatch>=matchCount;
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && e.shiftKey) {
@@ -49,7 +59,8 @@ export function SearchBar({
   const newButtonClass=(isDisable:boolean)=>`${btnClass} ${isDisable? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`;
 
   return (
-    <div role="search" aria-label="Document Search" className="fixed top-0 right-0 z-50 flex items-center gap-2 p-2 bg-surface border border-border-theme rounded-bl-lg shadow-lg">
+    <div role="search" aria-label={isFolderMode ? 'Folder Search' : 'Document Search'} className={`fixed top-0 right-0 z-50 p-2 bg-surface border border-border-theme rounded-bl-lg shadow-lg ${isFolderMode ? 'w-96' : 'flex items-center gap-2'}`}>
+      <div className='flex items-center gap-2'>
       <input
         ref={inputRef}
         type="text"
@@ -57,11 +68,11 @@ export function SearchBar({
         className="w-56 px-3 py-1.5 text-sm rounded border border-border-theme bg-bg text-text-base placeholder:text-text-muted outline-none focus:ring-2 focus:ring-accent transition-shadow"
         onChange={(e) => setLocalQuery(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Search in the document"
-        aria-label="Search in document"
+        placeholder={isFolderMode ? "Search in folder" : "Search in the document"}
+        aria-label={isFolderMode ? "Search in folder" : "Search in document"}
       />
 
-     {query && (
+     {query && !isFolderMode && (
         <div role="status" aria-live="polite" className="flex items-center gap-2">
           {matchCount > 0 ? (
             <span className="min-w-15 font-mono text-sm text-text-muted">
@@ -74,12 +85,76 @@ export function SearchBar({
           )}
         </div>
       )}
-
       <div className="flex gap-1" role="group" aria-label="Search navigation">
-        <button onClick={onPrev} disabled={prevDisable} aria-label="Previous match" className={newButtonClass(prevDisable)}><Icons.ArrowUp size={18} /></button>
-        <button onClick={onNext} disabled={nextDisable} aria-label="Next match" className={newButtonClass(nextDisable)}><Icons.ArrowDown size={18} /></button>
-        <button onClick={onClose} aria-label="Close search" className={newButtonClass(false)}><Icons.X size={18} /></button>
+          {!isFolderMode && (
+            <>
+              <button
+                onClick={onPrev}
+                disabled={prevDisable}
+                aria-label="Previous match"
+                className={newButtonClass(prevDisable)}
+              >
+                <Icons.ArrowUp size={18} />
+              </button>
+              <button
+                onClick={onNext}
+                disabled={nextDisable}
+                aria-label="Next match"
+                className={newButtonClass(nextDisable)}
+              >
+                <Icons.ArrowDown size={18} />
+              </button>
+            </>
+          )}
+          <button
+            onClick={onClose}
+            aria-label="Close search"
+            className={newButtonClass(false)}
+          >
+            <Icons.X size={18} />
+          </button>
+        </div>
       </div>
+      {isFolderMode && (
+        <div className="mt-2 max-h-80 overflow-y-auto border-t border-border-theme pt-2">
+          {!hasFolder && (
+            <div className="px-2 py-3 text-sm text-text-muted">
+              Open a folder to search.
+            </div>
+          )}
+          {hasFolder && isSearchingFolder && (
+            <div className="px-2 py-3 text-sm text-text-muted">
+              Searching...
+            </div>
+          )}
+          {hasFolder &&
+            query &&
+            !isSearchingFolder &&
+            folderResults.length === 0 && (
+              <div className="px-2 py-3 text-sm text-text-muted">
+                No results
+              </div>
+            )}
+          {folderResults.map((result) => (
+            <button
+              key={`${result.filePath}:${result.line}:${result.preview}`}
+              type="button"
+              className="block w-full rounded px-2 py-2 text-left hover:bg-accent-bg"
+              onClick={() => onOpenFolderResult?.(result)}
+            >
+              <div className="flex items-center justify-between gap-2 text-sm text-text-base">
+                <span className="truncate font-medium">{result.fileName}</span>
+                <span className="shrink-0 font-mono text-xs text-text-muted">
+                  :{result.line}
+                </span>
+              </div>
+              <div className="mt-1 truncate text-xs text-text-muted">
+                {result.preview}
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
