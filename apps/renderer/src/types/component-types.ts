@@ -1,7 +1,7 @@
 import React from 'react';
 import { APPTHEMES } from '../utils/constants/theme-constants';
 import { RecentFile } from '@package/shared-types/dist/src/recentfile-type';
-import { FileType } from '@package/shared-types';
+import { FileType, FolderSearchResult } from '@package/shared-types';
 export interface ErrorProps {
   message: string;
   onRetry: () => void;
@@ -64,6 +64,13 @@ export interface SearchBarProps {
   onNext: () => void;
   onPrev: () => void;
   onClose: () => void;
+  mode?: 'document' | 'folder';
+  folderResults?: FolderSearchResult[];
+  isSearchingFolder?: boolean;
+  onOpenFolderResult?: (result: FolderSearchResult) => void;
+  hasFolder?: boolean;
+  caseSensitive?: boolean;
+  onToggleCaseSensitive?: () => void;
 }
 
 export type ReadingWidth = 'narrow' | 'default' | 'wide' | 'full';
