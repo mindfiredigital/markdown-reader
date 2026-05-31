@@ -65,9 +65,10 @@ jobs:
         run: pnpm audit --audit-level=high
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.28.0
         with:
           scan-type: fs
           scan-ref: .
           severity: CRITICAL,HIGH
           format: table
+          exit-code: 1

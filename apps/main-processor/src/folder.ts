@@ -10,7 +10,12 @@ export async function getFolder(
   currentDepth = 0,
   seenPaths = new Set<string>()
 ): Promise<FileType> {
-  const realFolderPath = await realpath(folderPath);
+  let realFolderPath: string;
+  try {
+    realFolderPath = await realpath(folderPath);
+  } catch {
+    realFolderPath = folderPath;
+  }
   if (currentDepth >= maxDepth || seenPaths.has(realFolderPath)) {
     return {
       name: basename(folderPath),

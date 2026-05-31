@@ -54,7 +54,7 @@ export default function App() {
   useEffect(()=>{
     if(!window.api?.getAppVersion) return;
     void window.api.getAppVersion().then(setAppVersion).catch(()=>{});
-  })
+  },[])
   
   useEffect(()=>{
     if(folderTree){
