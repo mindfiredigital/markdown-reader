@@ -38,4 +38,11 @@ describe('search folder', () => {
     const upper = await searchFolder(DIR, 'REACT');
     expect(lower.length).toBe(upper.length);
   });
+
+  it('should reject with an error if the directory does not exist', async () => {
+    const nonExistentDir = join(DIR, 'does-not-exist-folder');
+
+    const results = await searchFolder(nonExistentDir, 'React');
+    expect(results).toEqual([]);
+  });
 });
