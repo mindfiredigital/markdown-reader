@@ -13,6 +13,7 @@ import {
   resolveDirectoryPath,
   resolveWatchedMarkdownPath,
 } from './utils/helper/ipc-path-resolver';
+import { searchFolder } from './folder-search';
 
 //registers all IPC handlers for main process
 export function registerIPCHandlers(): void {
@@ -169,4 +170,14 @@ export function registerIPCHandlers(): void {
       await exportDOCX(html, css, outPath);
     }
   );
+
+  ipcMain.handle(IPC_CONSTANTS.SEARCH_FOLDER, async (event, folderPath: string, query: string) => {
+    if (!validateSender(event)) {
+      throw new Error('Untrusted sender');
+    }
+
+    const safeFolderPath = await resolveDirectoryPath(folderPath);
+    allowedFolderRoots.add(safeFolderPath);
+    return await searchFolder(safeFolderPath, query);
+  });
 }
