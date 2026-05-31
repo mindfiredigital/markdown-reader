@@ -6,6 +6,7 @@ export function useMenuEvents({
   onOpenFile,
   onOpenFolder,
   onSearchDocument,
+  onSearchFolder,
   onToggleToc,
   onToggleBrowser,
   onFocusMode,
@@ -26,7 +27,8 @@ export function useMenuEvents({
     window.api.onMenuEvent(MENU_EVENTS.OPEN_FILE, onOpenFile);
     window.api.onMenuEvent(MENU_EVENTS.OPEN_FOLDER, onOpenFolder);
     window.api.onMenuEvent(MENU_EVENTS.SEARCH_DOCUMENT, onSearchDocument);
-    window.api.onMenuEvent(MENU_EVENTS.TOGGLE_TOC, onToggleToc);
+    (window.api.onMenuEvent(MENU_EVENTS.SEARCH_FOLDER, onSearchFolder),
+      window.api.onMenuEvent(MENU_EVENTS.TOGGLE_TOC, onToggleToc));
     window.api.onMenuEvent(MENU_EVENTS.TOGGLE_BROWSER, onToggleBrowser);
     window.api.onMenuEvent(MENU_EVENTS.FOCUS_MODE, onFocusMode);
     window.api.onMenuEvent(MENU_EVENTS.CYCLE_THEME, onCycleTheme);
@@ -47,6 +49,7 @@ export function useMenuEvents({
     onOpenFile,
     onOpenFolder,
     onSearchDocument,
+    onSearchFolder,
     onToggleToc,
     onToggleBrowser,
     onFocusMode,
