@@ -106,6 +106,7 @@ export interface Tab {
   filePath: string;
   fileName: string;
   html: string;
+  toc?: TOCType[];
   scrollTop: number;
   fontSize: number;
 }
@@ -116,7 +117,7 @@ export interface TabState {
 }
 
 export type TabAction =
-  | { type: 'OPEN_TAB'; payload: { filePath: string; html?: string } }
+  | { type: 'OPEN_TAB'; payload: { filePath: string; html?: string; toc?: TOCType[] } }
   | { type: 'CLOSE_TAB'; payload: { tabId: string } }
   | { type: 'SWITCH_TAB'; payload: { tabId: string } }
   | {
@@ -124,6 +125,7 @@ export type TabAction =
       payload: {
         tabId: string;
         html?: string;
+        toc?: TOCType[];
         scrollTop?: number;
         fontSize?: number;
       };

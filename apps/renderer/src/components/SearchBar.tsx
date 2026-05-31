@@ -24,6 +24,10 @@ export function SearchBar({
     inputRef.current?.focus();
   }, []);
 
+  useEffect(() => {
+    setLocalQuery(query);
+  }, [query]);
+
   useEffect(()=>{
     const handler=setTimeout(()=>{
       onQueryChange(localQuery);
@@ -55,7 +59,7 @@ export function SearchBar({
   const newButtonClass=(isDisable:boolean)=>`${btnClass} ${isDisable? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`;
 
   return (
-    <div role="search" aria-label={isFolderMode ? 'Folder Search' : 'Document Search'} className="fixed top-0 right-0 z-50 flex items-center gap-2 p-2 bg-surface border border-border-theme rounded-bl-lg shadow-lg">
+    <div role="search" aria-label={isFolderMode ? 'Folder Search' : 'Document Search'} className={`fixed top-0 right-0 z-50 p-2 bg-surface border border-border-theme rounded-bl-lg shadow-lg ${isFolderMode ? 'w-96' : 'flex items-center gap-2'}`}>
       <div className='flex items-center gap-2'>
       <input
         ref={inputRef}

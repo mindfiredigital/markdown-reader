@@ -121,9 +121,10 @@ useShortcuts({
         )}
         {isFolderSearchOpen && (
           <SearchBar
+            mode="folder"
             query={folderQuery}
-            matchCount={matchCount}
-            currentMatch={currentMatch}
+            matchCount={folderResults.length}
+            currentMatch={folderResults.length?1:0}
             onQueryChange={searchFolder}
             onNext={() => {}}
             onPrev={() => {}}
@@ -183,7 +184,7 @@ useShortcuts({
             )}
             {!focusMode && (
               <Sidebar
-                tocItems={extractTOC(activeTab.html)}
+                tocItems={activeTab.toc??extractTOC(activeTab.html)}
                 activeId={activeId}
                 onSelect={scrollToHeading}
                 isVisible={sidebarOpen}
