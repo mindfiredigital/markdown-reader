@@ -1,7 +1,11 @@
 import { describe, it, expect } from 'vitest';
+import { mkdtemp, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 import { buildDocument } from '../src/export/buildDocument';
 import { sanitizeCss } from '../src/export/sanitizeCss';
 import { getImage } from '../src/export/getImage';
+import { inlineImages } from '../src/export/inlineImage';
 
 describe('build html document', () => {
   it('wraps content in a valid HTML5 document shell', () => {
@@ -48,5 +52,15 @@ describe('get image of mime type', () => {
     expect(getImage('image.jpeg')).toBe('image/jpeg');
     expect(getImage('image.svg')).toBe('image/svg+xml');
     expect(getImage('image.webp')).toBe('image/webp');
+  });
+});
+
+describe('inline images for HTML export', () => {
+  it('keeps local images as base 64 data URIs', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'markdown-reader-export-'));
+    const imagePath = join(dir, 'image.png');
+    await writeFile(imagePath, Buffer.from([137, 80, 78, 71]));
+    const html = await inlineImages(`<img src="${imagePath}"/>`);
+    expect(html).toContain('src="data:image/png;base64,');
   });
 });
