@@ -121,7 +121,7 @@ useShortcuts({
         )}
         {isFolderSearchOpen && (
           <SearchBar
-            query={query}
+            query={folderQuery}
             matchCount={matchCount}
             currentMatch={currentMatch}
             onQueryChange={searchFolder}
@@ -136,6 +136,8 @@ useShortcuts({
                 openSearch();
                 setQuery(folderQuery);
                 closeFolderSearch();
+              }).catch(() => {
+                setShowToast(true);
               });
             }}
 

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import { FolderSearchResult } from '@package/shared-types';
 
 export function useFolderSearch(folderPath: string | null) {
@@ -6,6 +6,7 @@ export function useFolderSearch(folderPath: string | null) {
   const [folderQuery, setFolderQuery] = useState('');
   const [folderResults, setFolderResults] = useState<FolderSearchResult[]>([]);
   const [isSearchingFolder, setIsSearchingFolder] = useState(false);
+  const requestId = useRef(0);
 
   const openFolderSearch = useCallback(() => setIsFolderSearchOpen(true), []);
   const closeFolderSearch = useCallback(() => {
@@ -17,17 +18,19 @@ export function useFolderSearch(folderPath: string | null) {
   const searchFolder = useCallback(
     async (query: string) => {
       setFolderQuery(query);
-      if (!folderPath || !query.trim()) {
+      if (!folderPath || !query.trim() || !window.api?.searchFolder) {
         setFolderResults([]);
         return;
       }
-
+      const current = ++requestId.current;
       setIsSearchingFolder(true);
       try {
         const results = await window.api.searchFolder(folderPath, query);
-        setFolderResults(results);
+        if (current === requestId.current) setFolderResults(results);
+      } catch {
+        if (current === requestId.current) setFolderResults([]);
       } finally {
-        setIsSearchingFolder(false);
+        if (current === requestId.current) setIsSearchingFolder(false);
       }
     },
     [folderPath]

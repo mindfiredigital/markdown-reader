@@ -16,7 +16,14 @@ export async function searchFolder(
   const files = await collectMarkdownFiles(folderPath);
 
   for (const filePath of files) {
-    const content = await readFile(filePath, 'utf-8');
+    let content: string;
+    try {
+      content = await readFile(filePath, 'utf-8');
+    } catch (error) {
+      const code = (error as { code?: string }).code;
+      if (code === 'ENOENT' || code === 'EACCES' || code === 'EPERM') continue;
+      throw error;
+    }
     const lines = content.split(/\r?\n/);
     for (let index = 0; index < lines.length; index += 1) {
       const lineText = lines[index] ?? '';
