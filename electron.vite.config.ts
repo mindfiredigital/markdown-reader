@@ -11,9 +11,6 @@ export default defineConfig({
       lib: {
         entry: resolve(__dirname, 'apps/main-processor/src/index.ts'),
       },
-      rollupOptions: {
-        external: ['html-to-docx', 'core-util-is'],
-      },
     },
   },
   preload: {

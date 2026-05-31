@@ -27,6 +27,7 @@ export function useFilePersistence({
         payload: {
           tabId: activeTab.id,
           html: result.html,
+          ...(result.toc ? { toc: result.toc } : {}),
         },
       });
       requestAnimationFrame(() => {

@@ -8,6 +8,7 @@
     "build": "pnpm exec tsc",
     "lint": "eslint ."
   },
+  "type": "module",
   "keywords": [],
   "author": "Mindfire-digital",
   "license": "ISC",

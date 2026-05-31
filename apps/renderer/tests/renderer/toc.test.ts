@@ -4,47 +4,63 @@ import { extractTOC } from '../../src/renderer/toc';
 describe('extract table of contents', () => {
   //test 1: checks empty array return from no heading
   it('returns empty array for HTML with no headings', () => {
-    const html = '<p>My name is Ashminita</p>';
-    const toc = extractTOC(html);
+    const markdown = 'My name is Ashminita';
+    const toc = extractTOC(markdown);
     expect(toc).toEqual([]);
   });
 
   // test 2:- checks single heading extraction
   it('extracts a single H1 headings', () => {
-    const html = '<h1 id="intro">Introduction</h1><p>text</p>';
-    const toc = extractTOC(html);
+    const markdown = '# Introduction\n\ntext';
+    const toc = extractTOC(markdown);
     expect(toc).toHaveLength(1);
-    expect(toc[0]).toEqual({ id: 'intro', text: 'Introduction', level: 1 });
+    expect(toc[0]).toEqual({ id: 'introduction', text: 'Introduction', level: 1 });
   });
 
   //test 3:-headings without id generate a slug from the text
   it('generates a id when heading has no id attribute', () => {
-    const html = '<h2>Getting Started</h2>';
+    const html = '## Getting Started';
     const toc = extractTOC(html);
     expect(toc[0]?.id).toBe('getting-started');
   });
 
   //test 4:- checks duplicate id
   it('generates unique ids for duplicate headings', () => {
-    const html = `<h2>Duplicate</h2>
-  <h2>Duplicate</h2>`;
-    const toc = extractTOC(html);
+    const markdown = `## Duplicate
+  ## Duplicate`;
+    const toc = extractTOC(markdown);
     expect(toc[0].id).toBe('duplicate');
     expect(toc[1].id).toBe('duplicate-1');
   });
 
   //test 5:-checks inline formating
   it('handles headings with inline HTML formating', () => {
-    const html = `<h2><em>Hello</em> World</h2>`;
-    const toc = extractTOC(html);
+    const markdown = `## <em>Hello</em> World`;
+    const toc = extractTOC(markdown);
     expect(toc[0].text).toBe('Hello World');
     expect(toc[0].id).toBe('hello-world');
   });
 
   //test 6:- checks code spans
   it('handle headings with code spans', () => {
-    const html = `<h2>Install <code>npm</code></h2>`;
-    const toc = extractTOC(html);
+    const markdown = '## Install `npm`';
+    const toc = extractTOC(markdown);
     expect(toc[0].text).toBe('Install npm');
+  });
+
+  it('does not extract headings from fenced code blocks', () => {
+    const markdown = `# Real Heading
+
+\`\`\`python
+# Not a heading
+## Also not a heading
+\`\`\``;
+    const toc = extractTOC(markdown);
+    expect(toc).toEqual([{ id: 'real-heading', text: 'Real Heading', level: 1 }]);
+  });
+
+  it('handles headings with links', () => {
+    const toc = extractTOC('## Read [the docs](https://example.com)');
+    expect(toc[0]).toEqual({ id: 'read-the-docs', text: 'Read the docs', level: 2 });
   });
 });

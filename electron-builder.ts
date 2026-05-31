@@ -22,6 +22,10 @@ const config: Configuration = {
       from: 'assets',
       to: 'assets',
     },
+    {
+      from: 'assets/unsigned-install-notice.txt',
+      to: 'UNSIGNED_INSTALL_NOTICE.txt',
+    },
   ],
   asar: true,
   fileAssociations: [
@@ -59,6 +63,7 @@ const config: Configuration = {
     createDesktopShortcut: true,
     createStartMenuShortcut: true,
     shortcutName: 'Markdown Reader',
+    license: 'assets/unsigned-install-notice.txt',
   },
   linux: {
     icon: 'assets/icons',
