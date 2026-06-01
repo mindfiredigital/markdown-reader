@@ -1,6 +1,7 @@
 import { FileType } from './file-types.js';
 import { RecentFile } from './recentfile-type.js';
 import { AppSettings } from './settings-type.js';
+import { FolderSearchResult } from './search-type.js';
 
 // markdown reader api
 export type MarkdownReaderAPI = {
@@ -16,6 +17,7 @@ export type MarkdownReaderAPI = {
   getSettings(): Promise<AppSettings>;
   saveSettings(settings: Partial<AppSettings>): Promise<AppSettings>;
   getAppVersion(): Promise<string>;
+  searchFolder(path: string, query: string): Promise<FolderSearchResult[]>;
   onFileChanged: (callback: (path: string) => void) => void;
   removeFileChangedListener: () => void;
   onMenuEvent: (event: string, callback: (payload?: unknown) => void) => () => void;

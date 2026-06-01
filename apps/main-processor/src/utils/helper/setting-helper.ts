@@ -76,10 +76,11 @@ export async function writeSettingsAtomically(
 
   try {
     await mkdir(dir, { recursive: true });
-    await writeFile(tempPath, JSON.stringify(nextSettings, null, 2), 'utf-8');
 
-    const tempFile = await open(tempPath, 'r');
+    const tempFile = await open(tempPath, 'w');
     try {
+      const data = JSON.stringify(nextSettings, null, 2);
+      await tempFile.writeFile(data, 'utf-8');
       await tempFile.sync();
     } finally {
       await tempFile.close();

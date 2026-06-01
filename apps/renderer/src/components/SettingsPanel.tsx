@@ -14,14 +14,22 @@ export function SettingsPanel({
   const dialogRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (!isOpen) return;
+      if (!isOpen) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
     dialogRef.current?.focus();
+   return () => previouslyFocused?.focus();
+    
+  }, [isOpen]);
+
+  useEffect(()=>{
+    if(!isOpen) return;
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [isOpen, onClose]);
+
+  }, [isOpen, onClose])
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>

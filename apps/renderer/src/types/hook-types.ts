@@ -29,6 +29,7 @@ export interface UseMenuEventsProps {
   onOpenFile: () => void;
   onOpenFolder: () => void;
   onSearchDocument: () => void;
+  onSearchFolder: () => void;
   onToggleToc: () => void;
   onToggleBrowser: () => void;
   onFocusMode: () => void;
@@ -52,6 +53,7 @@ export interface UseShortcutsProps {
   onToggleFocusMode: () => void;
   onToggleTheme: () => void;
   onOpenSearch: () => void;
+  onOpenFolderSearch: () => void;
   onCloseSearch: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;

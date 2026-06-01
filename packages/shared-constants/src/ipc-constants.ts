@@ -9,6 +9,7 @@ export const IPC_CONSTANTS = {
   GET_SETTINGS: 'getSettings',
   SAVE_SETTINGS: 'saveSettings',
   GET_APP_VERSION: 'getAppVersion',
+  SEARCH_FOLDER: 'searchFolder',
   WATCH_FILE: 'watchFile',
   UNWATCH_FILE: 'unWatchFile',
   FILE_CHANGED: 'file-changed',

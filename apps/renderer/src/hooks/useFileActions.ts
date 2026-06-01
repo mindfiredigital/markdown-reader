@@ -4,12 +4,15 @@ import { FileActionProps } from '../types/hook-types';
 
 export function useFileActions({ loadFile, dispatch }: FileActionProps) {
   const [folderTree, setFolderTree] = useState<FileType | null>(null);
+  const [folderPath, setFolderPath] = useState<string | null>(null);
 
   const openFolder = useCallback(async () => {
+    if (!window.api) return;
     const folderPath = await window.api.openFolderDialog();
     if (!folderPath) return;
     const tree = await window.api.readFolder(folderPath);
     setFolderTree(tree);
+    setFolderPath(folderPath);
   }, []);
 
   const loadFileInTab = useCallback(
@@ -36,5 +39,5 @@ export function useFileActions({ loadFile, dispatch }: FileActionProps) {
     });
   }, [loadFileInTab]);
 
-  return { folderTree, setFolderTree, openFolder, loadFileInTab, openFileDialog };
+  return { folderTree, folderPath, setFolderTree, openFolder, loadFileInTab, openFileDialog };
 }

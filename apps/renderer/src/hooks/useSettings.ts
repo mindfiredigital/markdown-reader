@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FONT_SIZE, WIDTH_MAP } from '../types/component-types';
-import { AppSettings, DEFAULT_SETTINGS, ReadingWidth } from '@package/shared-types';
+import { AppSettings, DEFAULT_SETTINGS } from '@package/shared-types';
 
 export function useSettings() {
-  const [fontSize, setFontSize] = useState(FONT_SIZE.DEFAULT);
-  const [readingWidth, setReadingWidth] = useState<ReadingWidth>('default');
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
+  const fontSize = settings.fontSize;
+  const readingWidth = settings.readingWidth;
 
   useEffect(() => {
     if (!window.api) return;
@@ -14,15 +14,12 @@ export function useSettings() {
       .getSettings()
       .then((savedSettings) => {
         setSettings(savedSettings);
-        setFontSize(savedSettings.fontSize);
-        setReadingWidth(savedSettings.readingWidth);
       })
       .catch(() => {});
   }, []);
 
   useEffect(() => {
     document.documentElement.style.setProperty('--font-size-content', `${fontSize}px`);
-    setSettings((current) => ({ ...current, fontSize }));
   }, [fontSize]);
 
   useEffect(() => {
@@ -30,49 +27,50 @@ export function useSettings() {
       '--reading-width',
       WIDTH_MAP[readingWidth] ?? '768px'
     );
-    setSettings((current) => ({ ...current, readingWidth }));
   }, [readingWidth]);
 
   useEffect(() => {
-    const styleId = 'markdown-reader-custon-css';
+    const styleId = 'markdown-reader-custom-css';
     let style = document.getElementById(styleId) as HTMLStyleElement | null;
     if (!style) {
       style = document.createElement('style');
       style.id = styleId;
       document.head.appendChild(style);
     }
-    style.textContent = settings.customCss;
+    style.textContent = settings.customCss || '';
   }, [settings.customCss]);
 
   const increaseFontSize = useCallback(() => {
-    setFontSize((prev) => Math.min(FONT_SIZE.MAX, prev + FONT_SIZE.INCREMENT));
+    setSettings((current) => ({
+      ...current,
+      fontSize: Math.min(FONT_SIZE.MAX, current.fontSize + FONT_SIZE.INCREMENT),
+    }));
   }, []);
 
   const decreaseFontSize = useCallback(() => {
-    setFontSize((prev) => Math.max(FONT_SIZE.MIN, prev - FONT_SIZE.INCREMENT));
+    setSettings((current) => ({
+      ...current,
+      fontSize: Math.max(FONT_SIZE.MIN, current.fontSize - FONT_SIZE.INCREMENT),
+    }));
   }, []);
 
   const resetFontSize = useCallback(() => {
-    setFontSize(FONT_SIZE.DEFAULT);
+    setSettings((current) => ({ ...current, fontSize: FONT_SIZE.DEFAULT }));
   }, []);
 
-  const updateSettings = useCallback(
-    async (partial: Partial<AppSettings>) => {
-      if (!window.api) {
-        const next = { ...settings, ...partial };
-        setSettings(next);
-        setFontSize(next.fontSize);
-        setReadingWidth(next.readingWidth);
-        return;
-      }
+  const updateSettings = useCallback(async (partial: Partial<AppSettings>) => {
+    if (!window.api) {
+      setSettings((current) => ({ ...current, ...partial }));
+      return;
+    }
 
+    try {
       const next = await window.api.saveSettings(partial);
       setSettings(next);
-      setFontSize(next.fontSize);
-      setReadingWidth(next.readingWidth);
-    },
-    [settings]
-  );
+    } catch {
+      setSettings((current) => ({ ...current, ...partial }));
+    }
+  }, []);
   return {
     settings,
     fontSize,
@@ -80,7 +78,6 @@ export function useSettings() {
     increaseFontSize,
     decreaseFontSize,
     resetFontSize,
-    setReadingWidth,
     updateSettings,
   };
 }

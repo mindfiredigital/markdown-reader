@@ -13,6 +13,7 @@ import {
   resolveDirectoryPath,
   resolveWatchedMarkdownPath,
 } from './utils/helper/ipc-path-resolver';
+import { searchFolder } from './folder-search';
 import { AppSettings } from '@package/shared-types';
 import { getSettings } from './settings/get-settings';
 import { saveSettings } from './settings/save-settings';
@@ -193,4 +194,20 @@ export function registerIPCHandlers(): void {
       await exportDOCX(html, css, outPath);
     }
   );
+
+  ipcMain.handle(IPC_CONSTANTS.SEARCH_FOLDER, async (event, folderPath: string, query: string) => {
+    if (!validateSender(event)) {
+      throw new Error('Untrusted sender');
+    }
+
+    const safeFolderPath = await resolveDirectoryPath(folderPath);
+    allowedFolderRoots.add(safeFolderPath);
+    const isAllowed = Array.from(allowedFolderRoots).some(
+      (root) => safeFolderPath === root || safeFolderPath.startsWith(`${root}/`)
+    );
+    if (!isAllowed) {
+      throw new Error('Folder path is not authorized');
+    }
+    return await searchFolder(safeFolderPath, query);
+  });
 }

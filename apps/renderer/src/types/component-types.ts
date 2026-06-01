@@ -12,6 +12,7 @@ import {
   NARROW_WIDTH,
   WIDE_WIDTH,
 } from '@package/shared-constants';
+import { FolderSearchResult } from '@package/shared-types';
 export interface ErrorProps {
   message: string;
   onRetry: () => void;
@@ -67,13 +68,21 @@ export interface ToastProps {
 }
 
 export interface SearchBarProps {
-  query: string;
+  query?: string;
+  folderQuery?: string;
   matchCount: number;
   currentMatch: number;
   onQueryChange: (q: string) => void;
   onNext: () => void;
   onPrev: () => void;
   onClose: () => void;
+  mode?: 'document' | 'folder';
+  folderResults?: FolderSearchResult[];
+  isSearchingFolder?: boolean;
+  onOpenFolderResult?: (result: FolderSearchResult) => void;
+  hasFolder?: boolean;
+  caseSensitive?: boolean;
+  onToggleCaseSensitive?: () => void;
 }
 
 export const FONT_SIZE = {

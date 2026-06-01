@@ -13,6 +13,7 @@ import { SearchBar } from './components/SearchBar';
 import { useSettings } from './hooks/useSettings';
 import { StatusBar } from './components/StatusBar';
 import { FileBrowser } from './components/FileBrowser';
+import { extractTOC } from './renderer/toc';
 import { TabBar } from './components/TabBar';
 import { useTabStore } from './hooks/useTabStore';
 import { Icons } from './utils/constants/icon-contants';
@@ -28,6 +29,7 @@ import { useFileActions } from './hooks/useFileActions';
 import { useOpenFilePath } from './hooks/useOpenFilePath';
 import { useFilePersistence } from './hooks/useFilePersistence';
 import { ReaderToolbar } from './components/ReaderToolbar';
+import { useFolderSearch } from './hooks/useFolderSearch';
 import { SettingsPanel } from './components/SettingsPanel';
 
 export default function App() {
@@ -44,10 +46,11 @@ export default function App() {
   const {exportHtml,exportPdf,exportDocx}=useExport(activeTab);
   const {goToNextTab,goToPreviousTab,closeActiveTab}=useTabNavigation(state.tabs,state.activeTabId,dispatch);
   const {sidebarOpen,setSidebarOpen,fileBrowserOpen,setFileBrowserOpen,focusMode,toggleFocusMode,toggleSidebar,toggleFileBrowser}=useLayout();
-  const {folderTree,openFolder,loadFileInTab,openFileDialog}=useFileActions({loadFile,dispatch});
+  const {folderTree,folderPath,openFolder,loadFileInTab,openFileDialog}=useFileActions({loadFile,dispatch});
   const {isDraggingFile,handleDragEnter,handleDragOver,handleDragLeave,handleDrop}=useDragDrop(loadFileInTab);
   useOpenFilePath(loadFileInTab);
   const {scroll}=useFilePersistence({activeTab,loadFile,dispatch,contentRef,setShowToast});
+  const {isFolderSearchOpen,folderQuery,folderResults,isSearchingFolder,openFolderSearch,closeFolderSearch,searchFolder}=useFolderSearch(folderPath)
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [appVersion, setAppVersion] = useState('');
 
@@ -62,10 +65,20 @@ export default function App() {
     }
   },[folderTree,setFileBrowserOpen]);
 
+  useEffect(()=>{
+    if(!query || ! isSearchOpen) return;
+    requestAnimationFrame(()=>{
+      const marks=contentRef.current?.querySelectorAll('mark.search-match');
+      const target = marks?.[Math.max(0, currentMatch - 1)];
+      target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    })
+  },[currentMatch, isSearchOpen, query, activeTab?.html])
+
   useMenuEvents({
   onOpenFile: openFileDialog,
   onOpenFolder: openFolder,
   onSearchDocument: openSearch,
+  onSearchFolder: openFolderSearch,
   onToggleToc: toggleSidebar,
   onToggleBrowser: toggleFileBrowser,
   onFocusMode: toggleFocusMode,
@@ -89,6 +102,7 @@ useShortcuts({
   onToggleFocusMode: toggleFocusMode,
   onToggleTheme: toggleTheme,
   onOpenSearch: openSearch,
+  onOpenFolderSearch: openFolderSearch,
   onCloseSearch: closeSearch,
   onZoomIn: increaseFontSize,
   onZoomOut: decreaseFontSize,
@@ -115,6 +129,31 @@ useShortcuts({
             onNext={goToNextMatch}
             onPrev={goToPrevMatch}
             onClose={closeSearch}
+          />
+        )}
+        {isFolderSearchOpen && (
+          <SearchBar
+            mode="folder"
+            folderQuery={folderQuery}
+            matchCount={folderResults.length}
+            currentMatch={folderResults.length?1:0}
+            onQueryChange={searchFolder}
+            onNext={() => {}}
+            onPrev={() => {}}
+            onClose={closeFolderSearch}
+            folderResults={folderResults}
+            isSearchingFolder={isSearchingFolder}
+            hasFolder={Boolean(folderPath)}
+            onOpenFolderResult={(result) => {
+              void loadFileInTab(result.filePath).then(() => {
+                openSearch();
+                setQuery(folderQuery);
+                closeFolderSearch();
+              }).catch(() => {
+                setShowToast(true);
+              });
+            }}
+
           />
         )}
         {!focusMode && (
@@ -157,7 +196,7 @@ useShortcuts({
             )}
             {!focusMode && (
               <Sidebar
-                tocItems={activeToc}
+                tocItems={activeTab.toc??extractTOC(activeTab.html)}
                 activeId={activeId}
                 onSelect={scrollToHeading}
                 isVisible={sidebarOpen}
