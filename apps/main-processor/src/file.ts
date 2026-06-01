@@ -41,7 +41,9 @@ export async function watchFile(
     watcher.on('error', (error) => {
       const watcherError = error instanceof Error ? error : new Error(String(error));
 
-      void unWatchFile(filePath).then(() => onError?.(watcherError));
+      void unWatchFile(filePath)
+        .catch(() => {})
+        .finally(() => onError?.(watcherError));
 
       reject(watcherError);
     });
@@ -63,7 +65,9 @@ export async function watchFile(
     debounceTimers.set(filePath, timer);
   });
   watcher.on('unlink', () => {
-    void unWatchFile(filePath).then(() => onDeleted?.());
+    void unWatchFile(filePath)
+      .catch(() => {})
+      .finally(() => onDeleted?.());
   });
 }
 

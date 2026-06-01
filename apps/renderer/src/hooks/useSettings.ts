@@ -56,19 +56,19 @@ export function useSettings() {
   }, []);
 
   const increaseFontSize = useCallback(() => {
-    void updateSettings({
+    return updateSettings({
       fontSize: Math.min(FONT_SIZE.MAX, settings.fontSize + FONT_SIZE.INCREMENT),
     });
   }, [settings.fontSize, updateSettings]);
 
   const decreaseFontSize = useCallback(() => {
-    void updateSettings({
+    return updateSettings({
       fontSize: Math.max(FONT_SIZE.MIN, settings.fontSize - FONT_SIZE.INCREMENT),
     });
   }, [settings.fontSize, updateSettings]);
 
   const resetFontSize = useCallback(() => {
-    void updateSettings({ fontSize: FONT_SIZE.DEFAULT });
+    return updateSettings({ fontSize: FONT_SIZE.DEFAULT });
   }, [updateSettings]);
 
   return {

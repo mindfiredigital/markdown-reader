@@ -22,18 +22,19 @@ if (typeof window !== 'undefined' && window.SVGElement) {
   }
 }
 
+let mockSettings = {
+  fontSize: 16,
+  readingWidth: 'default',
+  customCss: '',
+};
+
 Object.defineProperty(window, 'api', {
   value: {
-    getSettings: vi.fn(async () => ({
-      fontSize: 16,
-      readingWidth: 'default',
-      customCss: '',
-    })),
-    saveSettings: vi.fn(async (partial) => ({
-      fontSize: partial.fontSize ?? 16,
-      readingWidth: 'default',
-      customCss: '',
-    })),
+    getSettings: vi.fn(async () => mockSettings),
+    saveSettings: vi.fn(async (partial) => {
+      mockSettings = { ...mockSettings, ...partial };
+      return mockSettings;
+    }),
   },
   writable: true,
 });
