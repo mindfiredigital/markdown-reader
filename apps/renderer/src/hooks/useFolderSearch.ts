@@ -19,11 +19,13 @@ export function useFolderSearch(folderPath: string | null) {
   const searchFolder = useCallback(
     async (query: string) => {
       setFolderQuery(query);
+      const current = ++requestId.current;
       if (!folderPath || !query.trim() || !window.api?.searchFolder) {
         setFolderResults([]);
+        setIsSearchingFolder(false);
         return;
       }
-      const current = ++requestId.current;
+
       setIsSearchingFolder(true);
       try {
         const results = await window.api.searchFolder(folderPath, query);
