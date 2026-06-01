@@ -1,5 +1,6 @@
 import { app } from 'electron';
 import path from 'path';
+import { mkdir, open, rename, unlink, writeFile } from 'node:fs/promises';
 import { AppSettings } from '@package/shared-types';
 import { THEMES } from '@package/shared-constants';
 import { SETTINGS_KEYS, READING_WIDTHS } from '../constants/setting-constants';
@@ -63,4 +64,48 @@ export function validateSettings(partial: Partial<AppSettings>): Partial<AppSett
   }
 
   return validated;
+}
+
+/* writes settings to disk without risking file corruption*/
+export async function writeSettingsAtomically(
+  settingsPath: string,
+  nextSettings: AppSettings
+): Promise<void> {
+  const dir = path.dirname(settingsPath);
+  const tempPath = `${settingsPath}.tmp`;
+
+  try {
+    await mkdir(dir, { recursive: true });
+    await writeFile(tempPath, JSON.stringify(nextSettings, null, 2), 'utf-8');
+
+    const tempFile = await open(tempPath, 'r');
+    try {
+      await tempFile.sync();
+    } finally {
+      await tempFile.close();
+    }
+    await rename(tempPath, settingsPath);
+  } catch (error) {
+    await unlink(tempPath).catch(() => {});
+    throw error;
+  }
+}
+
+/* Runs an asynchronous operation sequentially to prevent concurrent execution*/
+let mutex: Promise<void> = Promise.resolve();
+
+export async function runExclusive<T>(operation: () => Promise<T>): Promise<T> {
+  const previous = mutex;
+  let release!: () => void;
+  mutex = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+
+  await previous.catch(() => {});
+
+  try {
+    return await operation();
+  } finally {
+    release();
+  }
 }
