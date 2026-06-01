@@ -5,6 +5,7 @@ import {
   isPathInside,
   ALLOWED_MARKDOWN_EXTENSIONS,
   allowedFolderRoots,
+  allowedMarkdownFiles,
 } from '../constants/ipc-validation';
 
 /* Validates, resolves symlink and ensures a path is a valid Markdown file inside an optional root directory */
@@ -54,16 +55,17 @@ export async function resolveDirectoryPath(folderPath: string): Promise<string> 
 
 /*Resolves a Markdown file path against a dynamic set of allowed root folders throwing an error if it matches none*/
 export async function resolveWatchedMarkdownPath(filePath: string): Promise<string> {
-  let lastError: unknown;
+  const safeFilePath = await resolveMarkdownFilePath(filePath);
+
+  if (allowedMarkdownFiles.has(safeFilePath)) {
+    return safeFilePath;
+  }
   for (const allowedRoot of allowedFolderRoots) {
     try {
       return await resolveMarkdownFilePath(filePath, allowedRoot);
-    } catch (error) {
-      lastError = error;
+    } catch {
+      continue;
     }
   }
-  if (allowedFolderRoots.size > 0) {
-    throw lastError instanceof Error ? lastError : new Error('Path escapes allowed directory');
-  }
-  return await resolveMarkdownFilePath(filePath);
+  throw new Error('Path escapes allowed directory');
 }

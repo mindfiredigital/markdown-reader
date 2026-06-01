@@ -4,6 +4,7 @@ import { IpcMainInvokeEvent } from 'electron';
 // production and dev urls
 export const ALLOWED_MARKDOWN_EXTENSIONS = new Set(['.md', '.markdown']);
 export const allowedFolderRoots = new Set<string>();
+export const allowedMarkdownFiles = new Set<string>();
 
 //validate the sender
 export function validateSender(event: IpcMainInvokeEvent): boolean {
