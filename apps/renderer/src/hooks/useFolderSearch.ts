@@ -10,6 +10,7 @@ export function useFolderSearch(folderPath: string | null) {
 
   const openFolderSearch = useCallback(() => setIsFolderSearchOpen(true), []);
   const closeFolderSearch = useCallback(() => {
+    requestId.current += 1;
     setIsFolderSearchOpen(false);
     setFolderQuery('');
     setFolderResults([]);

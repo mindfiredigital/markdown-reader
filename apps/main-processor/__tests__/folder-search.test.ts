@@ -39,7 +39,7 @@ describe('search folder', () => {
     expect(lower.length).toBe(upper.length);
   });
 
-  it('should reject with an error if the directory does not exist', async () => {
+  it('returns an empty array if the directory does not exist', async () => {
     const nonExistentDir = join(DIR, 'does-not-exist-folder');
 
     const results = await searchFolder(nonExistentDir, 'React');
