@@ -12,34 +12,45 @@ describe('useSettings font size', () => {
     expect(result.current.fontSize).toBe(16);
   });
 
-  it('should increase font size by adding 2px', () => {
+  it('should increase font size by adding 2px', async () => {
     const { result } = renderHook(() => useSettings());
-    act(() => result.current.increaseFontSize());
+    await act(async () => {
+      result.current.increaseFontSize();
+    });
     expect(result.current.fontSize).toBe(18);
   });
 
-  it('should decrease font size by subracting 2px', () => {
+  it('should decrease font size by subracting 2px', async () => {
     const { result } = renderHook(() => useSettings());
-    act(() => result.current.decreaseFontSize());
+    await act(async () => {
+      result.current.decreaseFontSize();
+    });
     expect(result.current.fontSize).toBe(14);
   });
 
-  it('should not exceed 24px', () => {
+  it('should not exceed 24px', async () => {
     const { result } = renderHook(() => useSettings());
-    act(() => {
-      for (let i = 0; i < 10; i++) {
+
+    for (let i = 0; i < 10; i++) {
+      await act(async () => {
         result.current.increaseFontSize();
-      }
-    });
+      });
+    }
+
     expect(result.current.fontSize).toBe(24);
   });
 
-  it('should return recent font size as 16', () => {
+  it('should return recent font size as 16', async () => {
     const { result } = renderHook(() => useSettings());
-    act(() => {
+
+    await act(async () => {
       result.current.increaseFontSize();
+    });
+
+    await act(async () => {
       result.current.resetFontSize();
     });
+
     expect(result.current.fontSize).toBe(16);
   });
 });
