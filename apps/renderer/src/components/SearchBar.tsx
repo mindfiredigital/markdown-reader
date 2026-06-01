@@ -5,6 +5,7 @@ import { Icons } from '../utils/constants/icon-contants';
 // search bar component
 export function SearchBar({
   query,
+  folderQuery,
   matchCount,
   currentMatch,
   onQueryChange,
@@ -18,15 +19,17 @@ export function SearchBar({
   hasFolder = true,
 }: SearchBarProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [localQuery,setLocalQuery]=useState(query);
+  const isFolderMode = mode === 'folder';
+  const activeQuery = (isFolderMode ? folderQuery : query) ?? '';
+  const [localQuery,setLocalQuery]=useState(activeQuery);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
   useEffect(() => {
-    setLocalQuery(query);
-  }, [query]);
+    setLocalQuery(activeQuery);
+  }, [activeQuery]);
 
   useEffect(()=>{
     const handler=setTimeout(()=>{
@@ -35,7 +38,7 @@ export function SearchBar({
     return ()=>clearTimeout(handler)
   },[localQuery,onQueryChange]);
 
-  const isFolderMode = mode === 'folder';
+  
   const prevDisable=isFolderMode || matchCount===0 || currentMatch<=1;
   const nextDisable=isFolderMode || matchCount===0 || currentMatch>=matchCount;
 
@@ -128,7 +131,7 @@ export function SearchBar({
             </div>
           )}
           {hasFolder &&
-            query &&
+            folderQuery &&
             !isSearchingFolder &&
             folderResults.length === 0 && (
               <div className="px-2 py-3 text-sm text-text-muted">

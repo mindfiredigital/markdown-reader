@@ -122,7 +122,7 @@ useShortcuts({
         {isFolderSearchOpen && (
           <SearchBar
             mode="folder"
-            query={folderQuery}
+            folderQuery={folderQuery}
             matchCount={folderResults.length}
             currentMatch={folderResults.length?1:0}
             onQueryChange={searchFolder}

@@ -57,7 +57,8 @@ export interface ToastProps {
 }
 
 export interface SearchBarProps {
-  query: string;
+  query?: string;
+  folderQuery?: string;
   matchCount: number;
   currentMatch: number;
   onQueryChange: (q: string) => void;
