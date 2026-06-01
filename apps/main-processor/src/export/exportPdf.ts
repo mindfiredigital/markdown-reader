@@ -8,7 +8,7 @@ export async function exportPDF(bodyHtml: string, css: string, outputPath: strin
   const pdfWindow = new BrowserWindow({
     show: false,
     webPreferences: {
-      sandbox: false,
+      sandbox: true,
     },
   });
 

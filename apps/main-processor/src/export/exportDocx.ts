@@ -1,10 +1,12 @@
 import HTMLtoDOCX from 'html-to-docx';
 import { writeFile } from 'node:fs/promises';
 import { buildDocument } from './buildDocument';
+import { inlineImages } from './inlineImage';
 import { sanitizeCss } from './sanitizeCss';
 
 export async function exportDOCX(bodyHtml: string, css: string, outputPath: string): Promise<void> {
-  const html = buildDocument(bodyHtml, sanitizeCss(css));
+  const htmlWithInlineImages = await inlineImages(bodyHtml);
+  const html = buildDocument(htmlWithInlineImages, sanitizeCss(css));
 
   const result = await HTMLtoDOCX(html, null, {
     table: { row: { cantSplit: true } },
