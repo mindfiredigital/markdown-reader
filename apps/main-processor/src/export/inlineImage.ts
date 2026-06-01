@@ -9,7 +9,7 @@ export async function inlineImages(html: string): Promise<string> {
 
   for (const match of matches) {
     const fullMatch = match[0];
-    const src = match[1];
+    const src = match[2];
 
     if (!src) continue;
 

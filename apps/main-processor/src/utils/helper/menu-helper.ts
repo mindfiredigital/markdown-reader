@@ -1,9 +1,9 @@
 import { BrowserWindow, BaseWindow, MenuItem, KeyboardEvent } from 'electron';
 
-export function createMenuSender(eventName: string) {
+export function createMenuSender(eventName: string, payload?: unknown) {
   return (_menuItem: MenuItem, window: BaseWindow | undefined, _event: KeyboardEvent): void => {
     if (window instanceof BrowserWindow) {
-      window.webContents.send(eventName);
+      window.webContents.send(eventName, payload);
     }
   };
 }

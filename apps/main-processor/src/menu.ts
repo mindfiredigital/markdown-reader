@@ -1,5 +1,5 @@
 import type { MenuItemConstructorOptions } from 'electron';
-import { MENU_EVENTS, MENU_LABELS, SHORTCUTS } from '@package/shared-constants';
+import { MENU_EVENTS, MENU_LABELS, SHORTCUTS, THEMES } from '@package/shared-constants';
 import { createMenuSender } from './utils/helper/menu-helper';
 
 export function buildMenuTemplate(): MenuItemConstructorOptions[] {
@@ -60,11 +60,23 @@ export function buildMenuTemplate(): MenuItemConstructorOptions[] {
           accelerator: SHORTCUTS.FOCUS_MODE,
           click: send(MENU_EVENTS.FOCUS_MODE),
         },
+        {
+          label: MENU_LABELS.SETTINGS,
+          click: send(MENU_EVENTS.OPEN_SETTINGS),
+        },
         { type: 'separator' },
         {
           label: MENU_LABELS.CYCLE_THEME,
           accelerator: SHORTCUTS.CYCLE_THEME,
           click: send(MENU_EVENTS.CYCLE_THEME),
+        },
+        {
+          label: MENU_LABELS.THEME,
+          submenu: THEMES.map((theme) => ({
+            label: theme,
+            type: 'radio' as const,
+            click: send(MENU_EVENTS.SET_THEME, theme),
+          })),
         },
         { type: 'separator' },
         {
@@ -83,7 +95,7 @@ export function buildMenuTemplate(): MenuItemConstructorOptions[] {
           click: send(MENU_EVENTS.ZOOM_RESET),
         },
         { type: 'separator' },
-        { role: 'toggleDevTools' },
+        ...(process.env.NODE_ENV === 'development' ? [{ role: 'toggleDevTools' as const }] : []),
       ],
     },
     {

@@ -6,16 +6,18 @@ import { PATHS } from './utils/constants/path-constants';
 import { registerMenu } from './register-menu';
 import { parseFilePathFromArgv } from './cli';
 import { setupAutoUpdater } from './updater';
+import { resolveMarkdownFilePath } from './utils/helper/ipc-path-resolver';
 
 let mainWindow: BrowserWindow | null = null;
 let pendingFilePath: string | null = null;
 
-function sendFilePathToRenderer(filePath: string): void {
+async function sendFilePathToRenderer(filePath: string): Promise<void> {
+  const safeFilePath = await resolveMarkdownFilePath(filePath);
   if (!mainWindow) {
-    pendingFilePath = filePath;
+    pendingFilePath = safeFilePath;
     return;
   }
-  mainWindow.webContents.send('open-file-path', filePath);
+  mainWindow.webContents.send('open-file-path', safeFilePath);
 }
 
 // register all IPC before window is created
@@ -71,7 +73,9 @@ function createWindow(): void {
 
 app.on('open-file', (event, filePath) => {
   event.preventDefault();
-  sendFilePathToRenderer(filePath);
+  void sendFilePathToRenderer(filePath).catch((error) => {
+    console.error('Failed to open file from Os:-', error);
+  });
 });
 const hasSingleInstanceLock = app.requestSingleInstanceLock();
 if (!hasSingleInstanceLock) {
