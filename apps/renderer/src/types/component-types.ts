@@ -1,6 +1,6 @@
 import React from 'react';
 import { APPTHEMES } from '../utils/constants/theme-constants';
-import { RecentFile } from '@package/shared-types/dist/src/recentfile-type';
+import { RecentFile } from '@package/shared-types';
 import { AppSettings, FileType } from '@package/shared-types';
 import { ReadingWidth } from '@package/shared-types';
 import {
