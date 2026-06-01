@@ -4,9 +4,10 @@ import { Icons } from '../utils/constants/icon-contants';
 export function UpdateBanner() {
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);
   useEffect(() => {
-    window.api.onUpdateAvailable((version: string) => {
+    const removeUpdateAvailable=window.api.onUpdateAvailable((version: string) => {
       setUpdateVersion(version);
     });
+    return removeUpdateAvailable;
   }, []);
   if (!updateVersion) {
     return null;

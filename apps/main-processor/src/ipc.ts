@@ -199,9 +199,7 @@ export function registerIPCHandlers(): void {
     if (!validateSender(event)) {
       throw new Error('Untrusted sender');
     }
-
     const safeFolderPath = await resolveDirectoryPath(folderPath);
-    allowedFolderRoots.add(safeFolderPath);
     const isAllowed = Array.from(allowedFolderRoots).some(
       (root) => safeFolderPath === root || safeFolderPath.startsWith(`${root}/`)
     );

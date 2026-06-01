@@ -53,7 +53,7 @@ export function HeroSection() {
                   </Link>
 
                   <a
-                    href="/docs/introduction"
+                    href="https://github.com/mindfiredigital/markdown-reader"
                     className="no-underline"
                     target="_blank"
                     rel="noreferrer"

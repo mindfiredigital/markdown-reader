@@ -2,14 +2,26 @@ import path from 'path';
 import { IpcMainInvokeEvent } from 'electron';
 
 // production and dev urls
-const allowedOrigin = ['file://', 'http://localhost'];
 export const ALLOWED_MARKDOWN_EXTENSIONS = new Set(['.md', '.markdown']);
 export const allowedFolderRoots = new Set<string>();
 
 //validate the sender
 export function validateSender(event: IpcMainInvokeEvent): boolean {
-  const url = event.senderFrame?.url || '';
-  return allowedOrigin.some((origin) => url.startsWith(origin));
+  const url = event.senderFrame?.url;
+
+  if (!url) return false;
+
+  try {
+    const parsedUrl = new URL(url);
+
+    if (parsedUrl.protocol === 'file:') {
+      return true;
+    }
+
+    return parsedUrl.protocol === 'http:' && parsedUrl.hostname === 'localhost';
+  } catch {
+    return false;
+  }
 }
 
 //validate path type
