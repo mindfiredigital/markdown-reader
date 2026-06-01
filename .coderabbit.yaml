@@ -1,0 +1,236 @@
+# ---------------------------------------------------------------------------
+# CodeRabbit Configuration for mindfiredigital/markdown-reader
+#
+# Stack   : Electron + React + TypeScript + Vite + Tailwind CSS
+# Tooling : pnpm + Vitest + ESLint + Prettier + electron-vite
+# Pattern : Electron desktop app monorepo with main, preload, renderer, shared packages, and Docusaurus docs
+#
+# Validate : https://docs.coderabbit.ai/configuration/yaml-validator
+# Reference: https://docs.coderabbit.ai/reference/configuration
+# ---------------------------------------------------------------------------
+
+language: 'en-US'
+
+tone_instructions: 'Senior Electron/React/TS reviewer. Be concise. Prioritise IPC/preload boundaries, markdown sanitisation, local file safety, a11y, tests, packaging, and CI. Flag real risks; suggest concrete fixes.'
+
+early_access: false
+
+reviews:
+  profile: 'assertive'
+  request_changes_workflow: true
+
+  high_level_summary: true
+  high_level_summary_instructions: >
+    Summarise the PR in concise bullets grouped by:
+    Electron main/preload, renderer UI, markdown rendering, shared packages,
+    tests, tooling/CI, docs, and packaging. End with "Breaking changes: None"
+    unless a public API, IPC contract, file behaviour, shortcut, or packaging
+    change is breaking.
+  high_level_summary_in_walkthrough: false
+
+  collapse_walkthrough: false
+  changed_files_summary: true
+  sequence_diagrams: true
+  estimate_code_review_effort: true
+  assess_linked_issues: true
+  related_issues: true
+  related_prs: true
+
+  suggested_labels: true
+  auto_apply_labels: false
+  suggested_reviewers: true
+  auto_assign_reviewers: false
+
+  commit_status: true
+  fail_commit_status: false
+  review_status: true
+  review_details: true
+
+  poem: false
+  in_progress_fortune: false
+
+  auto_review:
+    enabled: true
+    base_branches:
+      - main
+      - dev
+
+  path_filters:
+    - '!out/**'
+    - '!dist/**'
+    - '!build/**'
+    - '!coverage/**'
+    - '!release/**'
+    - '!node_modules/**'
+    - '!docs/.docusaurus/**'
+    - '!docs/build/**'
+    - '!pnpm-lock.yaml'
+    - '!**/*.snap'
+    - '!**/__snapshots__/**'
+    - '!**/*.{png,jpg,jpeg,gif,webp,ico,icns,mp4,zip}'
+
+  path_instructions:
+    - path: 'apps/main-processor/src/**/*.ts'
+      instructions: |
+        Review as Electron main-process code.
+        - IPC handlers must use shared constants and validate renderer input.
+        - File/folder access must guard path traversal, missing files, permissions, symlinks, and deleted watched files.
+        - Watchers, menus, dialogs, and IPC listeners must be cleaned up.
+        - Do not expose Node/Electron internals or unrestricted filesystem access.
+        - Export/update/download flows must sanitize content, close resources, and avoid executing embedded scripts.
+
+    - path: 'apps/preload/src/**/*.ts'
+      instructions: |
+        Review as a strict preload boundary.
+        - Expose only typed contextBridge APIs, never raw ipcRenderer.
+        - Use shared IPC constants and shared payload/result types.
+        - Listener methods must return unsubscribe functions.
+        - Reject broad channel names, arbitrary invoke/send wrappers, and any-typed payloads.
+
+    - path: 'apps/renderer/src/**/*.{ts,tsx}'
+      instructions: |
+        Review as React renderer code.
+        - Keep components typed, accessible, keyboard-friendly, and resilient to missing preload APIs.
+        - Effects must have correct dependencies and cleanup.
+        - Handle loading, empty, error, stale-response, and rejected-promise states.
+        - Do not import Node-only modules into renderer code.
+        - Avoid unnecessary derived state, unsafe globals, and broad any types.
+
+    - path: 'apps/renderer/src/**/{renderer,markdown,utils}/**/*.{ts,tsx}'
+      instructions: |
+        Review markdown rendering carefully.
+        - Sanitize raw HTML, links, images, Mermaid, KaTeX, anchors, and exported content.
+        - Block script execution, javascript: URLs, unsafe inline handlers, and unsafe local file references.
+        - Heading IDs and TOC entries must be stable and collision-safe.
+        - Mermaid/KaTeX/code highlighting failures should not break the whole document.
+        - Add tests for unsafe HTML, malformed markdown, links, images, code blocks, Mermaid, and KaTeX when changed.
+
+    - path: 'apps/renderer/src/**/*.{css,tsx}'
+      instructions: |
+        Review UI, theme, and accessibility.
+        - Interactive controls need semantic elements, visible focus, and keyboard access.
+        - Theme changes must preserve readable contrast in light and dark modes.
+        - Markdown prose must remain readable for tables, code, blockquotes, links, lists, and images.
+        - Prefer existing tokens/classes over ad hoc inline styling.
+
+    - path: 'packages/shared-* /src/**/*.ts'
+      instructions: |
+        Review shared package contracts.
+        - IPC constants, menu constants, shortcuts, and shared types are public contracts.
+        - New IPC constants must have handler, preload wrapper, renderer usage, and tests.
+        - Breaking type/API changes must be called out clearly.
+        - Prefer precise types over string/object/unknown/any shapes.
+
+    - path: '**/*.{test,spec}.{ts,tsx}'
+      instructions: |
+        Review tests.
+        - Cover success and failure paths, especially IPC, filesystem, markdown rendering, search, settings, tabs, and exports.
+        - Use isolated temp directories for disk tests and clean them up.
+        - Mock Electron/preload APIs explicitly.
+        - Prefer Testing Library user-event and getByRole for UI tests.
+
+    - path: '.github/workflows/**/*.yml'
+      instructions: |
+        Review CI/CD.
+        - Actions should use version tags, not @main.
+        - Secrets must use ${{ secrets.* }} and never be hardcoded.
+        - CI should install with pinned pnpm, then run lint, typecheck, tests, build, and package checks.
+        - Security scans should fail for high/critical findings unless justified.
+
+    - path: 'electron.vite.config.ts'
+      instructions: |
+        Review Electron/Vite build separation.
+        - Main, preload, and renderer entry points must stay separated.
+        - Main/preload should externalize Node/Electron dependencies where needed.
+        - Renderer must not bundle Node-only or Electron main-process modules.
+        - Production sourcemap/minify/external settings must be intentional.
+
+    - path: 'electron-builder.ts'
+      instructions: |
+        Review packaging.
+        - Check appId, productName, files, asar, icons, targets, file associations, artifact names, and publish settings.
+        - Exclude source-only, test, coverage, cache, and map files from releases.
+        - Signing/notarisation/update config must not hardcode secrets.
+        - Platform targets should match expected Windows, macOS, and Linux release formats.
+
+    - path: '**/package.json'
+      instructions: |
+        Review scripts and dependencies.
+        - Scripts for lint, typecheck, test, coverage, build, and dist must fail on errors.
+        - Dependencies should live in the package that imports them.
+        - Runtime imports must not be placed only in devDependencies.
+        - Electron, Vite, React, TypeScript, Tailwind, and testing upgrades need compatibility attention.
+
+    - path: 'tsconfig*.json'
+      instructions: |
+        Review TypeScript config.
+        - Keep strict type safety enabled.
+        - Module, target, moduleResolution, paths, and includes must match electron-vite and workspace boundaries.
+        - Renderer configs should include DOM types; main/preload should not accidentally depend on browser globals.
+
+    - path: 'eslint.config.*'
+      instructions: |
+        Review lint config.
+        - TypeScript parsing should cover workspace TS/TSX files.
+        - React hooks rules must apply to renderer code.
+        - Avoid disabling rules that hide runtime errors or weaken type safety.
+
+    - path: 'docs/**/*.{md,mdx,ts,tsx}'
+      instructions: |
+        Review docs.
+        - Docs must match current shortcuts, markdown support, export behaviour, install steps, and privacy/offline claims.
+        - Code blocks need language tags.
+        - Links and images should resolve.
+        - Docusaurus components must guard browser-only APIs during static build.
+
+    - path: 'pnpm-workspace.yaml'
+      instructions: |
+        Review workspace config.
+        - Workspace globs must intentionally include apps, packages, and docs.
+        - allowBuilds entries should stay minimal and justified.
+
+  tools:
+    eslint:
+      enabled: true
+    markdownlint:
+      enabled: true
+    actionlint:
+      enabled: true
+    gitleaks:
+      enabled: true
+    htmlhint:
+      enabled: true
+    checkov:
+      enabled: true
+    languagetool:
+      enabled: true
+      enabled_rules:
+        - 'OXFORD_COMMA'
+        - 'EN_QUOTES'
+        - 'COMMA_PARENTHESIS_WHITESPACE'
+      disabled_categories:
+        - 'TYPOGRAPHY'
+    yamllint:
+      enabled: true
+    ast-grep:
+      essential_rules: true
+    biome:
+      enabled: false
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  opt_out: false
+  web_search:
+    enabled: true
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+      - 'SECURITY.md'
+      - 'docs/**/*.md'
+      - 'docs/**/*.mdx'
+  learnings:
+    scope: auto

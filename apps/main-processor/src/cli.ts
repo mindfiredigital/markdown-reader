@@ -1,4 +1,4 @@
-import { MARKDOWN_FILE_PATTERN } from './utils/path-constants';
+import { MARKDOWN_FILE_PATTERN } from './utils/constants/path-constants';
 
 export function parseFilePathFromArgv(argv: string[]): string | null {
   for (let i = argv.length - 1; i >= 0; i--) {

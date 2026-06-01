@@ -2,20 +2,19 @@ import { TOCType } from '../../types/component-types';
 
 // sets item level wise
 export function getItemClasses(item: TOCType, activeId: string): string {
-  let baseStyle = 'block w-full text-left px-4 py-1 text-sm transition';
+  let baseStyle =
+    'toc-item flex h-8 items-center truncate pr-3 text-left text-sm transition-colors';
   if (item.level === 1) {
-    baseStyle += ' pl-4 font-semibold';
+    baseStyle += ' pl-1 font-semibold';
   }
   if (item.level === 2) {
-    baseStyle += ' pl-8';
+    baseStyle += ' pl-4';
   }
   if (item.level === 3) {
-    baseStyle += ' pl-12 text-xs';
+    baseStyle += ' pl-7 text-xs';
   }
   if (item.id === activeId) {
-    baseStyle += ' toc-item';
-  } else {
-    baseStyle += ' toc-item';
+    baseStyle += ' font-medium';
   }
   return baseStyle;
 }

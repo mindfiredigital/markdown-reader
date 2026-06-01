@@ -28,7 +28,7 @@ export function getMarkdown(): Marked {
           return escapeHtml(code);
         }
         const highlighter = await shikiHighlighter();
-        const theme = THEMES.GITHUB_DARK;
+        const theme = THEMES[1];
         try {
           return highlighter.codeToHtml(code, {
             lang: language,

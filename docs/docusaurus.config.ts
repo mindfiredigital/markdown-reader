@@ -12,7 +12,7 @@ const config: Config = {
   projectName: 'markdown-reader',
   onBrokenLinks: 'throw',
   markdown: {
-   hooks: {
+    hooks: {
       onBrokenMarkdownLinks: 'warn',
     },
   },
@@ -39,7 +39,7 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/markdown-social-card.png',
     metadata: [
       {
         name: 'description',
@@ -56,7 +56,7 @@ const config: Config = {
       {
         name: 'twitter:description',
         content:
-          'A dedicated native reader for Markdown files — fast, offline, and built for docs.',
+          'A dedicated native reader for Markdown files - fast, offline, and built for docs.',
       },
     ],
     colorMode: {

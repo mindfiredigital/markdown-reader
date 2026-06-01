@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { MENU_EVENTS } from '@package/shared-constants';
-import { UseMenuEventsProps } from '../types/component-types';
-
+import { UseMenuEventsProps } from '../types/hook-types';
+import { Theme } from '../types/component-types';
 export function useMenuEvents({
   onOpenFile,
   onOpenFolder,
   onSearchDocument,
+  onSearchFolder,
   onToggleToc,
   onToggleBrowser,
   onFocusMode,
@@ -16,6 +17,11 @@ export function useMenuEvents({
   onNextTab,
   onPreviousTab,
   onCloseTab,
+  onExportHtml,
+  onExportPdf,
+  onExportDocx,
+  onOpenSettings,
+  onSetTheme,
 }: UseMenuEventsProps) {
   useEffect(() => {
     if (!window.api?.onMenuEvent) return;
@@ -23,6 +29,7 @@ export function useMenuEvents({
     window.api.onMenuEvent(MENU_EVENTS.OPEN_FILE, onOpenFile);
     window.api.onMenuEvent(MENU_EVENTS.OPEN_FOLDER, onOpenFolder);
     window.api.onMenuEvent(MENU_EVENTS.SEARCH_DOCUMENT, onSearchDocument);
+    window.api.onMenuEvent(MENU_EVENTS.SEARCH_FOLDER, onSearchFolder);
     window.api.onMenuEvent(MENU_EVENTS.TOGGLE_TOC, onToggleToc);
     window.api.onMenuEvent(MENU_EVENTS.TOGGLE_BROWSER, onToggleBrowser);
     window.api.onMenuEvent(MENU_EVENTS.FOCUS_MODE, onFocusMode);
@@ -33,6 +40,15 @@ export function useMenuEvents({
     window.api.onMenuEvent(MENU_EVENTS.NEXT_TAB, onNextTab);
     window.api.onMenuEvent(MENU_EVENTS.PREVIOUS_TAB, onPreviousTab);
     window.api.onMenuEvent(MENU_EVENTS.CLOSE_TAB, onCloseTab);
+    window.api.onMenuEvent(MENU_EVENTS.EXPORT_HTML, onExportHtml);
+    window.api.onMenuEvent(MENU_EVENTS.EXPORT_PDF, onExportPdf);
+    window.api.onMenuEvent(MENU_EVENTS.EXPORT_DOCX, onExportDocx);
+    window.api.onMenuEvent(MENU_EVENTS.OPEN_SETTINGS, onOpenSettings);
+    window.api.onMenuEvent(MENU_EVENTS.SET_THEME, (theme) => {
+      if (typeof theme === 'string') {
+        onSetTheme(theme as Theme);
+      }
+    });
 
     return () => {
       window.api.removeMenuListeners?.();
@@ -41,6 +57,7 @@ export function useMenuEvents({
     onOpenFile,
     onOpenFolder,
     onSearchDocument,
+    onSearchFolder,
     onToggleToc,
     onToggleBrowser,
     onFocusMode,
@@ -51,5 +68,10 @@ export function useMenuEvents({
     onNextTab,
     onPreviousTab,
     onCloseTab,
+    onExportHtml,
+    onExportPdf,
+    onExportDocx,
+    onOpenSettings,
+    onSetTheme,
   ]);
 }

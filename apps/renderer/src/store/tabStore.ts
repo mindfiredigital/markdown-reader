@@ -8,7 +8,7 @@ export function tabReducer(state: TabState, action: TabAction): TabState {
       if (existingTab) {
         return { ...state, activeTabId: existingTab.id };
       }
-      const newTab = createTab(action.payload.filePath, action.payload.html);
+      const newTab = createTab(action.payload.filePath, action.payload.html, action.payload.toc);
       return {
         tabs: [...state.tabs, newTab],
         activeTabId: newTab.id,
