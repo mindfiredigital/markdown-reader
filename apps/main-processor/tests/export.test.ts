@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mkdtemp, writeFile } from 'node:fs/promises';
+import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { buildDocument } from '../src/export/buildDocument';
@@ -58,9 +58,13 @@ describe('get image of mime type', () => {
 describe('inline images for HTML export', () => {
   it('keeps local images as base 64 data URIs', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'markdown-reader-export-'));
-    const imagePath = join(dir, 'image.png');
-    await writeFile(imagePath, Buffer.from([137, 80, 78, 71]));
-    const html = await inlineImages(`<img src="${imagePath}"/>`);
-    expect(html).toContain('src="data:image/png;base64,');
+    try {
+      const imagePath = join(dir, 'image.png');
+      await writeFile(imagePath, Buffer.from([137, 80, 78, 71]));
+      const html = await inlineImages(`<img src="${imagePath}"/>`);
+      expect(html).toContain('src="data:image/png;base64,');
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
   });
 });
