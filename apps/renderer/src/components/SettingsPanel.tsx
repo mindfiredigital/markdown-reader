@@ -1,3 +1,4 @@
+import { useEffect,useRef } from 'react';
 import { SettingsPanelProps } from '../types/component-types';
 import { Icons } from '../utils/constants/icon-contants';
 import { WIDTH_MAP } from '../types/component-types';
@@ -10,10 +11,24 @@ export function SettingsPanel({
   onChange,
   appVersion,
 }: SettingsPanelProps) {
+  const dialogRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    dialogRef.current?.focus();
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isOpen, onClose]);
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
       <section
+        ref={dialogRef}
+        tabIndex={-1}
+        onClick={(e)=>e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="settings-title"
