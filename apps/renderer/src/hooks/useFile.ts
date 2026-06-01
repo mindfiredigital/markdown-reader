@@ -29,7 +29,7 @@ export function useFile() {
       const renderHtml = await renderMarkdown(rawMarkdown);
       const safeHtml = DOMpurify.sanitize(renderHtml);
       setHtml(safeHtml);
-      const nextToc = extractTOC(safeHtml);
+      const nextToc = extractTOC(rawMarkdown);
       setToc(nextToc);
       await window.api.addRecentFile(path);
       const updated = await window.api.getRecentFiles();

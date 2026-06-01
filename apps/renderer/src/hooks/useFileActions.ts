@@ -24,6 +24,7 @@ export function useFileActions({ loadFile, dispatch }: FileActionProps) {
         payload: {
           filePath: result.filePath,
           html: result.html,
+          ...(result.toc ? { toc: result.toc } : {}),
         },
       });
     },

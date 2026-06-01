@@ -13,9 +13,9 @@ import { SearchBar } from './components/SearchBar';
 import { useSettings } from './hooks/useSettings';
 import { StatusBar } from './components/StatusBar';
 import { FileBrowser } from './components/FileBrowser';
+import { extractTOC } from './renderer/toc';
 import { TabBar } from './components/TabBar';
 import { useTabStore } from './hooks/useTabStore';
-import { extractTOC } from './renderer/toc';
 import { Icons } from './utils/constants/icon-contants';
 import { useShortcuts } from './hooks/useShortcuts';
 import { useMenuEvents } from './hooks/useMenuEvents';
@@ -30,14 +30,16 @@ import { useOpenFilePath } from './hooks/useOpenFilePath';
 import { useFilePersistence } from './hooks/useFilePersistence';
 import { ReaderToolbar } from './components/ReaderToolbar';
 import { useFolderSearch } from './hooks/useFolderSearch';
+import { SettingsPanel } from './components/SettingsPanel';
 
 export default function App() {
   const {  error, isLoading, openFile, toc,recentFiles,loadFile } =useFile();
   const { state, dispatch } = useTabStore();
   const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId) ?? null;
-  const { theme, toggleTheme} = useTheme();
-  const {activeId,scrollToHeading}=useToc(toc);
-  const {increaseFontSize,decreaseFontSize,resetFontSize,fontSize}=useSettings();
+  const activeToc=activeTab?.toc?? toc;
+  const { theme, toggleTheme,setTheme} = useTheme();
+  const {activeId,scrollToHeading}=useToc(activeToc);
+  const {settings,increaseFontSize,decreaseFontSize,resetFontSize,fontSize,updateSettings}=useSettings();
   const {query,matchCount,currentMatch,isSearchOpen,openSearch,closeSearch,setQuery,goToNextMatch,goToPrevMatch,getHiglightedHtml} = useSearch(activeTab?.html ?? '');
   const [showToast, setShowToast] = useState(false);
   const contentRef=useRef<HTMLDivElement>(null);
@@ -49,6 +51,13 @@ export default function App() {
   useOpenFilePath(loadFileInTab);
   const {scroll}=useFilePersistence({activeTab,loadFile,dispatch,contentRef,setShowToast});
   const {isFolderSearchOpen,folderQuery,folderResults,isSearchingFolder,openFolderSearch,closeFolderSearch,searchFolder}=useFolderSearch(folderPath)
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [appVersion, setAppVersion] = useState('');
+
+  useEffect(()=>{
+    if(!window.api?.getAppVersion) return;
+    void window.api.getAppVersion().then(setAppVersion).catch(()=>{});
+  },[])
   
   useEffect(()=>{
     if(folderTree){
@@ -82,7 +91,9 @@ export default function App() {
   onCloseTab: closeActiveTab,
   onExportHtml:exportHtml,
   onExportPdf:exportPdf,
-  onExportDocx:exportDocx
+  onExportDocx:exportDocx,
+  onOpenSettings:()=>setSettingsOpen(true),
+  onSetTheme:setTheme
 });
 
 useShortcuts({
@@ -98,6 +109,7 @@ useShortcuts({
   onZoomReset: resetFontSize,
   onToggleSidebar: toggleSidebar,
   onToggleFileBrowser: toggleFileBrowser,
+  onOpenSettings:()=>setSettingsOpen(true)
 });
   
 
@@ -208,6 +220,7 @@ useShortcuts({
         {!focusMode && (
           <StatusBar filePath={activeTab?.filePath ?? ''} theme={theme} fontSize={fontSize} />
         )}
+        <SettingsPanel settings={settings} isOpen={settingsOpen} onClose={()=>setSettingsOpen(false)} onChange={(partial)=>void updateSettings(partial)} appVersion={appVersion}/>
       </div>
     </>
   )}

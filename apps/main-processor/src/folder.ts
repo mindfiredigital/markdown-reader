@@ -1,19 +1,42 @@
-import { readdir } from 'node:fs/promises';
+import { readdir, realpath } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 import { FileType } from '@package/shared-types';
 import { isMarkdownFile } from './utils/helper/path-helper';
+import { MAX_FOLDER_DEPTH } from './utils/constants/path-constants';
 
-export async function getFolder(folderPath: string): Promise<FileType> {
-  const entries = await readdir(folderPath, { withFileTypes: true });
+export async function getFolder(
+  folderPath: string,
+  maxDepth = MAX_FOLDER_DEPTH,
+  currentDepth = 0,
+  seenPaths = new Set<string>()
+): Promise<FileType> {
+  let realFolderPath: string;
+  try {
+    realFolderPath = await realpath(folderPath);
+  } catch {
+    realFolderPath = folderPath;
+  }
+  if (currentDepth >= maxDepth || seenPaths.has(realFolderPath)) {
+    return {
+      name: basename(folderPath),
+      path: folderPath,
+      isDir: true,
+      children: [],
+    };
+  }
+  seenPaths.add(realFolderPath);
+  const entries = (await readdir(folderPath, { withFileTypes: true })).sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
   const children: FileType[] = [];
 
   for (const entry of entries) {
     if (entry.name.startsWith('.')) continue;
-
+    if (entry.isSymbolicLink()) continue;
     const fullPath = join(folderPath, entry.name);
 
     if (entry.isDirectory()) {
-      children.push(await getFolder(fullPath));
+      children.push(await getFolder(fullPath, maxDepth, currentDepth + 1, seenPaths));
       continue;
     }
 

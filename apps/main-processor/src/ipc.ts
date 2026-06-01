@@ -1,4 +1,4 @@
-import { ipcMain, dialog } from 'electron';
+import { app, ipcMain, dialog } from 'electron';
 import { readFile, unWatchFile, watchFile } from './file';
 import { getFolder } from './folder';
 import { validatePath, validateSender, allowedFolderRoots } from './utils/constants/ipc-validation';
@@ -14,6 +14,9 @@ import {
   resolveWatchedMarkdownPath,
 } from './utils/helper/ipc-path-resolver';
 import { searchFolder } from './folder-search';
+import { AppSettings } from '@package/shared-types';
+import { getSettings } from './settings/get-settings';
+import { saveSettings } from './settings/save-settings';
 
 //registers all IPC handlers for main process
 export function registerIPCHandlers(): void {
@@ -112,6 +115,27 @@ export function registerIPCHandlers(): void {
     const safeFolderPath = await resolveDirectoryPath(folderPath);
     allowedFolderRoots.add(safeFolderPath);
     return await getFolder(safeFolderPath);
+  });
+
+  ipcMain.handle(IPC_CONSTANTS.GET_SETTINGS, async (event) => {
+    if (!validateSender(event)) {
+      throw new Error('Untrusted sender');
+    }
+    return await getSettings();
+  });
+
+  ipcMain.handle(IPC_CONSTANTS.SAVE_SETTINGS, async (event, settings: Partial<AppSettings>) => {
+    if (!validateSender(event)) {
+      throw new Error('Untrusted sender');
+    }
+    return await saveSettings(settings);
+  });
+
+  ipcMain.handle(IPC_CONSTANTS.GET_APP_VERSION, async (event) => {
+    if (!validateSender(event)) {
+      throw new Error('Untrusted sender');
+    }
+    return app.getVersion();
   });
 
   ipcMain.handle(

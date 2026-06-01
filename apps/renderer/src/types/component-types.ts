@@ -1,7 +1,18 @@
 import React from 'react';
 import { APPTHEMES } from '../utils/constants/theme-constants';
-import { RecentFile } from '@package/shared-types/dist/src/recentfile-type';
-import { FileType, FolderSearchResult } from '@package/shared-types';
+import { RecentFile } from '@package/shared-types';
+import { AppSettings, FileType } from '@package/shared-types';
+import { ReadingWidth } from '@package/shared-types';
+import {
+  DEFAULT_FONT_SIZE,
+  DEFAULT_WIDTH,
+  FONT_SIZE_INCREMENT,
+  MAX_FONT_SIZE,
+  MIN_FONT_SIZE,
+  NARROW_WIDTH,
+  WIDE_WIDTH,
+} from '@package/shared-constants';
+import { FolderSearchResult } from '@package/shared-types';
 export interface ErrorProps {
   message: string;
   onRetry: () => void;
@@ -74,20 +85,17 @@ export interface SearchBarProps {
   onToggleCaseSensitive?: () => void;
 }
 
-export type ReadingWidth = 'narrow' | 'default' | 'wide' | 'full';
-
-export const FONT_SISE = {
-  DEFAULT: 16,
-  MIN: 12,
-  MAX: 24,
-  INCREMENT: 2,
+export const FONT_SIZE = {
+  DEFAULT: DEFAULT_FONT_SIZE,
+  MIN: MIN_FONT_SIZE,
+  MAX: MAX_FONT_SIZE,
+  INCREMENT: FONT_SIZE_INCREMENT,
 };
 
 export const WIDTH_MAP: Record<ReadingWidth, string> = {
-  narrow: '640px',
-  default: '768px',
-  wide: '1024px',
-  full: '100%',
+  narrow: `${NARROW_WIDTH}px`,
+  default: `${DEFAULT_WIDTH}px`,
+  wide: `${WIDE_WIDTH}px`,
 };
 export interface StatusBarProps {
   filePath: string;
@@ -165,4 +173,12 @@ export interface ReaderToolbarProps {
   onZoomOut: () => void;
   onZoomReset: () => void;
   onToggleTheme: () => void;
+}
+
+export interface SettingsPanelProps {
+  settings: AppSettings;
+  isOpen: boolean;
+  onClose: () => void;
+  onChange: (settings: Partial<AppSettings>) => void;
+  appVersion?: string;
 }

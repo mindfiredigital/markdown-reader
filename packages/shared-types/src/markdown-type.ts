@@ -1,7 +1,7 @@
-import { FileType } from './file-types';
-import { RecentFile } from './recentfile-type';
-import { Settings } from './settings-type';
-import { FolderSearchResult } from './search-type';
+import { FileType } from './file-types.js';
+import { RecentFile } from './recentfile-type.js';
+import { AppSettings } from './settings-type.js';
+import { FolderSearchResult } from './search-type.js';
 
 // markdown reader api
 export type MarkdownReaderAPI = {
@@ -14,13 +14,13 @@ export type MarkdownReaderAPI = {
   getRecentFiles(): Promise<RecentFile[]>;
   addRecentFile(path: string): Promise<void>;
   clearRecentFiles(): Promise<void>;
-  getSettings(): Promise<Settings>;
-  saveSettings(settings: Settings[]): Promise<void>;
+  getSettings(): Promise<AppSettings>;
+  saveSettings(settings: Partial<AppSettings>): Promise<AppSettings>;
   getAppVersion(): Promise<string>;
   searchFolder(path: string, query: string): Promise<FolderSearchResult[]>;
   onFileChanged: (callback: (path: string) => void) => void;
   removeFileChangedListener: () => void;
-  onMenuEvent: (event: string, callback: () => void) => void;
+  onMenuEvent: (event: string, callback: (payload?: unknown) => void) => () => void;
   removeMenuListeners: () => void;
   onOpenFilePath(callback: (path: string) => void): void;
   removeOpenFilePathListener(): void;
@@ -31,12 +31,4 @@ export type MarkdownReaderAPI = {
   getPathForFile(file: File): string;
   onUpdateAvailable: (callback: (version: string) => void) => void;
   downloadUpdate: () => void;
-};
-
-// initial setting
-export const DEFAULT_SETTINGS: Settings = {
-  theme: 'github-light',
-  fontSize: 16,
-  readingWidth: 'default',
-  showLineNumbers: false,
 };
