@@ -6,11 +6,7 @@ import { SETTINGS_KEYS, READING_WIDTHS } from '../constants/setting-constants';
 
 /* Gives file system path for settings.json */
 export function getSettingsPath(): string {
-  try {
-    return path.join(app.getPath('userData'), 'settings.json');
-  } catch {
-    return path.join(process.cwd(), 'settings.json');
-  }
+  return path.join(app.getPath('userData'), 'settings.json');
 }
 
 /* To validate the settings preference before saving */
