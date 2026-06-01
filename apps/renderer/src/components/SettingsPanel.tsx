@@ -14,9 +14,10 @@ export function SettingsPanel({
   const dialogRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (isOpen){
+      if (!isOpen) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
     dialogRef.current?.focus();
-  }
+   return () => previouslyFocused?.focus();
     
   }, [isOpen]);
 

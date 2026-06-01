@@ -64,8 +64,12 @@ export function useSettings() {
       return;
     }
 
-    const next = await window.api.saveSettings(partial);
-    setSettings(next);
+    try {
+      const next = await window.api.saveSettings(partial);
+      setSettings(next);
+    } catch {
+      setSettings((current) => ({ ...current, ...partial }));
+    }
   }, []);
   return {
     settings,

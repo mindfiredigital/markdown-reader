@@ -42,7 +42,7 @@ export const MENU_EVENTS = {
   EXPORT_HTML: 'menu:export-html',
   EXPORT_PDF: 'menu:export-pdf',
   EXPORT_DOCX: 'menu:export-docx',
-  OPEN_SETTINGS: 'menu:open:settings',
+  OPEN_SETTINGS: 'menu:open-settings',
   SET_THEME: 'menu:set-theme',
 } as const;
 
