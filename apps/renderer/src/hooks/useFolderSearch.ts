@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import { FolderSearchResult } from '@package/shared-types';
 
 export function useFolderSearch(folderPath: string | null) {
@@ -38,6 +38,12 @@ export function useFolderSearch(folderPath: string | null) {
     },
     [folderPath]
   );
+
+  useEffect(() => {
+    return () => {
+      requestId.current += 1;
+    };
+  }, []);
 
   return {
     isFolderSearchOpen,
