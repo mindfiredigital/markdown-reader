@@ -14,10 +14,10 @@ export function getHeadingId(text: string): string {
 
 // assigns id to the headings
 export function heading({ text, depth }: HeadingProps) {
-  const plainText = stripHtml(text);
-  const id = getHeadingId(plainText);
-  const safeText = escapeHtml(plainText);
-  return `<h${depth} id="${id}">${safeText}</h${depth}>\n`;
+  const parsedInline = parseInline(text) as string;
+  const idText = decodeHtml(stripHtml(parsedInline));
+  const id = getHeadingId(idText);
+  return `<h${depth} id="${id}">${parseInline}</h${depth}>\n`;
 }
 
 //removes inline html
@@ -28,7 +28,7 @@ export function stripHtml(html: string): string {
 
 export function headingText(token: Tokens.Heading): string {
   const inlineHtml = parseInline(token.text) as string;
-  return stripHtml(inlineHtml).trim();
+  return decodeHtml(stripHtml(inlineHtml).trim());
 }
 
 export function isHeadingToken(token: unknown): token is Tokens.Heading {
