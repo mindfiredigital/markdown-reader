@@ -15,7 +15,7 @@ export function UpdateBanner() {
   }
 
   return (
-    <div className="bg-accent-bg border-b border-border-theme px-4 py-2 flex items-center gap-3 text-sm">
+    <div role="region" aria-label="Application update banner" className="bg-accent-bg border-b border-border-theme px-4 py-2 flex items-center gap-3 text-sm">
       <span className="text-text-base font-medium">
         Update available: v{updateVersion}
       </span>
@@ -25,6 +25,7 @@ export function UpdateBanner() {
           void window.api.downloadUpdate();
         }}
         className="text-accent hover:underline"
+        aria-label={`Download update version ${updateVersion} and install on quit`}
       >
         Download & install on quit
       </button>

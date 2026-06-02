@@ -11,6 +11,7 @@ export function FileBrowser({
   return (
     <aside
       aria-label="File browser"
+      role="complementary"
       className="flex w-72 shrink-0 flex-col border-r border-border-theme bg-surface"
     >
       <div className="flex items-center justify-between border-b border-border-theme px-4 py-3">

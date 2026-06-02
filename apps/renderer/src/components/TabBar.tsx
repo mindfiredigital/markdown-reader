@@ -7,6 +7,7 @@ export function TabBar({ tabs, activeTabId, onSwitch, onClose ,plusOpen}: TabBar
   return (
     <div
       role="tablist"
+      aria-label="Document tabs"
       className="flex h-11 shrink-0 items-center overflow-x-auto border-b border-border-theme bg-surface px-2"
     >
       {tabs.map((tab) => {
@@ -22,8 +23,11 @@ export function TabBar({ tabs, activeTabId, onSwitch, onClose ,plusOpen}: TabBar
           >
             <button
               role="tab"
-              aria-current={isActive ? 'true' : undefined}
+              id={`tab-${tab.id}`}
+              aria-selected={isActive}
+              aria-controls={`tabpanel-${tab.id}`}
               aria-label={tab.fileName}
+              tabIndex={isActive ? 0 : -1}
               onClick={() => onSwitch(tab.id)}
               className={[
                 'flex h-10 items-center truncate px-4 text-sm transition-colors',
@@ -37,7 +41,7 @@ export function TabBar({ tabs, activeTabId, onSwitch, onClose ,plusOpen}: TabBar
 
             <button
               type="button"
-              aria-label="close tab"
+              aria-label={`Close ${tab.fileName} tab`}
               onClick={(event) => {
                 event.stopPropagation();
                 onClose(tab.id);
