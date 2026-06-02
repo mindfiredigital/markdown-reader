@@ -162,6 +162,7 @@ useShortcuts({
             activeTabId={state.activeTabId}
             onSwitch={(id) => dispatch({ type: 'SWITCH_TAB', payload: { tabId: id } })}
             onClose={(id) => dispatch({ type: 'CLOSE_TAB', payload: { tabId: id } })}
+            plusOpen={openFileDialog}
           />
         )}
         <UpdateBanner/>

@@ -108,6 +108,7 @@ export interface TabBarProps {
   activeTabId: string | null;
   onSwitch: (id: string) => void;
   onClose: (id: string) => void;
+  plusOpen: () => void;
 }
 
 export interface Tab {

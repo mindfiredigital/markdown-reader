@@ -1,7 +1,7 @@
 import type { TabBarProps } from '../types/component-types';
 import { Icons } from '../utils/constants/icon-contants';
 
-export function TabBar({ tabs, activeTabId, onSwitch, onClose }: TabBarProps) {
+export function TabBar({ tabs, activeTabId, onSwitch, onClose ,plusOpen}: TabBarProps) {
   if (tabs.length === 0) return null;
 
   return (
@@ -33,7 +33,7 @@ export function TabBar({ tabs, activeTabId, onSwitch, onClose }: TabBarProps) {
               ].join(' ')}
             >
               <span className="truncate">{tab.fileName}</span>
-            </button>
+            </button>   
 
             <button
               type="button"
@@ -46,9 +46,19 @@ export function TabBar({ tabs, activeTabId, onSwitch, onClose }: TabBarProps) {
             >
               <Icons.X size={13} />
             </button>
-          </div>
+          </div>          
         );
       })}
+      <div className="flex shrink-0 items-center pl-1">
+        <button 
+          type="button"
+          onClick={plusOpen}
+          aria-label="Open new tab"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-text-muted transition-all hover:bg-accent-bg hover:text-text-base"
+        >
+          <Icons.Plus size={16} />
+        </button>
+      </div>
     </div>
   );
 }
