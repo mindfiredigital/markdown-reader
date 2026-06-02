@@ -31,7 +31,7 @@ describe('TabBar', () => {
 
   it('marks the active tab', () => {
     render(<TabBar tabs={tabs} activeTabId="tab-1" onSwitch={() => {}} onClose={() => {}} />);
-    expect(screen.getByRole('tab', { name: /README/i })).toHaveAttribute('aria-current', 'true');
+    expect(screen.getByRole('tab', { name: /README/i })).toHaveAttribute('aria-selected', 'true');
   });
 
   it('switches tab when a tab is clicked', () => {
@@ -49,7 +49,7 @@ describe('TabBar', () => {
 
     render(<TabBar tabs={tabs} activeTabId="tab-1" onSwitch={() => {}} onClose={onClose} />);
 
-    fireEvent.click(screen.getAllByRole('button', { name: /close tab/i })[0]);
+    fireEvent.click(screen.getAllByRole('button', { name: /close .* tab/i })[0]);
 
     expect(onClose).toHaveBeenCalledWith('tab-1');
   });
