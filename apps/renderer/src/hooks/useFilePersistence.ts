@@ -10,18 +10,35 @@ export function useFilePersistence({
   contentRef,
   setShowToast,
 }: FilePersistenceProps) {
-  const debounceTimer = useRef<number | undefined>(undefined);
-  const scrollTimer = useRef<number | undefined>(undefined);
+  const debounceTimer = useRef<ReturnType<typeof window.setTimeout> | undefined>(undefined);
+  const scrollTimer = useRef<ReturnType<typeof window.setTimeout> | undefined>(undefined);
+  const isMounted = useRef<boolean>(true);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+      if (debounceTimer.current) {
+        window.clearTimeout(debounceTimer.current);
+        debounceTimer.current = undefined;
+      }
+      if (scrollTimer.current) {
+        window.clearTimeout(scrollTimer.current);
+        scrollTimer.current = undefined;
+      }
+    };
+  }, []);
 
   const handleFileChange = useCallback(() => {
     if (!activeTab) return;
     if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
+      window.clearTimeout(debounceTimer.current);
     }
     debounceTimer.current = window.setTimeout(async () => {
+      if (!debounceTimer.current) return;
       const currentScroll = contentRef.current?.scrollTop ?? 0;
       const result = await loadFile(activeTab.filePath);
-      if (!result) return;
+      if (!result || !isMounted.current) return;
       dispatch({
         type: 'UPDATE_TAB_STATE',
         payload: {
@@ -43,10 +60,11 @@ export function useFilePersistence({
     if (!activeTab || !contentRef.current) return;
 
     if (scrollTimer.current) {
-      clearTimeout(scrollTimer.current);
+      window.clearTimeout(scrollTimer.current);
     }
 
     scrollTimer.current = window.setTimeout(() => {
+      if (!scrollTimer.current || !contentRef.current) return;
       saveScrollPos(activeTab.filePath, contentRef.current!.scrollTop);
 
       dispatch({
@@ -67,7 +85,7 @@ export function useFilePersistence({
         contentRef.current.scrollTop = activeTab.scrollTop ?? getScrollPos(activeTab.filePath);
       }
     });
-  }, [activeTab?.id, activeTab?.html]);
+  }, [activeTab?.id, activeTab?.html, contentRef]);
 
   return { scroll };
 }

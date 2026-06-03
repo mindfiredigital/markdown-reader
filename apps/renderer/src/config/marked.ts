@@ -5,17 +5,18 @@ import { THEMES } from '@package/shared-constants';
 import { escapeHtml, heading } from '../utils/helpers/heading-helper';
 import { MARKDOWN_LANGUAGES } from '../utils/constants/markdown-constants';
 
-let instance: Marked | null = null;
-
-export function getMarkdown(): Marked {
-  if (instance) return instance;
-  instance = new Marked();
+export function getMarkdown(registry: Map<string, number>): Marked {
+  const instance = new Marked();
 
   // configure marked with GFM options
   instance.use({
     gfm: true,
     breaks: false,
-    renderer: { heading },
+    renderer: {
+      heading(props) {
+        return heading(props, registry);
+      },
+    },
   });
 
   //configure marked to use Shikhi for code blocks

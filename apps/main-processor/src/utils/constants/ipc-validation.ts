@@ -39,12 +39,13 @@ export function validatePath(filePath: string) {
     // Prevent access to sensitive OS system folders
     const lower = resolvedPath.toLowerCase();
     if (process.platform === 'win32') {
+      const sysDrive = (process.env.SystemDrive ?? 'C:').toLowerCase();
       const forbiddenPrefixes = [
-        'c:\\windows\\',
-        'c:\\winnt\\',
-        'c:\\boot\\',
-        'c:\\system volume information\\',
-        'c:\\$recycle.bin\\',
+        `${sysDrive}\\windows\\`,
+        `${sysDrive}\\winnt\\`,
+        `${sysDrive}\\boot\\`,
+        `${sysDrive}\\system volume information\\`,
+        `${sysDrive}\\$recycle.bin\\`,
       ];
       if (forbiddenPrefixes.some((p) => lower === p.slice(0, -1) || lower.startsWith(p))) {
         return false;

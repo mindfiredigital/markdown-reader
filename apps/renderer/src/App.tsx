@@ -13,7 +13,6 @@ import { SearchBar } from './components/SearchBar';
 import { useSettings } from './hooks/useSettings';
 import { StatusBar } from './components/StatusBar';
 import { FileBrowser } from './components/FileBrowser';
-import { extractTOC } from './renderer/toc';
 import { TabBar } from './components/TabBar';
 import { useTabStore } from './hooks/useTabStore';
 import { Icons } from './utils/constants/icon-contants';
@@ -198,7 +197,7 @@ useShortcuts({
             )}
             {!focusMode && (
               <Sidebar
-                tocItems={activeTab.toc??extractTOC(activeTab.html)}
+                tocItems={activeToc}
                 activeId={activeId}
                 onSelect={scrollToHeading}
                 isVisible={sidebarOpen}

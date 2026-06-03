@@ -113,7 +113,7 @@ reviews:
         - Markdown prose must remain readable for tables, code, blockquotes, links, lists, and images.
         - Prefer existing tokens/classes over ad hoc inline styling.
 
-    - path: 'packages/shared-* /src/**/*.ts'
+    - path: 'packages/shared-*/src/**/*.ts'
       instructions: |
         Review shared package contracts.
         - IPC constants, menu constants, shortcuts, and shared types are public contracts.

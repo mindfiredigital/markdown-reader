@@ -32,6 +32,7 @@ export function useFileActions({ loadFile, dispatch }: FileActionProps) {
   );
 
   const openFileDialog = useCallback(() => {
+    if (!window.api) return;
     void window.api.openFileDialog().then((chosenPath) => {
       if (chosenPath) {
         void loadFileInTab(chosenPath);

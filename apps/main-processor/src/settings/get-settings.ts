@@ -9,7 +9,7 @@ export async function getSettings(): Promise<AppSettings> {
   try {
     const data = await readFile(settingsPath, 'utf-8');
     const parsed = JSON.parse(data);
-    if (parsed && typeof parsed === 'object') {
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
       return { ...DEFAULT_SETTINGS, ...validateSettings(parsed) };
     }
     return DEFAULT_SETTINGS;

@@ -18,6 +18,9 @@ export async function shikiHighlighter(): Promise<HighlighterCore> {
       themes,
       langs,
       engine: createJavaScriptRegexEngine(),
+    }).catch((err) => {
+      highlighter = null;
+      throw err;
     });
   }
   return highlighter;

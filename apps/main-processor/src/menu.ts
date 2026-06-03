@@ -2,7 +2,7 @@ import type { MenuItemConstructorOptions } from 'electron';
 import { MENU_EVENTS, MENU_LABELS, SHORTCUTS, THEMES } from '@package/shared-constants';
 import { createMenuSender } from './utils/helper/menu-helper';
 
-export function buildMenuTemplate(): MenuItemConstructorOptions[] {
+export function buildMenuTemplate(currentTheme: string): MenuItemConstructorOptions[] {
   const send = createMenuSender;
 
   return [
@@ -75,6 +75,7 @@ export function buildMenuTemplate(): MenuItemConstructorOptions[] {
           submenu: THEMES.map((theme) => ({
             label: theme,
             type: 'radio' as const,
+            checked: theme === currentTheme,
             click: send(MENU_EVENTS.SET_THEME, theme),
           })),
         },

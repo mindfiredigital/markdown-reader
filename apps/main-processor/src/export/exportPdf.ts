@@ -1,5 +1,8 @@
+import { once } from 'node:events';
 import { BrowserWindow } from 'electron';
-import { writeFile } from 'node:fs/promises';
+import { writeFile, rm } from 'node:fs/promises';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 import { buildDocument } from './buildDocument';
 import { sanitizeCss } from './sanitizeCss';
 import { inlineImages } from './inlineImage';
@@ -11,12 +14,16 @@ export async function exportPDF(bodyHtml: string, css: string, outputPath: strin
       sandbox: true,
     },
   });
-
+  const tempFilePath = join(
+    tmpdir(),
+    `pdf-export-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.html`
+  );
   try {
     const htmlWithInlineImages = await inlineImages(bodyHtml);
     const html = buildDocument(htmlWithInlineImages, sanitizeCss(css));
 
-    await pdfWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`);
+    await writeFile(tempFilePath, html, 'utf8');
+    await pdfWindow.loadFile(tempFilePath);
 
     await pdfWindow.webContents.executeJavaScript(`
       new Promise((resolve) => {
@@ -41,6 +48,17 @@ export async function exportPDF(bodyHtml: string, css: string, outputPath: strin
     });
     await writeFile(outputPath, pdfBuffer);
   } finally {
-    pdfWindow.close();
+    const closed = pdfWindow.isDestroyed()
+      ? Promise.resolve()
+      : once(pdfWindow, 'closed').then(() => undefined);
+    if (!pdfWindow.isDestroyed()) {
+      pdfWindow.close();
+    }
+    await closed;
+    try {
+      await rm(tempFilePath, { force: true });
+    } catch (error) {
+      console.error('Failed to clean up PDF export temp file:', error);
+    }
   }
 }
