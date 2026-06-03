@@ -1,12 +1,13 @@
 import type { TabBarProps } from '../types/component-types';
 import { Icons } from '../utils/constants/icon-contants';
 
-export function TabBar({ tabs, activeTabId, onSwitch, onClose }: TabBarProps) {
+export function TabBar({ tabs, activeTabId, onSwitch, onClose ,plusOpen}: TabBarProps) {
   if (tabs.length === 0) return null;
 
   return (
     <div
       role="tablist"
+      aria-label="Document tabs"
       className="flex h-11 shrink-0 items-center overflow-x-auto border-b border-border-theme bg-surface px-2"
     >
       {tabs.map((tab) => {
@@ -22,8 +23,11 @@ export function TabBar({ tabs, activeTabId, onSwitch, onClose }: TabBarProps) {
           >
             <button
               role="tab"
-              aria-current={isActive ? 'true' : undefined}
+              id={`tab-${tab.id}`}
+              aria-selected={isActive}
+              aria-controls={`tabpanel-${tab.id}`}
               aria-label={tab.fileName}
+              tabIndex={isActive ? 0 : -1}
               onClick={() => onSwitch(tab.id)}
               className={[
                 'flex h-10 items-center truncate px-4 text-sm transition-colors',
@@ -33,11 +37,11 @@ export function TabBar({ tabs, activeTabId, onSwitch, onClose }: TabBarProps) {
               ].join(' ')}
             >
               <span className="truncate">{tab.fileName}</span>
-            </button>
+            </button>   
 
             <button
               type="button"
-              aria-label="close tab"
+              aria-label={`Close ${tab.fileName} tab`}
               onClick={(event) => {
                 event.stopPropagation();
                 onClose(tab.id);
@@ -46,9 +50,19 @@ export function TabBar({ tabs, activeTabId, onSwitch, onClose }: TabBarProps) {
             >
               <Icons.X size={13} />
             </button>
-          </div>
+          </div>          
         );
       })}
+      <div className="flex shrink-0 items-center pl-1">
+        <button 
+          type="button"
+          onClick={plusOpen}
+          aria-label="Open new tab"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-text-muted transition-all hover:bg-accent-bg hover:text-text-base"
+        >
+          <Icons.Plus size={16} />
+        </button>
+      </div>
     </div>
   );
 }

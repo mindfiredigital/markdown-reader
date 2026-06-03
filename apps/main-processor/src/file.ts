@@ -34,8 +34,26 @@ export async function watchFile(
       pollInterval: 50,
     },
   });
-  await new Promise<void>((resolve) => {
-    watcher.on('ready', resolve);
+  currentWatchers.set(filePath, watcher);
+  await new Promise<void>((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      resolve();
+    }, 1000);
+    watcher.once('ready', () => {
+      clearTimeout(timeout);
+      resolve();
+    });
+
+    watcher.once('error', (error) => {
+      clearTimeout(timeout);
+      const watcherError = error instanceof Error ? error : new Error(String(error));
+
+      void unWatchFile(filePath)
+        .catch(() => {})
+        .finally(() => onError?.(watcherError));
+
+      reject(watcherError);
+    });
   });
   watcher.on('change', () => {
     const existingTimer = debounceTimers.get(filePath);
@@ -54,13 +72,10 @@ export async function watchFile(
     debounceTimers.set(filePath, timer);
   });
   watcher.on('unlink', () => {
-    void unWatchFile(filePath).then(() => onDeleted?.());
+    void unWatchFile(filePath)
+      .catch(() => {})
+      .finally(() => onDeleted?.());
   });
-  watcher.on('error', (error) => {
-    const watcherError = error instanceof Error ? error : new Error(String(error));
-    void unWatchFile(filePath).then(() => onError?.(watcherError));
-  });
-  currentWatchers.set(filePath, watcher);
 }
 
 //unwatch file

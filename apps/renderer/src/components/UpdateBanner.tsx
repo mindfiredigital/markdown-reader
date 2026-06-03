@@ -4,16 +4,18 @@ import { Icons } from '../utils/constants/icon-contants';
 export function UpdateBanner() {
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);
   useEffect(() => {
-    window.api.onUpdateAvailable((version: string) => {
+    if(!window.api?.onUpdateAvailable) return;
+    const removeUpdateAvailable=window.api.onUpdateAvailable((version: string) => {
       setUpdateVersion(version);
     });
+    return removeUpdateAvailable;
   }, []);
   if (!updateVersion) {
     return null;
   }
 
   return (
-    <div className="bg-accent-bg border-b border-border-theme px-4 py-2 flex items-center gap-3 text-sm">
+    <div role="region" aria-label="Application update banner" className="bg-accent-bg border-b border-border-theme px-4 py-2 flex items-center gap-3 text-sm">
       <span className="text-text-base font-medium">
         Update available: v{updateVersion}
       </span>
@@ -23,6 +25,7 @@ export function UpdateBanner() {
           void window.api.downloadUpdate();
         }}
         className="text-accent hover:underline"
+        aria-label={`Download update version ${updateVersion} and install on quit`}
       >
         Download & install on quit
       </button>

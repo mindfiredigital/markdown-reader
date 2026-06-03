@@ -108,6 +108,7 @@ export interface TabBarProps {
   activeTabId: string | null;
   onSwitch: (id: string) => void;
   onClose: (id: string) => void;
+  plusOpen: () => void;
 }
 
 export interface Tab {
@@ -182,3 +183,8 @@ export interface SettingsPanelProps {
   onChange: (settings: Partial<AppSettings>) => void;
   appVersion?: string;
 }
+
+export type ErrorBoundaryState = {
+  hasError: boolean;
+  error: Error | null;
+};

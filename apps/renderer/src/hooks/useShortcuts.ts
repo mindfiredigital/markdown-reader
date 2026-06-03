@@ -73,12 +73,14 @@ export function useShortcuts({
         return;
       }
 
-      if (e.key === '[') {
+      if (mod && e.key === '[') {
+        e.preventDefault();
         onToggleSidebar();
         return;
       }
 
-      if (e.key === '\\') {
+      if (mod && e.key === '\\') {
+        e.preventDefault();
         onToggleFileBrowser();
         return;
       }

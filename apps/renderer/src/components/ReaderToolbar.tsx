@@ -11,8 +11,9 @@ export function ReaderToolbar({
   onToggleTheme,
 }: ReaderToolbarProps) {
   return (
-    <div className="absolute right-5 top-5 z-30 flex items-center gap-1 rounded-xl border border-border-theme bg-surface px-2 py-1 shadow-sm">
+    <div role="toolbar" aria-label="Text settings toolbar" className="absolute right-5 top-5 z-30 flex items-center gap-1 rounded-xl border border-border-theme bg-surface px-2 py-1 shadow-sm">
       <button
+        type='button'
         onClick={onZoomOut}
         className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
         aria-label="Zoom out"
@@ -20,20 +21,24 @@ export function ReaderToolbar({
         <Icons.ZoomOut size={18} />
       </button>
       <button
+        type='button'
         onClick={onZoomReset}
         className="min-w-12 rounded-md px-2 py-1 text-xs font-medium text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
+        aria-label={`Reset zoom, current size ${fontSize} pixels`}
       >
         {fontSize}px
       </button>
       <button
+        type="button"
         onClick={onZoomIn}
         className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
         aria-label="Zoom in"
       >
         <Icons.ZoomIn size={18} />
       </button>
-      <div className="mx-1 h-5 w-px bg-border-theme" />
+      <div aria-hidden="true" className="mx-1 h-5 w-px bg-border-theme" />
       <button
+        type="button"
         onClick={onToggleTheme}
         className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
         aria-label="Toggle theme"

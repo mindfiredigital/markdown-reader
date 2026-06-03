@@ -60,6 +60,7 @@ export function SearchBar({
 
 
   const newButtonClass=(isDisable:boolean)=>`${btnClass} ${isDisable? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`;
+  const statusId = "search-status-msg";
 
   return (
     <div role="search" aria-label={isFolderMode ? 'Folder Search' : 'Document Search'} className={`fixed top-0 right-0 z-50 p-2 bg-surface border border-border-theme rounded-bl-lg shadow-lg ${isFolderMode ? 'w-96' : 'flex items-center gap-2'}`}>
@@ -73,10 +74,12 @@ export function SearchBar({
         onKeyDown={handleKeyDown}
         placeholder={isFolderMode ? "Search in folder" : "Search in the document"}
         aria-label={isFolderMode ? "Search in folder" : "Search in document"}
+        aria-describedby={query && !isFolderMode ? statusId : undefined} 
+        aria-invalid={!isFolderMode && query && matchCount === 0 ? "true" : undefined} 
       />
 
      {query && !isFolderMode && (
-        <div role="status" aria-live="polite" className="flex items-center gap-2">
+        <div id={statusId} role="status" aria-live="polite" className="flex items-center gap-2">
           {matchCount > 0 ? (
             <span className="min-w-15 font-mono text-sm text-text-muted">
               <span className="sr-only">Match</span> {currentMatch} 
@@ -110,6 +113,7 @@ export function SearchBar({
             </>
           )}
           <button
+            type='button'
             onClick={onClose}
             aria-label="Close search"
             className={newButtonClass(false)}
@@ -119,9 +123,9 @@ export function SearchBar({
         </div>
       </div>
       {isFolderMode && (
-        <div className="mt-2 max-h-80 overflow-y-auto border-t border-border-theme pt-2">
+        <div role="region" aria-label="Folder search results" className="mt-2 max-h-80 overflow-y-auto border-t border-border-theme pt-2">
           {!hasFolder && (
-            <div className="px-2 py-3 text-sm text-text-muted">
+            <div role="status" aria-live="polite" className="px-2 py-3 text-sm text-text-muted">
               Open a folder to search.
             </div>
           )}
@@ -142,6 +146,7 @@ export function SearchBar({
             <button
               key={`${result.filePath}:${result.line}:${result.preview}`}
               type="button"
+              aria-label={`Open file ${result.fileName} at line ${result.line}, match preview: ${result.preview}`}
               className="block w-full rounded px-2 py-2 text-left hover:bg-accent-bg"
               onClick={() => onOpenFolderResult?.(result)}
             >

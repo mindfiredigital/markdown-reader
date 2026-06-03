@@ -40,24 +40,6 @@ export function useSettings() {
     style.textContent = settings.customCss || '';
   }, [settings.customCss]);
 
-  const increaseFontSize = useCallback(() => {
-    setSettings((current) => ({
-      ...current,
-      fontSize: Math.min(FONT_SIZE.MAX, current.fontSize + FONT_SIZE.INCREMENT),
-    }));
-  }, []);
-
-  const decreaseFontSize = useCallback(() => {
-    setSettings((current) => ({
-      ...current,
-      fontSize: Math.max(FONT_SIZE.MIN, current.fontSize - FONT_SIZE.INCREMENT),
-    }));
-  }, []);
-
-  const resetFontSize = useCallback(() => {
-    setSettings((current) => ({ ...current, fontSize: FONT_SIZE.DEFAULT }));
-  }, []);
-
   const updateSettings = useCallback(async (partial: Partial<AppSettings>) => {
     if (!window.api) {
       setSettings((current) => ({ ...current, ...partial }));
@@ -67,10 +49,28 @@ export function useSettings() {
     try {
       const next = await window.api.saveSettings(partial);
       setSettings(next);
-    } catch {
-      setSettings((current) => ({ ...current, ...partial }));
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      throw error;
     }
   }, []);
+
+  const increaseFontSize = useCallback(() => {
+    return updateSettings({
+      fontSize: Math.min(FONT_SIZE.MAX, settings.fontSize + FONT_SIZE.INCREMENT),
+    });
+  }, [settings.fontSize, updateSettings]);
+
+  const decreaseFontSize = useCallback(() => {
+    return updateSettings({
+      fontSize: Math.max(FONT_SIZE.MIN, settings.fontSize - FONT_SIZE.INCREMENT),
+    });
+  }, [settings.fontSize, updateSettings]);
+
+  const resetFontSize = useCallback(() => {
+    return updateSettings({ fontSize: FONT_SIZE.DEFAULT });
+  }, [updateSettings]);
+
   return {
     settings,
     fontSize,
