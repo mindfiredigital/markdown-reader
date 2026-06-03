@@ -1,3 +1,4 @@
+import { once } from 'node:events';
 import { BrowserWindow } from 'electron';
 import { writeFile, rm } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -47,7 +48,13 @@ export async function exportPDF(bodyHtml: string, css: string, outputPath: strin
     });
     await writeFile(outputPath, pdfBuffer);
   } finally {
-    pdfWindow.close();
+    const closed = pdfWindow.isDestroyed()
+      ? Promise.resolve()
+      : once(pdfWindow, 'closed').then(() => undefined);
+    if (!pdfWindow.isDestroyed()) {
+      pdfWindow.close();
+    }
+    await closed;
     try {
       await rm(tempFilePath, { force: true });
     } catch (error) {
