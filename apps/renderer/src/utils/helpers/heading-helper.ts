@@ -2,6 +2,13 @@ import { HeadingProps } from '../../types/component-types';
 import { SLUG_PATTERNS, HTML_PATTERNS } from '../constants/regex-constants';
 import { parseInline, type Tokens } from 'marked';
 
+const idRegistry = new Map<string, number>();
+
+//Resets the shared heading counter state.
+export function resetHeadingRegistry(): void {
+  idRegistry.clear();
+}
+
 // converts heading text into a ID
 export function getHeadingId(text: string): string {
   let id = text.toLowerCase();
@@ -9,7 +16,10 @@ export function getHeadingId(text: string): string {
   id = id.replace(SLUG_PATTERNS.SPACES, '-');
   id = id.trim().replace(SLUG_PATTERNS.TRIM_HYPHENS, '');
 
-  return id;
+  const count = idRegistry.get(id) || 0;
+  idRegistry.set(id, count + 1);
+
+  return count === 0 ? id : `${id}-${count}`;
 }
 
 // assigns id to the headings

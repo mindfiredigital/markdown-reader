@@ -1,8 +1,10 @@
 import { getMarkdown } from '../config/marked';
+import { resetHeadingRegistry } from '../utils/helpers/heading-helper';
 import { parseCallouts } from './callout';
 
 // converts markdown text into plain HTML string
 export async function renderMarkdown(markdownText: string): Promise<string> {
+  resetHeadingRegistry();
   if (!markdownText || markdownText.trim() === '') {
     return '';
   }

@@ -198,7 +198,7 @@ useShortcuts({
             )}
             {!focusMode && (
               <Sidebar
-                tocItems={activeTab.toc??extractTOC(activeTab.html)}
+                tocItems={activeToc}
                 activeId={activeId}
                 onSelect={scrollToHeading}
                 isVisible={sidebarOpen}
