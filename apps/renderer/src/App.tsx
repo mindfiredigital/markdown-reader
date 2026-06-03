@@ -13,7 +13,6 @@ import { SearchBar } from './components/SearchBar';
 import { useSettings } from './hooks/useSettings';
 import { StatusBar } from './components/StatusBar';
 import { FileBrowser } from './components/FileBrowser';
-import { extractTOC } from './renderer/toc';
 import { TabBar } from './components/TabBar';
 import { useTabStore } from './hooks/useTabStore';
 import { Icons } from './utils/constants/icon-contants';
