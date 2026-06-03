@@ -1,4 +1,5 @@
 import { app, ipcMain, dialog } from 'electron';
+import { sep } from 'node:path';
 import { readFile, unWatchFile, watchFile } from './file';
 import { getFolder } from './folder';
 import {
@@ -209,7 +210,7 @@ export function registerIPCHandlers(): void {
     }
     const safeFolderPath = await resolveDirectoryPath(folderPath);
     const isAllowed = Array.from(allowedFolderRoots).some(
-      (root) => safeFolderPath === root || safeFolderPath.startsWith(`${root}/`)
+      (root) => safeFolderPath === root || safeFolderPath.startsWith(`${root}${sep}`)
     );
     if (!isAllowed) {
       throw new Error('Folder path is not authorized');
