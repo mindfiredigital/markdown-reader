@@ -183,3 +183,8 @@ export interface SettingsPanelProps {
   onChange: (settings: Partial<AppSettings>) => void;
   appVersion?: string;
 }
+
+export type ErrorBoundaryState = {
+  hasError: boolean;
+  error: Error | null;
+};

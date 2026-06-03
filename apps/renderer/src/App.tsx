@@ -1,4 +1,4 @@
-import React,{ useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useFile } from './hooks/useFile';
 import { Welcome } from './components/Welcome';
 import { Reader } from './components/Reader';
@@ -31,6 +31,7 @@ import { useFilePersistence } from './hooks/useFilePersistence';
 import { ReaderToolbar } from './components/ReaderToolbar';
 import { useFolderSearch } from './hooks/useFolderSearch';
 import { SettingsPanel } from './components/SettingsPanel';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 export default function App() {
   const {  error, isLoading, openFile, toc,recentFiles,loadFile } =useFile();
@@ -212,7 +213,9 @@ useShortcuts({
             className="flex-1 overflow-y-auto" 
             onScroll={scroll}
             >
-              <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
+              <ErrorBoundary>
+                <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
+              </ErrorBoundary>
             </main>
           </div>
         )}
