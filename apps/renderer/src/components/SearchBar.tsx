@@ -79,7 +79,7 @@ export function SearchBar({
       />
 
      {query && !isFolderMode && (
-        <div role="status" aria-live="polite" className="flex items-center gap-2">
+        <div id={statusId} role="status" aria-live="polite" className="flex items-center gap-2">
           {matchCount > 0 ? (
             <span className="min-w-15 font-mono text-sm text-text-muted">
               <span className="sr-only">Match</span> {currentMatch} 
