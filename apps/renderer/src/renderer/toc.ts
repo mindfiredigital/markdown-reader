@@ -4,13 +4,13 @@ import {
   getHeadingId,
   isHeadingToken,
   headingText,
-  resetHeadingRegistry,
+  createHeadingRegistry,
 } from '../utils/helpers/heading-helper';
 
 // extracts table of content from HTML string
 export function extractTOC(html: string): TOCType[] {
   const items: TOCType[] = [];
-  resetHeadingRegistry();
+  const registry = createHeadingRegistry();
   const tokens = lexer(html);
 
   for (const token of tokens) {
@@ -19,7 +19,7 @@ export function extractTOC(html: string): TOCType[] {
     const level = Math.min(token.depth, 3) as 1 | 2 | 3;
     const text = headingText(token);
     if (!text) continue;
-    const id = getHeadingId(text);
+    const id = getHeadingId(text, registry);
     items.push({ id, text, level });
   }
   return items;

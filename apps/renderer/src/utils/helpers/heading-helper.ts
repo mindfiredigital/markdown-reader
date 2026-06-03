@@ -2,30 +2,27 @@ import { HeadingProps } from '../../types/component-types';
 import { SLUG_PATTERNS, HTML_PATTERNS } from '../constants/regex-constants';
 import { parseInline, type Tokens } from 'marked';
 
-const idRegistry = new Map<string, number>();
-
-//Resets the shared heading counter state.
-export function resetHeadingRegistry(): void {
-  idRegistry.clear();
+export function createHeadingRegistry(): Map<string, number> {
+  return new Map<string, number>();
 }
 
 // converts heading text into a ID
-export function getHeadingId(text: string): string {
+export function getHeadingId(text: string, registry: Map<string, number>): string {
   let id = text.toLowerCase();
   id = id.replace(SLUG_PATTERNS.NON_WORD, '');
   id = id.replace(SLUG_PATTERNS.SPACES, '-');
   id = id.trim().replace(SLUG_PATTERNS.TRIM_HYPHENS, '');
 
-  const count = idRegistry.get(id) || 0;
-  idRegistry.set(id, count + 1);
+  const count = registry.get(id) || 0;
+  registry.set(id, count + 1);
 
   return count === 0 ? id : `${id}-${count}`;
 }
 
 // assigns id to the headings
-export function heading({ text, depth }: HeadingProps) {
+export function heading({ text, depth }: HeadingProps, registry: Map<string, number>) {
   const plainText = stripHtml(text);
-  const id = getHeadingId(plainText);
+  const id = getHeadingId(plainText, registry);
   const safeText = escapeHtml(plainText);
   return `<h${depth} id="${id}">${safeText}</h${depth}>\n`;
 }
