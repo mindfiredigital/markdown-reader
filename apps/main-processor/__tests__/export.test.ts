@@ -1,11 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, writeFile, rm, realpath } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { buildDocument } from '../src/export/buildDocument';
 import { sanitizeCss } from '../src/export/sanitizeCss';
 import { getImage } from '../src/export/getImage';
 import { inlineImages } from '../src/export/inlineImage';
+import { allowedFolderRoots } from '../src/utils/constants/ipc-validation';
 
 describe('build html document', () => {
   it('wraps content in a valid HTML5 document shell', () => {
@@ -58,11 +59,26 @@ describe('get image of mime type', () => {
 describe('inline images for HTML export', () => {
   it('keeps local images as base 64 data URIs', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'markdown-reader-export-'));
+    const resolvedDir = await realpath(dir);
+    allowedFolderRoots.add(resolvedDir);
     try {
-      const imagePath = join(dir, 'image.png');
+      const imagePath = join(resolvedDir, 'image.png');
       await writeFile(imagePath, Buffer.from([137, 80, 78, 71]));
       const html = await inlineImages(`<img src="${imagePath}"/>`);
       expect(html).toContain('src="data:image/png;base64,');
+    } finally {
+      allowedFolderRoots.delete(resolvedDir);
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it('does not inline images outside approved folders', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'markdown-reader-export-deny-'));
+    try {
+      const imagePath = join(dir, 'private.png');
+      await writeFile(imagePath, Buffer.from([137, 80, 78, 71]));
+      const html = await inlineImages(`<img src="${imagePath}"/>`);
+      expect(html).toBe(`<img src="${imagePath}"/>`);
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
