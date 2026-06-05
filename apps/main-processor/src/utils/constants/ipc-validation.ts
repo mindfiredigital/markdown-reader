@@ -1,5 +1,7 @@
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 import { IpcMainInvokeEvent } from 'electron';
+import { PATHS } from './path-constants';
 
 // production and dev urls
 export const ALLOWED_MARKDOWN_EXTENSIONS = new Set(['.md', '.markdown']);
@@ -16,7 +18,11 @@ export function validateSender(event: IpcMainInvokeEvent): boolean {
     const parsedUrl = new URL(url);
 
     if (parsedUrl.protocol === 'file:') {
-      return true;
+      parsedUrl.hash = '';
+      parsedUrl.search = '';
+      const filePath = path.resolve(fileURLToPath(parsedUrl.href));
+      const expectedPath = path.resolve(PATHS.RENDERER_HTML);
+      return filePath === expectedPath;
     }
 
     return parsedUrl.protocol === 'http:' && parsedUrl.hostname === 'localhost';

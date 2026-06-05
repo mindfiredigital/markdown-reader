@@ -2,6 +2,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { realpath, stat } from 'node:fs/promises';
 import { validatePath, validateSender } from '../src/utils/constants/ipc-validation';
 import { resolveMarkdownFilePath } from '../src/utils/helper/ipc-path-resolver';
+import { pathToFileURL } from 'node:url';
+import { PATHS } from '../src/utils/constants/path-constants';
 
 vi.mock('node:fs/promises', () => ({
   realpath: vi.fn(),
@@ -34,6 +36,17 @@ describe('ipc - validation test', () => {
   //test 2:- to check empty urls
   it('return false when url is empty', () => {
     const event = mockEvent('');
+    expect(validateSender(event)).toBe(false);
+  });
+
+  it('returns true for valid file:// url matching RENDERER_HTML', () => {
+    const validUrl = pathToFileURL(PATHS.RENDERER_HTML).href;
+    const event = mockEvent(validUrl);
+    expect(validateSender(event)).toBe(true);
+  });
+
+  it('returns false for invalid file:// url', () => {
+    const event = mockEvent('file:///etc/passwd');
     expect(validateSender(event)).toBe(false);
   });
 
