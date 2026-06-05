@@ -38,11 +38,20 @@ describe('sanitise css for export ', () => {
 
   it('removes unsafe css patterns', () => {
     const css = sanitizeCss(
-      'body { behavior: url(test.htc); background: url(javascript:alert(1)); }'
+      'body { behavior: url(test.htc); background: url(javascript:alert(1)); } ' +
+        '@import "http://example.com/style.css"; ' +
+        '@import url("https://example.com/no-semicolon")' +
+        'div { background: url(https://example.com/bg.png); } ' +
+        'p { background: url(//example.com/bg.png); } ' +
+        'span { background: url(http://example.com/bg.png); }'
     );
 
     expect(css).not.toContain('behavior');
     expect(css).not.toContain('javascript:');
+    expect(css).not.toContain('@import');
+    expect(css).not.toContain('https://');
+    expect(css).not.toContain('http://');
+    expect(css).not.toContain('//example.com');
   });
 });
 
