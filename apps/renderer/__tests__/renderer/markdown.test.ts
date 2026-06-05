@@ -55,4 +55,12 @@ describe('renderMarkdown', () => {
     `);
     expect(html).toContain('onerror');
   });
+
+  it('it should reset heading counters between independent render markdown calls', async () => {
+    const html1 = await renderMarkdown('# Hello World');
+    expect(html1).toContain('<h1 id="hello-world">Hello World</h1>');
+    const html2 = await renderMarkdown('# Hello World');
+    expect(html2).toContain('<h1 id="hello-world">Hello World</h1>');
+    expect(html2).not.toContain('id="hello-world-1"');
+  });
 });
