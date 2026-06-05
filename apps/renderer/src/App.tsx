@@ -177,6 +177,7 @@ useShortcuts({
         )}
 
         {activeTab && !isLoading && !error && (
+        <ErrorBoundary>
           <div className="flex flex-1 overflow-hidden relative">
             {!focusMode && (
               <FileBrowser
@@ -212,11 +213,11 @@ useShortcuts({
             className="flex-1 overflow-y-auto" 
             onScroll={scroll}
             >
-              <ErrorBoundary>
+              
                 <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
-              </ErrorBoundary>
             </main>
           </div>
+          </ErrorBoundary>
         )}
 
         <Toast message="File updated" show={showToast} onDone={() => setShowToast(false)} />
