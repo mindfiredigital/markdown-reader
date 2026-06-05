@@ -35,7 +35,6 @@ export function useFilePersistence({
       window.clearTimeout(debounceTimer.current);
     }
     debounceTimer.current = window.setTimeout(async () => {
-      if (!debounceTimer.current) return;
       const currentScroll = contentRef.current?.scrollTop ?? 0;
       const result = await loadFile(activeTab.filePath);
       if (!result || !isMounted.current) return;
@@ -64,14 +63,14 @@ export function useFilePersistence({
     }
 
     scrollTimer.current = window.setTimeout(() => {
-      if (!scrollTimer.current || !contentRef.current) return;
-      saveScrollPos(activeTab.filePath, contentRef.current!.scrollTop);
+      if (!isMounted.current || !contentRef.current) return;
+      saveScrollPos(activeTab.filePath, contentRef.current.scrollTop);
 
       dispatch({
         type: 'UPDATE_TAB_STATE',
         payload: {
           tabId: activeTab.id,
-          scrollTop: contentRef.current?.scrollTop ?? 0,
+          scrollTop: contentRef.current.scrollTop,
         },
       });
     }, 100);
