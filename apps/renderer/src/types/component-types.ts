@@ -36,13 +36,6 @@ export interface ThemeContextType {
   setTheme: (theme: Theme) => void;
 }
 
-export type BuiltThemeType =
-  | 'github-light'
-  | 'github-dark'
-  | 'notion'
-  | 'nord'
-  | 'minimal'
-  | 'dracula';
 export interface HeadingProps {
   text: string;
   depth: number;
