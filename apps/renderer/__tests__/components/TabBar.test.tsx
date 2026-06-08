@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { TabBar } from '../../src/components/TabBar';
-import { Tab } from '../../src/types/component-types';
+import { Tab } from '@package/shared-types';
 
 const tabs: Tab[] = [
   {

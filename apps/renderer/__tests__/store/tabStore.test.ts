@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { tabReducer } from '../../src/store/tabStore';
 import { TabState, TabAction } from '../../src/types/component-types';
-import { createTab } from '../../src/utils/helpers/tab-helper';
+import { createTab } from '@package/shared-utils';
 const empty: TabState = {
   tabs: [],
   activeTabId: null,

@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, test, expect } from 'vitest';
 import { useCollapsibleToc } from '../../src/hooks/useCollapsibleToc';
-import { TOCType } from '../../src/types/component-types';
+import { TOCType } from '@package/shared-types';
 
 describe('Table of Contents Hook Tests', () => {
   const sampleDocumentItems: TOCType[] = [

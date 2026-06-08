@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { findMatches, highlightMatches } from '../../src/utils/helpers/search-helper';
+import { findMatches, highlightMatches } from '@package/shared-utils';
 
 describe('find matches', () => {
   it(' should return empty array for empty query', () => {

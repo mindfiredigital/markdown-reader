@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import {Sidebar} from "../../src/components/Sidebar"
-import { TOCType } from '../../src/types/component-types';
+import { TOCType } from '@package/shared-types';
 
 //fake TOC
 const mockTOC: TOCType[] = [
