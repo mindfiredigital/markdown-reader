@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { TOCType } from '../types/component-types';
+import { TOCType } from '@package/shared-types';
 
 export function useCollapsibleToc(tocItems: TOCType[]) {
   const [collapsedItems, setCollapsedItems] = useState<Record<string, boolean>>({});

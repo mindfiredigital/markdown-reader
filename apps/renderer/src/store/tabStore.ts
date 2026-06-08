@@ -1,5 +1,5 @@
 import { TabAction, TabState } from '../types/component-types';
-import { createTab } from '../utils/helpers/tab-helper';
+import { createTab } from '@package/shared-utils';
 
 export function tabReducer(state: TabState, action: TabAction): TabState {
   switch (action.type) {

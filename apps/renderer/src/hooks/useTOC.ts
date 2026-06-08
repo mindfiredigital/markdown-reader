@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { TOCType } from '../types/component-types';
+import { TOCType } from '@package/shared-types';
 
 export function useToc(tocItems: TOCType[]) {
   const [activeId, setActiveId] = useState('');

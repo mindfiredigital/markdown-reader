@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import DOMpurify from 'dompurify';
-import { renderMarkdown } from '../renderer/markdown';
-import { extractTOC } from '../renderer/toc';
-import { TOCType } from '../types/component-types';
+import { renderMarkdown } from '@package/markdown-core';
+import { extractTOC } from '@package/markdown-core';
+import { TOCType } from '@package/shared-types';
 import { RecentFile } from '@package/shared-types';
 
 export function useFile() {

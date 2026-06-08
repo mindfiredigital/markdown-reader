@@ -1,7 +1,7 @@
 import React from 'react';
 import { Theme } from './component-types';
-import { TOCType } from './component-types';
-import { Tab, TabAction } from './component-types';
+import { TabAction } from './component-types';
+import { TOCType, Tab } from '@package/shared-types';
 
 type LoadFileResult =
   | {

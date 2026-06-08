@@ -1,7 +1,7 @@
 import { useEffect,useRef } from 'react';
 import { SidebarProps } from '../types/component-types';
 import { Icons } from '../utils/constants/icon-contants';
-import { getItemClasses } from '../utils/helpers/sidebar-helper';
+import { getItemClasses } from '@package/shared-utils';
 import { useCollapsibleToc } from '../hooks/useCollapsibleToc';
 
 //sidebar component

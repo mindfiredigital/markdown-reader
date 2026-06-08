@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { useWatcher } from './useWatcher';
-import { saveScrollPos, getScrollPos } from '../renderer/scroll';
+import { saveScrollPos, getScrollPos } from '@package/markdown-core';
 import { FilePersistenceProps } from '../types/hook-types';
 
 export function useFilePersistence({

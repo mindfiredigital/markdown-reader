@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
-import { TabAction, Tab } from '../types/component-types';
+import { TabAction } from '../types/component-types';
+import { Tab } from '@package/shared-types';
 
 export function useTabNavigation(
   tabs: Tab[],

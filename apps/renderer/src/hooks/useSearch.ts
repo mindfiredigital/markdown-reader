@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { UseSearchProps } from '../types/hook-types';
-import { findMatches, highlightMatches } from '../utils/helpers/search-helper';
-import { HTML_PATTERNS } from '../utils/constants/regex-constants';
+import { findMatches, highlightMatches } from '@package/shared-utils';
+import { HTML_PATTERNS } from '@package/shared-constants';
 
 export function useSearch(rawHtml: string): UseSearchProps {
   const [currentMatch, setCurrentMatch] = useState(1);

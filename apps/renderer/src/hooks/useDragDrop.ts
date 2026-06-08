@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { extractDroppedMdpath } from '../renderer/drag-drop';
+import { extractDroppedMdpath } from '../utils/helpers/drag-drop-helper';
 
 export function useDragDrop(loadFileInTab: (path: string) => Promise<void>) {
   const [isDraggingFile, setIsDraggingFile] = useState(false);

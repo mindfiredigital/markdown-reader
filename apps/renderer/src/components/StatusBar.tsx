@@ -1,5 +1,5 @@
 import { StatusBarProps } from "../types/component-types";
-import { basename } from "../utils/helpers/path-helper";
+import { basename } from "@package/shared-utils";
 import { Icons } from "../utils/constants/icon-contants";
 
 export function StatusBar({ filePath, theme, fontSize }: StatusBarProps) {

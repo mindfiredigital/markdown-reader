@@ -13,6 +13,7 @@ import {
   WIDE_WIDTH,
 } from '@package/shared-constants';
 import { FolderSearchResult } from '@package/shared-types';
+import { TOCType, Tab } from '@package/shared-types';
 export interface ErrorProps {
   message: string;
   onRetry: () => void;
@@ -43,15 +44,6 @@ export type BuiltThemeType =
   | 'nord'
   | 'minimal'
   | 'dracula';
-export interface HeadingProps {
-  text: string;
-  depth: number;
-}
-export interface TOCType {
-  id: string;
-  text: string;
-  level: 1 | 2 | 3;
-}
 
 export interface SidebarProps {
   tocItems: TOCType[];
@@ -109,16 +101,6 @@ export interface TabBarProps {
   onSwitch: (id: string) => void;
   onClose: (id: string) => void;
   plusOpen: () => void;
-}
-
-export interface Tab {
-  id: string;
-  filePath: string;
-  fileName: string;
-  html: string;
-  toc?: TOCType[];
-  scrollTop: number;
-  fontSize: number;
 }
 
 export interface TabState {

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SearchBarProps } from '../types/component-types';
-import { btnClass } from '../utils/constants/style-constants';
+import { btnClass } from '@package/shared-constants/src/style-constants';
 import { Icons } from '../utils/constants/icon-contants';
 // search bar component
 export function SearchBar({
