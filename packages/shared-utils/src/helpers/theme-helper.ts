@@ -1,4 +1,4 @@
-import { Theme } from '../../types/component-types';
+import { Theme } from '@package/shared-constants';
 
 /*checks user's system color scheme preference. */
 export function getSystemTheme(): Theme {

@@ -1,5 +1,5 @@
-import { HeadingProps } from '../../types/component-types';
-import { SLUG_PATTERNS, HTML_PATTERNS } from '../constants/regex-constants';
+import { HeadingProps } from '@package/shared-types';
+import { SLUG_PATTERNS, HTML_PATTERNS } from '@package/shared-constants';
 import { parseInline, type Tokens } from 'marked';
 
 export function createHeadingRegistry(): Map<string, number> {

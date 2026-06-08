@@ -1,4 +1,4 @@
-import { createSearchRegex } from '../constants/regex-constants';
+import { createSearchRegex } from '@package/shared-constants';
 
 // matches the input in the search with the content
 export function findMatches(text: string, query: string): number[] {

@@ -1,5 +1,5 @@
- import { Tab } from "../../types/component-types";
-import { FILE_PATH } from "../constants/regex-constants";
+ import { Tab } from "@package/shared-types";
+import { FILE_PATH } from "@package/shared-constants";
 
 export function createTab(filePath: string, html = '',toc: Tab['toc']=[]): Tab {
   return {
