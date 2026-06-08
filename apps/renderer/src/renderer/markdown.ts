@@ -1,13 +1,16 @@
 import { getMarkdown } from '../config/marked';
+import { createHeadingRegistry } from '../utils/helpers/heading-helper';
 import { parseCallouts } from './callout';
 
 // converts markdown text into plain HTML string
 export async function renderMarkdown(markdownText: string): Promise<string> {
+  const registry = createHeadingRegistry();
+
   if (!markdownText || markdownText.trim() === '') {
     return '';
   }
 
-  const marked = getMarkdown();
+  const marked = getMarkdown(registry);
   let result = await marked.parse(markdownText);
   if (result.includes('$')) {
     const { processAllMath } = await import('./katex');

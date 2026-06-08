@@ -1,0 +1,31 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: auto;
+  overflow: visible;
+  background: #ffffff;
+}
+
+body {
+  padding: 40px;
+  font-family: system-ui, sans-serif;
+  line-height: 1.7;
+  color: #111827;
+}
+
+.content,
+.prose {
+  max-width: 850px;
+  margin: 0 auto;
+  height: auto;
+  overflow: visible;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
+}

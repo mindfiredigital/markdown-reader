@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { UseShortcutsProps } from '../types/component-types';
+import { UseShortcutsProps } from '../types/hook-types';
 
 export function useShortcuts({
   onOpenFile,
@@ -7,6 +7,7 @@ export function useShortcuts({
   onToggleFocusMode,
   onToggleTheme,
   onOpenSearch,
+  onOpenFolderSearch,
   onCloseSearch,
   onZoomIn,
   onZoomOut,
@@ -21,6 +22,12 @@ export function useShortcuts({
       if (mod && e.shiftKey && e.key.toLowerCase() === 'o') {
         e.preventDefault();
         onOpenFolder();
+        return;
+      }
+
+      if (mod && e.shiftKey && e.key.toLowerCase() === 'f') {
+        e.preventDefault();
+        onOpenFolderSearch();
         return;
       }
 
@@ -66,12 +73,14 @@ export function useShortcuts({
         return;
       }
 
-      if (e.key === '[') {
+      if (mod && e.key === '[') {
+        e.preventDefault();
         onToggleSidebar();
         return;
       }
 
-      if (e.key === '\\') {
+      if (mod && e.key === '\\') {
+        e.preventDefault();
         onToggleFileBrowser();
         return;
       }
@@ -90,6 +99,7 @@ export function useShortcuts({
     onToggleFocusMode,
     onToggleTheme,
     onOpenSearch,
+    onOpenFolderSearch,
     onCloseSearch,
     onZoomIn,
     onZoomOut,

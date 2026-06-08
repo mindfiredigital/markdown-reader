@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useFile } from './hooks/useFile';
 import { Welcome } from './components/Welcome';
 import { Reader } from './components/Reader';
@@ -6,123 +6,79 @@ import { Loading } from './components/Loading';
 import { Error } from './components/Error';
 import { useToc } from './hooks/useTOC';
 import { Sidebar } from './components/Sidebar';
-import { useWatcher } from './hooks/useWatcher';
-import { saveScrollPos, getScrollPos } from './renderer/scroll';
 import { Toast } from './components/Toast';
 import { useTheme } from './hooks/useTheme';
 import { useSearch } from './hooks/useSearch';
 import { SearchBar } from './components/SearchBar';
 import { useSettings } from './hooks/useSettings';
 import { StatusBar } from './components/StatusBar';
-import { FileType } from '@package/shared-types';
 import { FileBrowser } from './components/FileBrowser';
 import { TabBar } from './components/TabBar';
 import { useTabStore } from './hooks/useTabStore';
-import { extractTOC } from './renderer/toc';
 import { Icons } from './utils/constants/icon-contants';
 import { useShortcuts } from './hooks/useShortcuts';
 import { useMenuEvents } from './hooks/useMenuEvents';
+import { UpdateBanner } from './components/UpdateBanner';
+import { useExport } from './hooks/useExport';
+import { useDragDrop } from './hooks/useDragDrop';
+import { useTabNavigation } from './hooks/useTabNavigation';
+import { DragDrop } from './components/DragDrop';
+import { useLayout } from './hooks/useLayout';
+import { useFileActions } from './hooks/useFileActions';
+import { useOpenFilePath } from './hooks/useOpenFilePath';
+import { useFilePersistence } from './hooks/useFilePersistence';
+import { ReaderToolbar } from './components/ReaderToolbar';
+import { useFolderSearch } from './hooks/useFolderSearch';
+import { SettingsPanel } from './components/SettingsPanel';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 export default function App() {
   const {  error, isLoading, openFile, toc,recentFiles,loadFile } =useFile();
   const { state, dispatch } = useTabStore();
   const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId) ?? null;
-  const { theme, toggleTheme} = useTheme();
-  const {activeId,scrollToHeading}=useToc(toc);
-  const {increaseFontSize,decreaseFontSize,resetFontSize,fontSize}=useSettings();
+  const activeToc=activeTab?.toc?? toc;
+  const { theme, toggleTheme,setTheme} = useTheme();
+  const {activeId,scrollToHeading}=useToc(activeToc);
+  const {settings,increaseFontSize,decreaseFontSize,resetFontSize,fontSize,updateSettings}=useSettings();
   const {query,matchCount,currentMatch,isSearchOpen,openSearch,closeSearch,setQuery,goToNextMatch,goToPrevMatch,getHiglightedHtml} = useSearch(activeTab?.html ?? '');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showToast, setShowToast] = useState(false);
-  const [folderTree, setFolderTree] = useState<FileType | null>(null);
-  const [fileBrowserOpen, setFileBrowserOpen] = useState(false);
-  const [focusMode, setFocusMode] = useState(false);
   const contentRef=useRef<HTMLDivElement>(null);
-  const debounceTimer=useRef<number | undefined>(undefined);
-  const scrollTimer=useRef<number | undefined>(undefined);
+  const {exportHtml,exportPdf,exportDocx}=useExport(activeTab);
+  const {goToNextTab,goToPreviousTab,closeActiveTab}=useTabNavigation(state.tabs,state.activeTabId,dispatch);
+  const {sidebarOpen,setSidebarOpen,fileBrowserOpen,setFileBrowserOpen,focusMode,toggleFocusMode,toggleSidebar,toggleFileBrowser}=useLayout();
+  const {folderTree,folderPath,openFolder,loadFileInTab,openFileDialog}=useFileActions({loadFile,dispatch});
+  const {isDraggingFile,handleDragEnter,handleDragOver,handleDragLeave,handleDrop}=useDragDrop(loadFileInTab);
+  useOpenFilePath(loadFileInTab);
+  const {scroll}=useFilePersistence({activeTab,loadFile,dispatch,contentRef,setShowToast});
+  const {isFolderSearchOpen,folderQuery,folderResults,isSearchingFolder,openFolderSearch,closeFolderSearch,searchFolder}=useFolderSearch(folderPath)
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [appVersion, setAppVersion] = useState('');
 
-  const openFolder = useCallback(async () => {
-    const folderPath = await window.api.openFolderDialog();
-    if (!folderPath) return;
-    const tree = await window.api.readFolder(folderPath);
-    setFolderTree(tree);
-    setFileBrowserOpen(true);
-  }, []);
-
-  const loadFileInTab = useCallback(
-    async (path: string) => {
-      const result = await loadFile(path);
-      if (!result) return;
-      dispatch({
-        type: 'OPEN_TAB',
-        payload: {
-          filePath: result.filePath,
-          html: result.html,
-        },
-      });
-    },
-    [loadFile, dispatch]
-  );
-  const openFileDialog = useCallback(() => {
-  void window.api.openFileDialog().then((chosenPath) => {
-    if (chosenPath) {
-      void loadFileInTab(chosenPath);
-    }
-  });
-}, [loadFileInTab]);
-
-const toggleSidebar = useCallback(() => {
-  setSidebarOpen((prev) => !prev);
-}, []);
-
-const toggleFileBrowser = useCallback(() => {
-  setFileBrowserOpen((prev) => !prev);
-}, []);
-
-const toggleFocusMode = useCallback(() => {
-  setFocusMode((prev) => !prev);
-}, []);
-
-const goToNextTab = useCallback(() => {
-  const idx = state.tabs.findIndex((tab) => tab.id === state.activeTabId);
-  const next = state.tabs[idx + 1] || state.tabs[0];
-
-  if (next) {
-    dispatch({ type: 'SWITCH_TAB', payload: { tabId: next.id } });
-  }
-}, [state.tabs, state.activeTabId, dispatch]);
-
-const goToPreviousTab = useCallback(() => {
-  const idx = state.tabs.findIndex((tab) => tab.id === state.activeTabId);
-  const prev = state.tabs[idx - 1] || state.tabs[state.tabs.length - 1];
-
-  if (prev) {
-    dispatch({ type: 'SWITCH_TAB', payload: { tabId: prev.id } });
-  }
-}, [state.tabs, state.activeTabId, dispatch]);
-
-const closeActiveTab = useCallback(() => {
-  if (!state.activeTabId) return;
-
-  dispatch({
-    type: 'CLOSE_TAB',
-    payload: { tabId: state.activeTabId },
-  });
-}, [state.activeTabId, dispatch]);
+  useEffect(()=>{
+    if(!window.api?.getAppVersion) return;
+    void window.api.getAppVersion().then(setAppVersion).catch(()=>{});
+  },[])
   
+  useEffect(()=>{
+    if(folderTree){
+      setFileBrowserOpen(true);
+    }
+  },[folderTree,setFileBrowserOpen]);
 
-  useEffect(() => {
-    window.api.onOpenFilePath((path) => {
-      void loadFileInTab(path);
-    });
-    return () => {
-      window.api.removeOpenFilePathListener();
-    };
-  }, [loadFileInTab]);
+  useEffect(()=>{
+    if(!query || ! isSearchOpen) return;
+    requestAnimationFrame(()=>{
+      const marks=contentRef.current?.querySelectorAll('mark.search-match');
+      const target = marks?.[Math.max(0, currentMatch - 1)];
+      target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    })
+  },[currentMatch, isSearchOpen, query, activeTab?.html])
 
   useMenuEvents({
   onOpenFile: openFileDialog,
   onOpenFolder: openFolder,
   onSearchDocument: openSearch,
+  onSearchFolder: openFolderSearch,
   onToggleToc: toggleSidebar,
   onToggleBrowser: toggleFileBrowser,
   onFocusMode: toggleFocusMode,
@@ -133,6 +89,11 @@ const closeActiveTab = useCallback(() => {
   onNextTab: goToNextTab,
   onPreviousTab: goToPreviousTab,
   onCloseTab: closeActiveTab,
+  onExportHtml:exportHtml,
+  onExportPdf:exportPdf,
+  onExportDocx:exportDocx,
+  onOpenSettings:()=>setSettingsOpen(true),
+  onSetTheme:setTheme
 });
 
 useShortcuts({
@@ -141,71 +102,23 @@ useShortcuts({
   onToggleFocusMode: toggleFocusMode,
   onToggleTheme: toggleTheme,
   onOpenSearch: openSearch,
+  onOpenFolderSearch: openFolderSearch,
   onCloseSearch: closeSearch,
   onZoomIn: increaseFontSize,
   onZoomOut: decreaseFontSize,
   onZoomReset: resetFontSize,
   onToggleSidebar: toggleSidebar,
   onToggleFileBrowser: toggleFileBrowser,
+  onOpenSettings:()=>setSettingsOpen(true)
 });
-  const handleFileChange = useCallback(() => {
-    if(!activeTab) return;
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
-    }
-    debounceTimer.current = window.setTimeout(async () => {
-      const currentScroll = contentRef.current?.scrollTop ?? 0;
-      const result =await loadFile(activeTab.filePath);
-      if(!result) return;
-      dispatch({
-      type: 'UPDATE_TAB_STATE',
-      payload: {
-        tabId: activeTab.id,
-        html: result.html,
-      },
-    });
-      requestAnimationFrame(() => {
-        if (contentRef.current) {
-          contentRef.current.scrollTop = currentScroll;
-        }
-      });
-      setShowToast(true);
-    }, 150);
-  }, [activeTab,loadFile,dispatch]);
- const scroll = () => {
-  if (!activeTab || !contentRef.current) return;
-
-  if (scrollTimer.current) {
-    clearTimeout(scrollTimer.current);
-  }
-
-  scrollTimer.current = window.setTimeout(() => {
-    saveScrollPos(activeTab.filePath, contentRef.current!.scrollTop);
-
-    dispatch({
-      type: 'UPDATE_TAB_STATE',
-      payload: {
-        tabId: activeTab.id,
-        scrollTop: contentRef.current?.scrollTop ?? 0,
-      },
-    });
-  }, 100);
-};
-  useWatcher(activeTab?.filePath ??'', handleFileChange);
-  useEffect(() => {
-  if (!activeTab || !contentRef.current) return;
-
-  requestAnimationFrame(() => {
-    if (contentRef.current) {
-      contentRef.current.scrollTop =
-        activeTab.scrollTop ?? getScrollPos(activeTab.filePath);
-    }
-  });
-}, [activeTab?.id, activeTab?.html]);
+  
 
   return (
     <>
-      <div className="h-screen flex flex-col bg-bg text-text-base">
+      <div className="h-screen flex flex-col bg-bg text-text-base"  onDragEnter={handleDragEnter} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
+        {isDraggingFile &&(
+          <DragDrop/>
+        )}
         {isLoading && <Loading />}
         {isSearchOpen && (
           <SearchBar
@@ -218,14 +131,41 @@ useShortcuts({
             onClose={closeSearch}
           />
         )}
+        {isFolderSearchOpen && (
+          <SearchBar
+            mode="folder"
+            folderQuery={folderQuery}
+            matchCount={folderResults.length}
+            currentMatch={folderResults.length?1:0}
+            onQueryChange={searchFolder}
+            onNext={() => {}}
+            onPrev={() => {}}
+            onClose={closeFolderSearch}
+            folderResults={folderResults}
+            isSearchingFolder={isSearchingFolder}
+            hasFolder={Boolean(folderPath)}
+            onOpenFolderResult={(result) => {
+              void loadFileInTab(result.filePath).then(() => {
+                openSearch();
+                setQuery(folderQuery);
+                closeFolderSearch();
+              }).catch(() => {
+                setShowToast(true);
+              });
+            }}
+
+          />
+        )}
         {!focusMode && (
           <TabBar
             tabs={state.tabs}
             activeTabId={state.activeTabId}
             onSwitch={(id) => dispatch({ type: 'SWITCH_TAB', payload: { tabId: id } })}
             onClose={(id) => dispatch({ type: 'CLOSE_TAB', payload: { tabId: id } })}
+            plusOpen={openFileDialog}
           />
         )}
+        <UpdateBanner/>
 
         {error && <Error message={error} onRetry={openFile} />}
 
@@ -237,6 +177,7 @@ useShortcuts({
         )}
 
         {activeTab && !isLoading && !error && (
+        <ErrorBoundary>
           <div className="flex flex-1 overflow-hidden relative">
             {!focusMode && (
               <FileBrowser
@@ -257,7 +198,7 @@ useShortcuts({
             )}
             {!focusMode && (
               <Sidebar
-                tocItems={extractTOC(activeTab.html)}
+                tocItems={activeToc}
                 activeId={activeId}
                 onSelect={scrollToHeading}
                 isVisible={sidebarOpen}
@@ -265,59 +206,25 @@ useShortcuts({
               />
             )}
             {!focusMode && (
-              <div className="absolute right-5 top-5 z-30 flex items-center gap-1 rounded-xl border border-border-theme bg-surface px-2 py-1 shadow-sm">
-                <button
-                  onClick={decreaseFontSize}
-                  className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
-                  aria-label="Zoom out"
-                >
-                  <Icons.ZoomOut size={18} />
-                </button>
-
-                <button
-                  onClick={resetFontSize}
-                  className="min-w-12 rounded-md px-2 py-1 text-xs font-medium text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
-                >
-                  {fontSize}px
-                </button>
-
-                <button
-                  onClick={increaseFontSize}
-                  className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
-                  aria-label="Zoom in"
-                >
-                  <Icons.ZoomIn size={18} />
-                </button>
-
-                <div className="mx-1 h-5 w-px bg-border-theme" />
-
-                <button
-                  onClick={toggleTheme}
-                  className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
-                  aria-label="Toggle theme"
-                >
-                  {theme === 'github-dark' || theme === 'dracula' || theme === 'nord' ? (
-                    <Icons.Sun size={18} />
-                  ) : (
-                    <Icons.Moon size={18} />
-                  )}
-                </button>
-              </div>
+              <ReaderToolbar fontSize={fontSize} theme={theme} onZoomIn={increaseFontSize} onZoomOut={decreaseFontSize} onZoomReset={resetFontSize} onToggleTheme={toggleTheme}/>
             )}
             <main 
             ref={contentRef} 
             className="flex-1 overflow-y-auto" 
             onScroll={scroll}
             >
-              <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
+              
+                <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
             </main>
           </div>
+          </ErrorBoundary>
         )}
 
         <Toast message="File updated" show={showToast} onDone={() => setShowToast(false)} />
         {!focusMode && (
           <StatusBar filePath={activeTab?.filePath ?? ''} theme={theme} fontSize={fontSize} />
         )}
+        <SettingsPanel settings={settings} isOpen={settingsOpen} onClose={()=>setSettingsOpen(false)} onChange={(partial)=>void updateSettings(partial)} appVersion={appVersion}/>
       </div>
     </>
   )}

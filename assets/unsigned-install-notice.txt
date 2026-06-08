@@ -1,0 +1,23 @@
+Markdown Reader unsigned build notice
+
+This early build is not code signed because the project does not currently have
+a macOS Developer ID certificate or Windows code-signing certificate.
+
+What this means:
+- macOS may show a Gatekeeper warning.
+- Windows may show a SmartScreen warning.
+- Some Linux desktop environments may show an untrusted-package warning.
+
+The app is intended to be safe when downloaded from the official project
+release page. For your safety, do not install copies from unknown sources.
+If checksums are published with the release, verify the downloaded installer
+before running it.
+
+How to continue:
+- macOS: open System Settings > Privacy & Security and choose Open Anyway for
+  Markdown Reader, or right-click the app and choose Open.
+- Windows: choose More info > Run anyway in the SmartScreen dialog.
+- Linux: install the .deb with your package manager, or mark the AppImage as
+  executable before launching it.
+
+Code signing will be added in a future release.

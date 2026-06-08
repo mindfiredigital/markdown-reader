@@ -7,6 +7,8 @@ export function FileTree({node,depth,activeFilePath,onOpenFile}:FileTreeProps) {
     return (
       <div className="mb-1">
         <div
+          role='group'
+          aria-label={`${node.name} folder`}
           style={{ paddingLeft }}
           className="flex items-center gap-2 py-2 text-[11px] font-semibold uppercase tracking-wider text-text-muted"
         >
@@ -31,6 +33,7 @@ export function FileTree({node,depth,activeFilePath,onOpenFile}:FileTreeProps) {
   const isActive = node.path === activeFilePath;
   return(
     <button type="button" onClick={() => onOpenFile(node.path)}
+      aria-current={isActive ? 'location' : undefined}
       style={{ paddingLeft }}
       className={[
         'group flex w-full items-center gap-2 rounded-r-xl py-2 pr-3 text-left text-sm transition-all',
@@ -40,6 +43,7 @@ export function FileTree({node,depth,activeFilePath,onOpenFile}:FileTreeProps) {
       ].join(' ')}
     >
       <div
+        aria-hidden="true" 
         className={[
           'h-2 w-2 rounded-full transition-colors',
           isActive ? 'bg-accent' : 'bg-border-theme',

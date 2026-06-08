@@ -1,8 +1,8 @@
 import type { MenuItemConstructorOptions } from 'electron';
-import { MENU_EVENTS, MENU_LABELS, SHORTCUTS } from '@package/shared-constants';
+import { MENU_EVENTS, MENU_LABELS, SHORTCUTS, THEMES } from '@package/shared-constants';
 import { createMenuSender } from './utils/helper/menu-helper';
 
-export function buildMenuTemplate(): MenuItemConstructorOptions[] {
+export function buildMenuTemplate(currentTheme: string): MenuItemConstructorOptions[] {
   const send = createMenuSender;
 
   return [
@@ -26,6 +26,19 @@ export function buildMenuTemplate(): MenuItemConstructorOptions[] {
           click: send(MENU_EVENTS.CLOSE_TAB),
         },
         { type: 'separator' },
+        {
+          label: MENU_LABELS.EXPORT_HTML,
+          click: send(MENU_EVENTS.EXPORT_HTML),
+        },
+        {
+          label: MENU_LABELS.EXPORT_PDF,
+          click: send(MENU_EVENTS.EXPORT_PDF),
+        },
+        {
+          label: MENU_LABELS.EXPORT_DOCX,
+          click: send(MENU_EVENTS.EXPORT_DOCX),
+        },
+        { type: 'separator' },
         { role: 'quit' },
       ],
     },
@@ -47,11 +60,24 @@ export function buildMenuTemplate(): MenuItemConstructorOptions[] {
           accelerator: SHORTCUTS.FOCUS_MODE,
           click: send(MENU_EVENTS.FOCUS_MODE),
         },
+        {
+          label: MENU_LABELS.SETTINGS,
+          click: send(MENU_EVENTS.OPEN_SETTINGS),
+        },
         { type: 'separator' },
         {
           label: MENU_LABELS.CYCLE_THEME,
           accelerator: SHORTCUTS.CYCLE_THEME,
           click: send(MENU_EVENTS.CYCLE_THEME),
+        },
+        {
+          label: MENU_LABELS.THEME,
+          submenu: THEMES.map((theme) => ({
+            label: theme,
+            type: 'radio' as const,
+            checked: theme === currentTheme,
+            click: send(MENU_EVENTS.SET_THEME, theme),
+          })),
         },
         { type: 'separator' },
         {
@@ -70,7 +96,7 @@ export function buildMenuTemplate(): MenuItemConstructorOptions[] {
           click: send(MENU_EVENTS.ZOOM_RESET),
         },
         { type: 'separator' },
-        { role: 'toggleDevTools' },
+        ...(process.env.NODE_ENV === 'development' ? [{ role: 'toggleDevTools' as const }] : []),
       ],
     },
     {

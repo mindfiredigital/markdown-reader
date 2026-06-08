@@ -1,10 +1,28 @@
-import { ipcMain, dialog } from 'electron';
+import { app, ipcMain, dialog } from 'electron';
+import { sep } from 'node:path';
 import { readFile, unWatchFile, watchFile } from './file';
 import { getFolder } from './folder';
-import { validateMarkdownFile, validatePath, validateSender } from './utils/ipc-validation';
+import {
+  validatePath,
+  validateSender,
+  allowedFolderRoots,
+  allowedMarkdownFiles,
+} from './utils/constants/ipc-validation';
 import { IPC_CONSTANTS } from '@package/shared-constants';
 import { getRecentFiles } from './recent/getRecentFile';
 import { addRecentFile } from './recent/addRecentFile';
+import { exportHTML } from './export/exportHtml';
+import { exportPDF } from './export/exportPdf';
+import { exportDOCX } from './export/exportDocx';
+import {
+  resolveMarkdownFilePath,
+  resolveDirectoryPath,
+  resolveWatchedMarkdownPath,
+} from './utils/helper/ipc-path-resolver';
+import { searchFolder } from './folder-search';
+import { AppSettings } from '@package/shared-types';
+import { getSettings } from './settings/get-settings';
+import { saveSettings } from './settings/save-settings';
 
 //registers all IPC handlers for main process
 export function registerIPCHandlers(): void {
@@ -13,14 +31,9 @@ export function registerIPCHandlers(): void {
     if (!validateSender(event)) {
       throw new Error('Untrusted sender');
     }
-    if (!validatePath(filePath)) {
-      throw new Error('Invalid file path');
-    }
-
-    if (!validateMarkdownFile(filePath)) {
-      throw new Error('Only markdown files allowed');
-    }
-    return await readFile(filePath);
+    const safeFilePath = await resolveMarkdownFilePath(filePath);
+    allowedMarkdownFiles.add(safeFilePath);
+    return await readFile(safeFilePath);
   });
 
   // opens the file path
@@ -41,10 +54,9 @@ export function registerIPCHandlers(): void {
     }
     const selected = result.filePaths[0];
     if (!selected) return null;
-    if (!validateMarkdownFile(selected)) {
-      throw new Error('Only markdown files allowed');
-    }
-    return selected;
+    const safeFilePath = await resolveMarkdownFilePath(selected);
+    allowedMarkdownFiles.add(safeFilePath);
+    return safeFilePath;
   });
 
   // watches a file
@@ -52,11 +64,9 @@ export function registerIPCHandlers(): void {
     if (!validateSender(event)) {
       throw new Error('Untrusted sender');
     }
-    if (!validatePath(filePath)) {
-      throw new Error('Invalid File Path');
-    }
-    await watchFile(filePath, () => {
-      event.sender.send('file-changed', filePath);
+    const safeFilePath = await resolveWatchedMarkdownPath(filePath);
+    await watchFile(safeFilePath, () => {
+      event.sender.send(IPC_CONSTANTS.FILE_CHANGED, safeFilePath);
     });
   });
 
@@ -65,10 +75,8 @@ export function registerIPCHandlers(): void {
     if (!validateSender(event)) {
       throw new Error('Untrusted sender');
     }
-    if (!validatePath(filePath)) {
-      throw new Error('Invalid file path');
-    }
-    await unWatchFile(filePath);
+    const safeFilePath = await resolveMarkdownFilePath(filePath);
+    await unWatchFile(safeFilePath);
   });
 
   //get recent files
@@ -84,10 +92,8 @@ export function registerIPCHandlers(): void {
     if (!validateSender(event)) {
       throw new Error('Untrusted sender');
     }
-    if (!validatePath(filePath)) {
-      throw new Error('Invalid file path');
-    }
-    await addRecentFile(filePath);
+    const safeFilePath = await resolveMarkdownFilePath(filePath);
+    await addRecentFile(safeFilePath);
   });
 
   ipcMain.handle(IPC_CONSTANTS.OPEN_FOLDER_DIALOG, async (event) => {
@@ -104,7 +110,10 @@ export function registerIPCHandlers(): void {
       return null;
     }
 
-    return result.filePaths[0] ?? null;
+    if (!result.filePaths[0]) return null;
+    const safeFolderPath = await resolveDirectoryPath(result.filePaths[0]);
+    allowedFolderRoots.add(safeFolderPath);
+    return safeFolderPath;
   });
 
   ipcMain.handle(IPC_CONSTANTS.READ_FOLDER, async (event, folderPath: string) => {
@@ -112,9 +121,100 @@ export function registerIPCHandlers(): void {
       throw new Error('Untrusted sender');
     }
 
-    if (!validatePath(folderPath)) {
-      throw new Error('Invalid folder path');
+    const safeFolderPath = await resolveDirectoryPath(folderPath);
+    allowedFolderRoots.add(safeFolderPath);
+    return await getFolder(safeFolderPath);
+  });
+
+  ipcMain.handle(IPC_CONSTANTS.GET_SETTINGS, async (event) => {
+    if (!validateSender(event)) {
+      throw new Error('Untrusted sender');
     }
-    return await getFolder(folderPath);
+    return await getSettings();
+  });
+
+  ipcMain.handle(IPC_CONSTANTS.SAVE_SETTINGS, async (event, settings: Partial<AppSettings>) => {
+    if (!validateSender(event)) {
+      throw new Error('Untrusted sender');
+    }
+    return await saveSettings(settings);
+  });
+
+  ipcMain.handle(IPC_CONSTANTS.GET_APP_VERSION, async (event) => {
+    if (!validateSender(event)) {
+      throw new Error('Untrusted sender');
+    }
+    return app.getVersion();
+  });
+
+  ipcMain.handle(
+    IPC_CONSTANTS.EXPORT_HTML,
+    async (event, html: string, css: string, outPath: string) => {
+      if (!validateSender(event)) {
+        throw new Error('Untrusted sender');
+      }
+
+      if (!validatePath(outPath)) {
+        throw new Error('Invalid folder path');
+      }
+      await exportHTML(html, css, outPath);
+    }
+  );
+
+  ipcMain.handle(IPC_CONSTANTS.SHOW_SAVE_DIALOG, async (event, opts: { defaultExt: string }) => {
+    if (!validateSender(event)) {
+      throw new Error('Untrusted sender');
+    }
+    const result = await dialog.showSaveDialog({
+      filters: [
+        {
+          name: opts.defaultExt.toUpperCase() + ' File',
+          extensions: [opts.defaultExt],
+        },
+      ],
+    });
+    return result.canceled ? null : result.filePath;
+  });
+
+  ipcMain.handle(
+    IPC_CONSTANTS.EXPORT_PDF,
+    async (event, html: string, css: string, outPath: string) => {
+      if (!validateSender(event)) {
+        throw new Error('Untrusted sender');
+      }
+
+      if (!validatePath(outPath)) {
+        throw new Error('Invalid folder path');
+      }
+      await exportPDF(html, css, outPath);
+    }
+  );
+
+  ipcMain.handle(
+    IPC_CONSTANTS.EXPORT_DOCX,
+    async (event, html: string, css: string, outPath: string) => {
+      if (!validateSender(event)) {
+        throw new Error('Untrusted sender');
+      }
+
+      if (!validatePath(outPath)) {
+        throw new Error('Invalid folder path');
+      }
+      await exportDOCX(html, css, outPath);
+    }
+  );
+
+  ipcMain.handle(IPC_CONSTANTS.SEARCH_FOLDER, async (event, folderPath: string, query: string) => {
+    if (!validateSender(event)) {
+      throw new Error('Untrusted sender');
+    }
+    const safeFolderPath = await resolveDirectoryPath(folderPath);
+    const isAllowed = Array.from(allowedFolderRoots).some(
+      (root) => safeFolderPath === root || safeFolderPath.startsWith(`${root}${sep}`)
+    );
+    if (!isAllowed) {
+      throw new Error('Folder path is not authorized');
+    }
+    return await searchFolder(safeFolderPath, query);
   });
 }

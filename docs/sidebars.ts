@@ -21,7 +21,13 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Contribution Guide',
-      items: ['contribution-guide/how-to-contribute', 'contribution-guide/code-of-conduct'],
+      items: [
+        'development',
+        'architecture',
+        'ipc-api',
+        'contribution-guide/how-to-contribute',
+        'contribution-guide/code-of-conduct',
+      ],
     },
   ],
 };

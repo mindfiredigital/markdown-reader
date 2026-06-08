@@ -1,7 +1,18 @@
 import React from 'react';
 import { APPTHEMES } from '../utils/constants/theme-constants';
-import { RecentFile } from '@package/shared-types/dist/src/recentfile-type';
-import { FileType } from '@package/shared-types';
+import { RecentFile } from '@package/shared-types';
+import { AppSettings, FileType } from '@package/shared-types';
+import { ReadingWidth } from '@package/shared-types';
+import {
+  DEFAULT_FONT_SIZE,
+  DEFAULT_WIDTH,
+  FONT_SIZE_INCREMENT,
+  MAX_FONT_SIZE,
+  MIN_FONT_SIZE,
+  NARROW_WIDTH,
+  WIDE_WIDTH,
+} from '@package/shared-constants';
+import { FolderSearchResult } from '@package/shared-types';
 export interface ErrorProps {
   message: string;
   onRetry: () => void;
@@ -25,13 +36,6 @@ export interface ThemeContextType {
   setTheme: (theme: Theme) => void;
 }
 
-export type BuiltThemeType =
-  | 'github-light'
-  | 'github-dark'
-  | 'notion'
-  | 'nord'
-  | 'minimal'
-  | 'dracula';
 export interface HeadingProps {
   text: string;
   depth: number;
@@ -56,43 +60,35 @@ export interface ToastProps {
   duration?: number;
 }
 
-export interface UseSearchProps {
-  query: string;
-  currentMatch: number;
-  matchCount: number;
-  isSearchOpen: boolean;
-  openSearch: () => void;
-  closeSearch: () => void;
-  setQuery: (q: string) => void;
-  goToNextMatch: () => void;
-  goToPrevMatch: () => void;
-  getHiglightedHtml: (html: string) => string;
-}
-
 export interface SearchBarProps {
-  query: string;
+  query?: string;
+  folderQuery?: string;
   matchCount: number;
   currentMatch: number;
   onQueryChange: (q: string) => void;
   onNext: () => void;
   onPrev: () => void;
   onClose: () => void;
+  mode?: 'document' | 'folder';
+  folderResults?: FolderSearchResult[];
+  isSearchingFolder?: boolean;
+  onOpenFolderResult?: (result: FolderSearchResult) => void;
+  hasFolder?: boolean;
+  caseSensitive?: boolean;
+  onToggleCaseSensitive?: () => void;
 }
 
-export type ReadingWidth = 'narrow' | 'default' | 'wide' | 'full';
-
-export const FONT_SISE = {
-  DEFAULT: 16,
-  MIN: 12,
-  MAX: 24,
-  INCREMENT: 2,
+export const FONT_SIZE = {
+  DEFAULT: DEFAULT_FONT_SIZE,
+  MIN: MIN_FONT_SIZE,
+  MAX: MAX_FONT_SIZE,
+  INCREMENT: FONT_SIZE_INCREMENT,
 };
 
 export const WIDTH_MAP: Record<ReadingWidth, string> = {
-  narrow: '640px',
-  default: '768px',
-  wide: '1024px',
-  full: '100%',
+  narrow: `${NARROW_WIDTH}px`,
+  default: `${DEFAULT_WIDTH}px`,
+  wide: `${WIDE_WIDTH}px`,
 };
 export interface StatusBarProps {
   filePath: string;
@@ -105,6 +101,7 @@ export interface TabBarProps {
   activeTabId: string | null;
   onSwitch: (id: string) => void;
   onClose: (id: string) => void;
+  plusOpen: () => void;
 }
 
 export interface Tab {
@@ -112,6 +109,7 @@ export interface Tab {
   filePath: string;
   fileName: string;
   html: string;
+  toc?: TOCType[];
   scrollTop: number;
   fontSize: number;
 }
@@ -122,7 +120,7 @@ export interface TabState {
 }
 
 export type TabAction =
-  | { type: 'OPEN_TAB'; payload: { filePath: string; html?: string } }
+  | { type: 'OPEN_TAB'; payload: { filePath: string; html?: string; toc?: TOCType[] } }
   | { type: 'CLOSE_TAB'; payload: { tabId: string } }
   | { type: 'SWITCH_TAB'; payload: { tabId: string } }
   | {
@@ -130,6 +128,7 @@ export type TabAction =
       payload: {
         tabId: string;
         html?: string;
+        toc?: TOCType[];
         scrollTop?: number;
         fontSize?: number;
       };
@@ -153,32 +152,32 @@ export type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export interface UseMenuEventsProps {
-  onOpenFile: () => void;
-  onOpenFolder: () => void;
-  onSearchDocument: () => void;
-  onToggleToc: () => void;
-  onToggleBrowser: () => void;
-  onFocusMode: () => void;
-  onCycleTheme: () => void;
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onZoomReset: () => void;
-  onNextTab: () => void;
-  onPreviousTab: () => void;
-  onCloseTab: () => void;
+export interface ElectronFile extends File {
+  path: string;
 }
 
-export interface UseShortcutsProps {
-  onOpenFile: () => void;
-  onOpenFolder: () => void;
-  onToggleFocusMode: () => void;
-  onToggleTheme: () => void;
-  onOpenSearch: () => void;
-  onCloseSearch: () => void;
+export type ActiveTab = {
+  html: string;
+} | null;
+
+export interface ReaderToolbarProps {
+  fontSize: number;
+  theme: string;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onZoomReset: () => void;
-  onToggleSidebar: () => void;
-  onToggleFileBrowser: () => void;
+  onToggleTheme: () => void;
 }
+
+export interface SettingsPanelProps {
+  settings: AppSettings;
+  isOpen: boolean;
+  onClose: () => void;
+  onChange: (settings: Partial<AppSettings>) => void;
+  appVersion?: string;
+}
+
+export type ErrorBoundaryState = {
+  hasError: boolean;
+  error: Error | null;
+};

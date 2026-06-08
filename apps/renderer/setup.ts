@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 
 // mock svg measurments for jsdom environment for mermaid testing
 if (typeof window !== 'undefined' && window.SVGElement) {
@@ -20,3 +21,20 @@ if (typeof window !== 'undefined' && window.SVGElement) {
     proto.getComputedTextLength = () => 100;
   }
 }
+
+let mockSettings = {
+  fontSize: 16,
+  readingWidth: 'default',
+  customCss: '',
+};
+
+Object.defineProperty(window, 'api', {
+  value: {
+    getSettings: vi.fn(async () => mockSettings),
+    saveSettings: vi.fn(async (partial) => {
+      mockSettings = { ...mockSettings, ...partial };
+      return mockSettings;
+    }),
+  },
+  writable: true,
+});

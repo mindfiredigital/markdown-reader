@@ -1,5 +1,6 @@
 import { readFile as fsReadFile } from 'node:fs/promises';
 import chokidar, { type FSWatcher } from 'chokidar';
+import { WatchFileOptions } from './types/watch-file-types';
 
 //file read logic
 export async function readFile(filePath: string): Promise<string> {
@@ -12,11 +13,17 @@ export async function readFile(filePath: string): Promise<string> {
 }
 
 const currentWatchers = new Map<string, FSWatcher>();
+const debounceTimers = new Map<string, NodeJS.Timeout>();
 //file watching logic
-export async function watchFile(filePath: string, onChange: () => void): Promise<void> {
+export async function watchFile(
+  filePath: string,
+  options: WatchFileOptions | (() => void)
+): Promise<void> {
+  const { onChange, onDeleted, onError } =
+    typeof options === 'function' ? { onChange: options } : options;
+
   if (currentWatchers.has(filePath)) {
-    await currentWatchers.get(filePath)!.close();
-    currentWatchers.delete(filePath);
+    await unWatchFile(filePath);
   }
 
   const watcher = chokidar.watch(filePath, {
@@ -27,16 +34,65 @@ export async function watchFile(filePath: string, onChange: () => void): Promise
       pollInterval: 50,
     },
   });
-  await new Promise<void>((resolve) => {
-    watcher.on('ready', resolve);
-  });
-  watcher.on('change', onChange);
   currentWatchers.set(filePath, watcher);
+  await new Promise<void>((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      resolve();
+    }, 1000);
+    watcher.once('ready', () => {
+      clearTimeout(timeout);
+      resolve();
+    });
+
+    watcher.once('error', (error) => {
+      clearTimeout(timeout);
+      const watcherError = error instanceof Error ? error : new Error(String(error));
+
+      void unWatchFile(filePath)
+        .catch(() => {})
+        .finally(() => onError?.(watcherError));
+
+      reject(watcherError);
+    });
+  });
+  watcher.on('change', () => {
+    const existingTimer = debounceTimers.get(filePath);
+    if (existingTimer) {
+      clearTimeout(existingTimer);
+    }
+
+    const timer = setTimeout(() => {
+      if (!currentWatchers.has(filePath)) {
+        debounceTimers.delete(filePath);
+        return;
+      }
+      debounceTimers.delete(filePath);
+      onChange();
+    }, 100);
+    debounceTimers.set(filePath, timer);
+  });
+  watcher.on('unlink', () => {
+    void unWatchFile(filePath)
+      .catch(() => {})
+      .finally(() => onDeleted?.());
+  });
 }
 
 //unwatch file
 export async function unWatchFile(filePath: string): Promise<void> {
+  const timer = debounceTimers.get(filePath);
+  if (timer) {
+    clearTimeout(timer);
+    debounceTimers.delete(filePath);
+  }
   if (!currentWatchers.has(filePath)) return;
   await currentWatchers.get(filePath)!.close();
   currentWatchers.delete(filePath);
+}
+
+export function getWatcherDiagnostics(): { watchers: number; debounceTimers: number } {
+  return {
+    watchers: currentWatchers.size,
+    debounceTimers: debounceTimers.size,
+  };
 }
