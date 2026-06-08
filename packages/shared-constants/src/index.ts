@@ -1,3 +1,16 @@
+export { btnClass, CALLOUT_MAP } from './style-constants.js';
+export { SHIKI_LANG, SHIKI_THEME } from './shiki-constants.js';
+export { MARKDOWN_LANGUAGES } from './markdown-constants.js';
+export {
+  CALLOUT_REGEX,
+  HTML_PATTERNS,
+  SLUG_PATTERNS,
+  createSearchRegex,
+  BLOCK_MATH_REGEX,
+  BLOCK_MERMAID_REGEX,
+  INLINE_MATH_REGEX,
+  FILE_PATH,
+} from './regex-constants.js';
 export { MARKDOWN_FILE_PATTERN } from './path-constants.js';
 export { SHORTCUTS } from './keyboard-constants.js';
 export { MENU_LABELS, MENU_EVENTS, MENU_EVENT_LIST } from './menu-constants.js';
@@ -13,3 +26,4 @@ export {
   THEMES,
   WIDE_WIDTH,
 } from './theme-constants.js';
+export type { Theme } from './theme-constants.js';
