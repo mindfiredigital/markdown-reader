@@ -8,7 +8,7 @@ export const THEMES = [
 ] as const;
 
 export type Theme = (typeof THEMES)[number];
-
+export const DEFAULT_THEME = 'github-dark';
 export const MIN_FONT_SIZE = 12;
 export const MAX_FONT_SIZE = 24;
 export const DEFAULT_FONT_SIZE = 16;

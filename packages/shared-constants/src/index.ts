@@ -25,5 +25,6 @@ export {
   NARROW_WIDTH,
   THEMES,
   WIDE_WIDTH,
+  DEFAULT_THEME,
 } from './theme-constants.js';
 export type { Theme } from './theme-constants.js';
