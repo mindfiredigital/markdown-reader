@@ -8,5 +8,7 @@ export const EXPORT_CONST = {
     /-moz-binding\s*:/gi,
     /expression\s*\(/gi,
     /javascript\s*:/gi,
+    /@import\b[^;]*(?:;|$)/gi,
+    /url\s*\(\s*['"]?\s*(?:https?:|\/\/)[^)]*\)/gi,
   ],
 };

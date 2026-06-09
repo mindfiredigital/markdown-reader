@@ -6,3 +6,5 @@ export const APPTHEMES = [
   'minimal',
   'dracula',
 ] as const;
+
+export const DEFAULT_THEME = 'github-dark';

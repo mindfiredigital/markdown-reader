@@ -1,12 +1,17 @@
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import { shikiHighlighter } from '../renderer/shiki';
-import { THEMES } from '@package/shared-constants';
 import { escapeHtml, heading } from '@package/shared-utils';
 import { MARKDOWN_LANGUAGES } from '@package/shared-constants';
+import { DEFAULT_THEME } from '@package/shared-constants';
+
+let instance: Marked | null = null;
+let currentRegistry: Map<string, number>;
 
 export function getMarkdown(registry: Map<string, number>): Marked {
-  const instance = new Marked();
+  currentRegistry = registry;
+  if (instance) return instance;
+  instance = new Marked();
 
   // configure marked with GFM options
   instance.use({
@@ -14,7 +19,7 @@ export function getMarkdown(registry: Map<string, number>): Marked {
     breaks: false,
     renderer: {
       heading(props) {
-        return heading(props, registry);
+        return heading(props, currentRegistry);
       },
     },
   });
@@ -29,7 +34,7 @@ export function getMarkdown(registry: Map<string, number>): Marked {
           return escapeHtml(code);
         }
         const highlighter = await shikiHighlighter();
-        const theme = THEMES[1];
+        const theme = DEFAULT_THEME;
         try {
           return highlighter.codeToHtml(code, {
             lang: language,

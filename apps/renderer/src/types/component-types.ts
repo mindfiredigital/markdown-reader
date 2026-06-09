@@ -37,14 +37,6 @@ export interface ThemeContextType {
   setTheme: (theme: Theme) => void;
 }
 
-export type BuiltThemeType =
-  | 'github-light'
-  | 'github-dark'
-  | 'notion'
-  | 'nord'
-  | 'minimal'
-  | 'dracula';
-
 export interface SidebarProps {
   tocItems: TOCType[];
   activeId: string;

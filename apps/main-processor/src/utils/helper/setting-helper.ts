@@ -1,6 +1,6 @@
 import { app } from 'electron';
 import path from 'path';
-import { mkdir, open, rename, unlink, writeFile } from 'node:fs/promises';
+import { mkdir, open, rename, unlink } from 'node:fs/promises';
 import { AppSettings } from '@package/shared-types';
 import { THEMES } from '@package/shared-constants';
 import { SETTINGS_KEYS, READING_WIDTHS } from '../constants/setting-constants';
@@ -44,7 +44,7 @@ export function validateSettings(partial: Partial<AppSettings>): Partial<AppSett
       validated.lineNumbers = value;
     }
     if (key === 'customCss') {
-      if (typeof value !== 'string') throw new Error('Invalid customCss');
+      if (typeof value !== 'string' || value.length > 10000) throw new Error('Invalid customCss');
       validated.customCss = value;
     }
     if (key === 'zoom') {
