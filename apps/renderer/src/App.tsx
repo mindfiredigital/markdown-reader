@@ -1,4 +1,4 @@
-import React,{ useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useFile } from './hooks/useFile';
 import { Welcome } from './components/Welcome';
 import { Reader } from './components/Reader';
@@ -13,7 +13,6 @@ import { SearchBar } from './components/SearchBar';
 import { useSettings } from './hooks/useSettings';
 import { StatusBar } from './components/StatusBar';
 import { FileBrowser } from './components/FileBrowser';
-import { extractTOC } from './renderer/toc';
 import { TabBar } from './components/TabBar';
 import { useTabStore } from './hooks/useTabStore';
 import { Icons } from './utils/constants/icon-contants';
@@ -31,6 +30,7 @@ import { useFilePersistence } from './hooks/useFilePersistence';
 import { ReaderToolbar } from './components/ReaderToolbar';
 import { useFolderSearch } from './hooks/useFolderSearch';
 import { SettingsPanel } from './components/SettingsPanel';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 export default function App() {
   const {  error, isLoading, openFile, toc,recentFiles,loadFile } =useFile();
@@ -162,6 +162,7 @@ useShortcuts({
             activeTabId={state.activeTabId}
             onSwitch={(id) => dispatch({ type: 'SWITCH_TAB', payload: { tabId: id } })}
             onClose={(id) => dispatch({ type: 'CLOSE_TAB', payload: { tabId: id } })}
+            plusOpen={openFileDialog}
           />
         )}
         <UpdateBanner/>
@@ -176,6 +177,7 @@ useShortcuts({
         )}
 
         {activeTab && !isLoading && !error && (
+        <ErrorBoundary>
           <div className="flex flex-1 overflow-hidden relative">
             {!focusMode && (
               <FileBrowser
@@ -196,7 +198,7 @@ useShortcuts({
             )}
             {!focusMode && (
               <Sidebar
-                tocItems={activeTab.toc??extractTOC(activeTab.html)}
+                tocItems={activeToc}
                 activeId={activeId}
                 onSelect={scrollToHeading}
                 isVisible={sidebarOpen}
@@ -211,9 +213,11 @@ useShortcuts({
             className="flex-1 overflow-y-auto" 
             onScroll={scroll}
             >
-              <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
+              
+                <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
             </main>
           </div>
+          </ErrorBoundary>
         )}
 
         <Toast message="File updated" show={showToast} onDone={() => setShowToast(false)} />

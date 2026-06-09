@@ -2,8 +2,6 @@
 title: Architecture
 ---
 
-# Architecture
-
 # Architecture Overview
 
 ## 1. System Communication Flow

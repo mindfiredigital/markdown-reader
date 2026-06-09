@@ -97,7 +97,7 @@ if (!hasSingleInstanceLock) {
 
   // electron ready window
   app.whenReady().then(() => {
-    registerMenu();
+    registerMenu('github-light');
     createWindow();
 
     //re create window when dock icon clicked in macOs

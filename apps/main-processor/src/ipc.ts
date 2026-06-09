@@ -1,7 +1,13 @@
 import { app, ipcMain, dialog } from 'electron';
+import { sep } from 'node:path';
 import { readFile, unWatchFile, watchFile } from './file';
 import { getFolder } from './folder';
-import { validatePath, validateSender, allowedFolderRoots } from './utils/constants/ipc-validation';
+import {
+  validatePath,
+  validateSender,
+  allowedFolderRoots,
+  allowedMarkdownFiles,
+} from './utils/constants/ipc-validation';
 import { IPC_CONSTANTS } from '@package/shared-constants';
 import { getRecentFiles } from './recent/getRecentFile';
 import { addRecentFile } from './recent/addRecentFile';
@@ -26,6 +32,7 @@ export function registerIPCHandlers(): void {
       throw new Error('Untrusted sender');
     }
     const safeFilePath = await resolveMarkdownFilePath(filePath);
+    allowedMarkdownFiles.add(safeFilePath);
     return await readFile(safeFilePath);
   });
 
@@ -47,7 +54,9 @@ export function registerIPCHandlers(): void {
     }
     const selected = result.filePaths[0];
     if (!selected) return null;
-    return await resolveMarkdownFilePath(selected);
+    const safeFilePath = await resolveMarkdownFilePath(selected);
+    allowedMarkdownFiles.add(safeFilePath);
+    return safeFilePath;
   });
 
   // watches a file
@@ -201,7 +210,7 @@ export function registerIPCHandlers(): void {
     }
     const safeFolderPath = await resolveDirectoryPath(folderPath);
     const isAllowed = Array.from(allowedFolderRoots).some(
-      (root) => safeFolderPath === root || safeFolderPath.startsWith(`${root}/`)
+      (root) => safeFolderPath === root || safeFolderPath.startsWith(`${root}${sep}`)
     );
     if (!isAllowed) {
       throw new Error('Folder path is not authorized');

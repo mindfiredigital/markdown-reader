@@ -36,13 +36,6 @@ export interface ThemeContextType {
   setTheme: (theme: Theme) => void;
 }
 
-export type BuiltThemeType =
-  | 'github-light'
-  | 'github-dark'
-  | 'notion'
-  | 'nord'
-  | 'minimal'
-  | 'dracula';
 export interface HeadingProps {
   text: string;
   depth: number;
@@ -108,6 +101,7 @@ export interface TabBarProps {
   activeTabId: string | null;
   onSwitch: (id: string) => void;
   onClose: (id: string) => void;
+  plusOpen: () => void;
 }
 
 export interface Tab {
@@ -182,3 +176,8 @@ export interface SettingsPanelProps {
   onChange: (settings: Partial<AppSettings>) => void;
   appVersion?: string;
 }
+
+export type ErrorBoundaryState = {
+  hasError: boolean;
+  error: Error | null;
+};

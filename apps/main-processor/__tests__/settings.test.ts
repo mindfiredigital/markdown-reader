@@ -42,6 +42,7 @@ describe('settings validation', () => {
       customCss: '.markdown-body { color: red; }',
     });
     expect(() => validateSettings({ customCss: 42 as never })).toThrow('Invalid customCss');
+    expect(() => validateSettings({ customCss: 'a'.repeat(10001) })).toThrow('Invalid customCss');
   });
 
   it('validates zoom range', () => {

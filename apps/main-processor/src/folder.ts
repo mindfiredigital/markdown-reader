@@ -1,4 +1,4 @@
-import { readdir, realpath } from 'node:fs/promises';
+import { readdir } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 import { FileType } from '@package/shared-types';
 import { isMarkdownFile } from './utils/helper/path-helper';
@@ -10,13 +10,7 @@ export async function getFolder(
   currentDepth = 0,
   seenPaths = new Set<string>()
 ): Promise<FileType> {
-  let realFolderPath: string;
-  try {
-    realFolderPath = await realpath(folderPath);
-  } catch {
-    realFolderPath = folderPath;
-  }
-  if (currentDepth >= maxDepth || seenPaths.has(realFolderPath)) {
+  if (currentDepth >= maxDepth || seenPaths.has(folderPath)) {
     return {
       name: basename(folderPath),
       path: folderPath,
@@ -24,7 +18,7 @@ export async function getFolder(
       children: [],
     };
   }
-  seenPaths.add(realFolderPath);
+  seenPaths.add(folderPath);
   const entries = (await readdir(folderPath, { withFileTypes: true })).sort((a, b) =>
     a.name.localeCompare(b.name)
   );

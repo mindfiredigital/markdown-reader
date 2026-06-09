@@ -36,9 +36,16 @@ export async function watchFile(
   });
   currentWatchers.set(filePath, watcher);
   await new Promise<void>((resolve, reject) => {
-    watcher.once('ready', resolve);
+    const timeout = setTimeout(() => {
+      resolve();
+    }, 1000);
+    watcher.once('ready', () => {
+      clearTimeout(timeout);
+      resolve();
+    });
 
-    watcher.on('error', (error) => {
+    watcher.once('error', (error) => {
+      clearTimeout(timeout);
       const watcherError = error instanceof Error ? error : new Error(String(error));
 
       void unWatchFile(filePath)

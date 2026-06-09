@@ -1,9 +1,12 @@
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 import { IpcMainInvokeEvent } from 'electron';
+import { PATHS } from './path-constants';
 
 // production and dev urls
 export const ALLOWED_MARKDOWN_EXTENSIONS = new Set(['.md', '.markdown']);
 export const allowedFolderRoots = new Set<string>();
+export const allowedMarkdownFiles = new Set<string>();
 
 //validate the sender
 export function validateSender(event: IpcMainInvokeEvent): boolean {
@@ -15,7 +18,11 @@ export function validateSender(event: IpcMainInvokeEvent): boolean {
     const parsedUrl = new URL(url);
 
     if (parsedUrl.protocol === 'file:') {
-      return true;
+      parsedUrl.hash = '';
+      parsedUrl.search = '';
+      const filePath = path.resolve(fileURLToPath(parsedUrl.href));
+      const expectedPath = path.resolve(PATHS.RENDERER_HTML);
+      return filePath === expectedPath;
     }
 
     return parsedUrl.protocol === 'http:' && parsedUrl.hostname === 'localhost';
@@ -38,12 +45,13 @@ export function validatePath(filePath: string) {
     // Prevent access to sensitive OS system folders
     const lower = resolvedPath.toLowerCase();
     if (process.platform === 'win32') {
+      const sysDrive = (process.env.SystemDrive ?? 'C:').toLowerCase();
       const forbiddenPrefixes = [
-        'c:\\windows\\',
-        'c:\\winnt\\',
-        'c:\\boot\\',
-        'c:\\system volume information\\',
-        'c:\\$recycle.bin\\',
+        `${sysDrive}\\windows\\`,
+        `${sysDrive}\\winnt\\`,
+        `${sysDrive}\\boot\\`,
+        `${sysDrive}\\system volume information\\`,
+        `${sysDrive}\\$recycle.bin\\`,
       ];
       if (forbiddenPrefixes.some((p) => lower === p.slice(0, -1) || lower.startsWith(p))) {
         return false;

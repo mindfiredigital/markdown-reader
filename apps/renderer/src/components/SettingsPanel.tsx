@@ -54,7 +54,7 @@ export function SettingsPanel({
         <div className="space-y-5 p-4">
           <fieldset>
             <legend className="mb-2 text-sm font-medium text-text-base">Reading width</legend>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Reading width choices">
               {(['narrow', 'default', 'wide'] as const).map((width) => (
                 <label
                   key={width}
@@ -68,7 +68,7 @@ export function SettingsPanel({
                     onChange={() => onChange({ readingWidth: width })}
                   />
                   <span className="capitalize">{width}</span>
-                  <span className="text-xs text-text-muted">{WIDTH_MAP[width]}</span>
+                  <span className="text-xs text-text-muted" aria-label={`Width value: ${WIDTH_MAP[width]}`}>{WIDTH_MAP[width]}</span>
                 </label>
               ))}
             </div>
@@ -89,13 +89,14 @@ export function SettingsPanel({
               value={settings.customCss}
               onChange={(event) => onChange({ customCss: event.target.value })}
               rows={8}
-              aria-label="Custom CSS"
+              aria-labelledby="custom-css-title"
               className="w-full resize-y rounded border border-border-theme bg-surface p-3 font-mono text-sm text-text-base outline-none focus:ring-2 focus:ring-accent"
               placeholder="Add custom reader CSS here "
             />
+            <span id="custom-css-title" className="sr-only">Custom CSS input editor</span> 
           </label>
 
-          {appVersion && <p className="text-xs text-text-muted">Version {appVersion}</p>}
+          {appVersion && <p className="text-xs text-text-muted" aria-label={`Application Version ${appVersion}`}>Version {appVersion}</p>}
         </div>
       </section>
     </div>

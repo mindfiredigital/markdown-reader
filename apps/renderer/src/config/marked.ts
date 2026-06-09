@@ -1,13 +1,15 @@
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import { shikiHighlighter } from '../renderer/shiki';
-import { THEMES } from '@package/shared-constants';
 import { escapeHtml, heading } from '../utils/helpers/heading-helper';
 import { MARKDOWN_LANGUAGES } from '../utils/constants/markdown-constants';
+import { DEFAULT_THEME } from '../utils/constants/theme-constants';
 
 let instance: Marked | null = null;
+let currentRegistry: Map<string, number>;
 
-export function getMarkdown(): Marked {
+export function getMarkdown(registry: Map<string, number>): Marked {
+  currentRegistry = registry;
   if (instance) return instance;
   instance = new Marked();
 
@@ -15,7 +17,11 @@ export function getMarkdown(): Marked {
   instance.use({
     gfm: true,
     breaks: false,
-    renderer: { heading },
+    renderer: {
+      heading(props) {
+        return heading(props, currentRegistry);
+      },
+    },
   });
 
   //configure marked to use Shikhi for code blocks
@@ -28,7 +34,7 @@ export function getMarkdown(): Marked {
           return escapeHtml(code);
         }
         const highlighter = await shikiHighlighter();
-        const theme = THEMES[1];
+        const theme = DEFAULT_THEME;
         try {
           return highlighter.codeToHtml(code, {
             lang: language,

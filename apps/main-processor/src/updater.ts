@@ -6,6 +6,10 @@ export function setupAutoUpdater(window: BrowserWindow): void {
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = true;
 
+  autoUpdater.removeAllListeners('update-available');
+  autoUpdater.removeAllListeners('update-downloaded');
+  autoUpdater.removeAllListeners('error');
+
   autoUpdater.on('update-available', (info: UpdateInfo) => {
     window.webContents.send(IPC_CONSTANTS.UPDATE_AVAILABLE, info.version);
   });
