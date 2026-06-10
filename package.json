@@ -17,7 +17,8 @@
     "typecheck": "pnpm -r run typecheck",
     "test": "pnpm -r run test",
     "test:coverage": "pnpm -r run test:coverage",
-    "build:extension": "vite build --config vite.extension.config.ts"
+    "dev:extension": "pnpm --filter extension dev",
+    "build:extension": "pnpm --filter extension build"
   },
   "keywords": [],
   "author": "Mindfire-digital",
