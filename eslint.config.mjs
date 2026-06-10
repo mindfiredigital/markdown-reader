@@ -18,7 +18,8 @@ export default [
       },
       globals: {
         ...globals.node,
-        ...globals.browser
+        ...globals.browser,
+        ...globals.webextensions
       }
     },
     plugins: {
