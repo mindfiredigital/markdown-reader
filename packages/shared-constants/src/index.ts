@@ -1,6 +1,5 @@
 export { Icons } from './icon-contants.js';
 export { btnClass, CALLOUT_MAP } from './style-constants.js';
-export { SHIKI_LANG, SHIKI_THEME } from './shiki-constants.js';
 export { MARKDOWN_LANGUAGES } from './markdown-constants.js';
 export {
   CALLOUT_REGEX,
