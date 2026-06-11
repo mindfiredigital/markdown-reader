@@ -1,4 +1,3 @@
-export { Icons } from './icon-contants.js';
 export { btnClass, CALLOUT_MAP } from './style-constants.js';
 export { MARKDOWN_LANGUAGES } from './markdown-constants.js';
 export {
