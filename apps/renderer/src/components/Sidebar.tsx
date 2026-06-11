@@ -1,6 +1,6 @@
 import { useEffect,useRef } from 'react';
 import { SidebarProps } from '../types/component-types';
-import { Icons } from '@package/shared-constants';
+import { Icons } from '@package/markdown-core';
 import { getItemClasses } from '@package/shared-utils';
 import { useCollapsibleToc } from '../hooks/useCollapsibleToc';
 

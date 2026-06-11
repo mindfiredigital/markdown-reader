@@ -1,5 +1,5 @@
 import { FileTreeProps } from '../types/component-types';
-import { Icons } from '@package/shared-constants';
+import { Icons } from '@package/markdown-core';
 export function FileTree({node,depth,activeFilePath,onOpenFile}:FileTreeProps) {
   const paddingLeft=depth*14+12;
   if (node.isDir){

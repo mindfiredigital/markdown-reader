@@ -1,4 +1,4 @@
-import { Icons } from '@package/shared-constants';
+import { Icons } from '@package/markdown-core';
 import { useCollapsibleToc } from '../hooks/useCollapsibleToc';
 import { TocPanelProps } from '../types';
 

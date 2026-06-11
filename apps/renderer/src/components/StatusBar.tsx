@@ -1,6 +1,6 @@
 import { StatusBarProps } from "../types/component-types";
 import { basename } from "@package/shared-utils";
-import { Icons } from '@package/shared-constants';
+import { Icons } from '@package/markdown-core';
 
 export function StatusBar({ filePath, theme, fontSize }: StatusBarProps) {
   const zoomPercent = Math.round((fontSize / 16) * 100);

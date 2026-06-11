@@ -1,6 +1,6 @@
 import { FONT_SIZE_INCREMENT, MAX_FONT_SIZE, MIN_FONT_SIZE } from '@package/shared-constants';
 import { ToolbarProps } from '../types';
-import { Icons } from '@package/shared-constants';
+import { Icons } from '@package/markdown-core';
 
 export function Toolbar({
   fileName,

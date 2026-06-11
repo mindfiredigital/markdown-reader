@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Icons } from '@package/shared-constants';
+import { Icons } from '@package/markdown-core';
 
 export function UpdateBanner() {
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);

@@ -1,4 +1,4 @@
-import { Icons } from '@package/shared-constants';
+import { Icons } from '@package/markdown-core';
 import { ReaderToolbarProps } from '../types/component-types';
 
 /* toolbar component to show zoom controls and theme toggle on UI */

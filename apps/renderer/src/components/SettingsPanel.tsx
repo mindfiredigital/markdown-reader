@@ -1,6 +1,6 @@
 import { useEffect,useRef } from 'react';
 import { SettingsPanelProps } from '../types/component-types';
-import { Icons } from '@package/shared-constants';
+import { Icons } from '@package/markdown-core';
 import { WIDTH_MAP } from '../types/component-types';
 
 /*Displays the settings features in UI*/
