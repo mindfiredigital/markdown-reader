@@ -1,5 +1,5 @@
-import { decodeHtml } from '@package/shared-utils';
-import { escapeHtml } from '@package/shared-utils';
+import { decodeHtml } from '../utils/helper/heading-helper';
+import { escapeHtml } from '../utils/helper/heading-helper';
 import { BLOCK_MERMAID_REGEX } from '@package/shared-constants';
 
 let diagramCounter = 0;
