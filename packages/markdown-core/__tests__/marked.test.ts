@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { getMarkdown } from '../src/config/marked';
-import { heading } from '@package/shared-utils';
+import { heading } from '../src/utils/helper/heading-helper';
 
-vi.mock('@package/shared-utils', () => ({
+vi.mock('../src/utils/helper/heading-helper', () => ({
   escapeHtml: (str: string) => str,
   heading: vi.fn().mockImplementation((props, registry) => {
     const count = registry.get(props.text) || 0;

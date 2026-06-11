@@ -1,7 +1,7 @@
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import { shikiHighlighter } from '../renderer/shiki';
-import { escapeHtml, heading } from '@package/shared-utils';
+import { escapeHtml, heading } from '../utils/helper/heading-helper';
 import { MARKDOWN_LANGUAGES } from '@package/shared-constants';
 import { DEFAULT_THEME } from '@package/shared-constants';
 

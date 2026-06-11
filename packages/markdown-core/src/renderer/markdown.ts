@@ -1,5 +1,5 @@
 import { getMarkdown } from '../config/marked';
-import { createHeadingRegistry } from '@package/shared-utils';
+import { createHeadingRegistry } from '../utils/helper/heading-helper';
 import { parseCallouts } from './callout';
 
 // converts markdown text into plain HTML string
