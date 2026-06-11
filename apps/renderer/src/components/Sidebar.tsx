@@ -1,6 +1,6 @@
 import { useEffect,useRef } from 'react';
 import { SidebarProps } from '../types/component-types';
-import { Icons } from '../utils/constants/icon-contants';
+import { Icons } from '@package/shared-constants';
 import { getItemClasses } from '@package/shared-utils';
 import { useCollapsibleToc } from '../hooks/useCollapsibleToc';
 

@@ -1,4 +1,4 @@
-import { Icons } from '../utils/constants/icon-contants';
+import { Icons } from '@package/shared-constants';
 import { ReaderToolbarProps } from '../types/component-types';
 
 /* toolbar component to show zoom controls and theme toggle on UI */

@@ -1,6 +1,5 @@
 import { FileTreeProps } from '../types/component-types';
-import { Icons } from '../utils/constants/icon-contants';
-
+import { Icons } from '@package/shared-constants';
 export function FileTree({node,depth,activeFilePath,onOpenFile}:FileTreeProps) {
   const paddingLeft=depth*14+12;
   if (node.isDir){

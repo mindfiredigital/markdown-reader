@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Icons } from '../utils/constants/icon-contants';
+import { Icons } from '@package/shared-constants';
 
 export function UpdateBanner() {
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);

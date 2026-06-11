@@ -1,5 +1,5 @@
 import type { TabBarProps } from '../types/component-types';
-import { Icons } from '../utils/constants/icon-contants';
+import { Icons } from '@package/shared-constants';
 
 export function TabBar({ tabs, activeTabId, onSwitch, onClose ,plusOpen}: TabBarProps) {
   if (tabs.length === 0) return null;

@@ -129,10 +129,6 @@ export interface FileTreeProps {
   onOpenFile: (path: string) => void;
 }
 
-export type IconProps = React.SVGProps<SVGSVGElement> & {
-  size?: number;
-};
-
 export interface ElectronFile extends File {
   path: string;
 }

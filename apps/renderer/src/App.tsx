@@ -15,7 +15,7 @@ import { StatusBar } from './components/StatusBar';
 import { FileBrowser } from './components/FileBrowser';
 import { TabBar } from './components/TabBar';
 import { useTabStore } from './hooks/useTabStore';
-import { Icons } from './utils/constants/icon-contants';
+import { Icons } from '@package/shared-constants';
 import { useShortcuts } from './hooks/useShortcuts';
 import { useMenuEvents } from './hooks/useMenuEvents';
 import { UpdateBanner } from './components/UpdateBanner';
