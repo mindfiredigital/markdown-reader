@@ -5,7 +5,7 @@ import {
   isHeadingToken,
   headingText,
   createHeadingRegistry,
-} from '@package/shared-utils';
+} from '../utils/helper/heading-helper';
 
 // extracts table of content from HTML string
 export function extractTOC(html: string): TOCType[] {
