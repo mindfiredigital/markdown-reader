@@ -19,6 +19,7 @@
     "@package/shared-constants": "workspace:*",
     "@package/shared-types": "workspace:*",
     "@package/shared-utils": "workspace:*",
+    "dompurify": "^3.4.1",
     "katex": "^0.16.45",
     "marked": "^18.0.2",
     "marked-highlight": "^2.2.4",
