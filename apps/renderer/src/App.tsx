@@ -31,8 +31,10 @@ import { ReaderToolbar } from './components/ReaderToolbar';
 import { useFolderSearch } from './hooks/useFolderSearch';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { usePlatformAPI } from './hooks/usePlatform';
 
 export default function App() {
+  const api = usePlatformAPI();
   const {  error, isLoading, openFile, toc,recentFiles,loadFile } =useFile();
   const { state, dispatch } = useTabStore();
   const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId) ?? null;
@@ -55,9 +57,9 @@ export default function App() {
   const [appVersion, setAppVersion] = useState('');
 
   useEffect(()=>{
-    if(!window.api?.getAppVersion) return;
-    void window.api.getAppVersion().then(setAppVersion).catch(()=>{});
-  },[])
+    if(!api?.getAppVersion) return;
+    void api.getAppVersion().then(setAppVersion).catch(()=>{});
+  },[api])
   
   useEffect(()=>{
     if(folderTree){

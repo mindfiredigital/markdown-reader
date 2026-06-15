@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Icons } from '../utils/constants/icon-contants';
+import { usePlatformAPI } from '../hooks/usePlatform';
 
 export function UpdateBanner() {
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);
+  const api=usePlatformAPI();
   useEffect(() => {
-    if(!window.api?.onUpdateAvailable) return;
-    const removeUpdateAvailable=window.api.onUpdateAvailable((version: string) => {
+    if(!api?.onUpdateAvailable) return;
+    const removeUpdateAvailable=api.onUpdateAvailable((version: string) => {
       setUpdateVersion(version);
     });
     return removeUpdateAvailable;
-  }, []);
+  }, [api]);
   if (!updateVersion) {
     return null;
   }
@@ -22,7 +24,9 @@ export function UpdateBanner() {
       <button
         type="button"
         onClick={() => {
-          void window.api.downloadUpdate();
+          if (api.downloadUpdate) {
+            api.downloadUpdate();
+          }
         }}
         className="text-accent hover:underline"
         aria-label={`Download update version ${updateVersion} and install on quit`}

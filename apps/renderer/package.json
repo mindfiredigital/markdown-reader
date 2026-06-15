@@ -18,6 +18,7 @@
   "dependencies": {
     "@package/shared-constants": "workspace:*",
     "@package/shared-types": "workspace:*",
+    "@package/platform-adapters": "workspace:*",
     "dompurify": "^3.4.0",
     "katex": "^0.16.45",
     "marked": "^18.0.0",
