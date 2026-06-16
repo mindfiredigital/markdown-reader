@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { extractDroppedMdpath } from '../renderer/drag-drop';
+import { usePlatformAPI } from './usePlatform';
 
 export function useDragDrop(loadFileInTab: (path: string) => Promise<void>) {
   const [isDraggingFile, setIsDraggingFile] = useState(false);
+  const api = usePlatformAPI();
   useEffect(() => {
     const preventDefaultDrag = (e: DragEvent) => {
       e.preventDefault();
@@ -43,12 +45,12 @@ export function useDragDrop(loadFileInTab: (path: string) => Promise<void>) {
       e.preventDefault();
       e.stopPropagation();
       setIsDraggingFile(false);
-      const droppedPath = extractDroppedMdpath(e.dataTransfer);
+      const droppedPath = extractDroppedMdpath(e.dataTransfer, api);
       if (droppedPath) {
         void loadFileInTab(droppedPath);
       }
     },
-    [loadFileInTab]
+    [loadFileInTab, api]
   );
 
   return {
