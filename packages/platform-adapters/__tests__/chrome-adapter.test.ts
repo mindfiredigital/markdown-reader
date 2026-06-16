@@ -33,7 +33,7 @@ describe('chrome adapter', () => {
     expect(await adapter.storage.getItem('theme')).toBe('github-dark');
   });
 
-  it('should remove and clear stord values', async () => {
+  it('should remove and clear stored values', async () => {
     const { api } = makeChromeApi({ theme: 'github-dark', zoom: 18 });
     const adapter = new ChromeAdapter(api);
 
@@ -96,7 +96,7 @@ describe('chrome adapter', () => {
     expect(await adapter.getRecentFiles()).toEqual([]);
   });
 
-  it('shouses cached file content before the worker', async () => {
+  it('chooses cached file content before the worker', async () => {
     const { api } = makeChromeApi({
       [`${STORAGE_KEYS.FILE_CONTENT_PREFIX}cached.md`]: '# Cached',
     });
@@ -188,7 +188,7 @@ describe('chrome adapter', () => {
     expect(api.runtime?.onMessage?.removeListener).toHaveBeenCalled();
   });
 
-  it('uses browser friendly update and file path behavor', async () => {
+  it('uses browser friendly update and file path behavior', async () => {
     const { api } = makeChromeApi();
     const adapter = new ChromeAdapter(api);
     const cleanup = adapter.onUpdateAvailable();

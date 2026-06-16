@@ -6,7 +6,7 @@ export function UpdateBanner() {
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);
   const api=usePlatformAPI();
   useEffect(() => {
-    if(!api?.onUpdateAvailable) return;
+    if(!api.onUpdateAvailable) return;
     const removeUpdateAvailable=api.onUpdateAvailable((version: string) => {
       setUpdateVersion(version);
     });

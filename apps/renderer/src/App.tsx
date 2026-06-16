@@ -57,7 +57,7 @@ export default function App() {
   const [appVersion, setAppVersion] = useState('');
 
   useEffect(()=>{
-    if(!api?.getAppVersion) return;
+    if(!api.getAppVersion) return;
     void api.getAppVersion().then(setAppVersion).catch(()=>{});
   },[api])
   

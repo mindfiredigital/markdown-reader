@@ -34,7 +34,10 @@ describe('runtime helpers', () => {
 
   it('should reject an incomplete chrome api', () => {
     vi.stubGlobal('chrome', { runtime: { sendMessage: vi.fn() } });
-
+    expect(isChromeExtensionRuntime()).toBe(false);
+  });
+  it('should reject chrome api without sendMessage', () => {
+    vi.stubGlobal('chrome', { storage: { local: {} } });
     expect(isChromeExtensionRuntime()).toBe(false);
   });
 

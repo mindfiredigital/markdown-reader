@@ -17,7 +17,9 @@ export function useSettings() {
       .then((savedSettings) => {
         setSettings(savedSettings);
       })
-      .catch(() => {});
+      .catch((error) => {
+        console.error('Failed to load settings using defaults', error);
+      });
   }, [api]);
 
   useEffect(() => {
