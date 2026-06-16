@@ -25,7 +25,11 @@ export default defineConfig({
         try {
           cpSync(iconSourceDir, resolve(extensionOutDir, 'icons'), { recursive: true });
         } catch (e) {
-          console.warn('Icon directory not found, skipping copy step.');
+          if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
+            console.warn('Icon directory not found, skipping copy step.');
+          } else {
+            throw e;
+          }
         }
       },
     },
