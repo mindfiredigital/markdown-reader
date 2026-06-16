@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
-
+@source "./**/*.{ts,tsx}";
 
 :root,
 [data-theme="github-light"] {
