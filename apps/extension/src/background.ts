@@ -12,7 +12,11 @@ if (!runtime?.onMessage) {
 // extension opens the full reader tab
 chromeApi?.action?.onClicked.addListener(() => {
   const viewerUrl = runtime.getURL('viewer.html');
-  void chromeApi.tabs?.create({ url: viewerUrl });
+  if (chromeApi?.tabs) {
+    Promise.resolve(chromeApi.tabs.create({ url: viewerUrl })).catch((error) => {
+      console.error('Failed to create tab:', error);
+    });
+  }
 });
 
 // listens for any messages coming from our React ui, checks if they are valid and passes them to handler.
