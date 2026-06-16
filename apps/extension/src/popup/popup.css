@@ -1,0 +1,14 @@
+html,
+body,
+#root {
+  width: 780px;
+  height: 560px;
+  min-width: 780px;
+  min-height: 560px;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background: var(--color-bg);
+}
