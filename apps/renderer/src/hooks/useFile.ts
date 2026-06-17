@@ -16,7 +16,6 @@ export function useFile() {
   const [recentFiles, setRecentFiles] = useState<RecentFile[]>([]);
 
   useEffect(() => {
-    if (!api.getRecentFiles) return;
     api
       .getRecentFiles()
       .then(setRecentFiles)
@@ -35,8 +34,8 @@ export function useFile() {
         setHtml(safeHtml);
         const nextToc = extractTOC(rawMarkdown);
         setToc(nextToc);
-        await api.addRecentFile?.(path);
-        const updated = (await api.getRecentFiles?.()) ?? [];
+        await api.addRecentFile(path);
+        const updated = await api.getRecentFiles();
         setRecentFiles(updated);
         return {
           html: safeHtml,
