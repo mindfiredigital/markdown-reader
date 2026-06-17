@@ -305,7 +305,12 @@ export class ChromeAdapter implements PlatformAdapter {
   }
 
   downloadUpdate(): void {
-    void this.sendMessage<void>({ type: CHROME_MESSAGE_TYPES.DOWNLOAD_UPDATE });
+    this.sendMessage<void>({ type: CHROME_MESSAGE_TYPES.DOWNLOAD_UPDATE }).catch(
+      (error: unknown) => {
+        const message = error instanceof Error ? error.message : String(error);
+        console.warn(`Chrome adapter download update message skipped: ${message}`);
+      }
+    );
   }
 
   async sendMessage<TResponse = unknown, TPayload = unknown>(
