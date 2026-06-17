@@ -125,7 +125,6 @@ export class ChromeAdapter implements PlatformAdapter {
             this.openedFiles.set(path, content);
             try {
               await this.storage.setItem(`${STORAGE_KEYS.FILE_CONTENT_PREFIX}${path}`, content);
-              resolve(path);
             } catch (error: unknown) {
               const errorMessage = error instanceof Error ? error.message : '';
               const errorName =
@@ -134,15 +133,16 @@ export class ChromeAdapter implements PlatformAdapter {
                   : '';
 
               if (errorMessage.includes('QUOTA_BYTES') || errorName === 'QuotaExceededError') {
-                reject(
-                  new Error(
-                    'Extension storage limit (10MB) exceeded. Please clear some files to free up space.'
-                  )
+                console.warn(
+                  'Extension storage limit (10MB) exceeded. File opened for this session but not persisted.'
                 );
               } else {
-                reject(error instanceof Error ? error : new Error('Failed to cache file content.'));
+                console.warn(
+                  error instanceof Error ? error : new Error('Failed to cache file content.')
+                );
               }
             }
+            resolve(path);
           };
           reader.onerror = () => {
             reject(reader.error ?? new Error('Failed to read selected Markdown file.'));
