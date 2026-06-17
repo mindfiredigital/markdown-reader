@@ -9,8 +9,20 @@ export type ChromeRuntime = {
   lastError?: { message?: string };
   sendMessage<TResponse = unknown>(message: unknown): Promise<TResponse>;
   onMessage?: {
-    addListener(listener: (message: unknown) => void): void;
-    removeListener(listener: (message: unknown) => void): void;
+    addListener(
+      listener: (
+        message: unknown,
+        sender: unknown,
+        sendResponse: (response?: unknown) => void
+      ) => boolean | void
+    ): void;
+    removeListener(
+      listener: (
+        message: unknown,
+        sender: unknown,
+        sendResponse: (response?: unknown) => void
+      ) => void
+    ): void;
   };
 };
 
