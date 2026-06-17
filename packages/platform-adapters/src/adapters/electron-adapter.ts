@@ -13,7 +13,12 @@ import type { StorageAdapter } from '../types/storage-type';
 class BrowserLocalStorageAdapter implements StorageAdapter {
   async getItem<T>(key: string): Promise<T | null> {
     const value = globalThis.localStorage?.getItem(key);
-    return value ? (JSON.parse(value) as T) : null;
+    if (!value) return null;
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return null;
+    }
   }
 
   async setItem<T>(key: string, value: T): Promise<void> {
@@ -148,8 +153,8 @@ export class ElectronAdapter implements PlatformAdapter {
   }
 
   async sendMessage<TResponse = unknown, TPayload = unknown>(
-    message: PlatformMessage<TPayload>
+    _message: PlatformMessage<TPayload>
   ): Promise<TResponse> {
-    return message as TResponse;
+    throw new Error('send message is an unsupported operation in the electron runtime environment');
   }
 }

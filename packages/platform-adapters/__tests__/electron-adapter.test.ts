@@ -128,6 +128,8 @@ describe('electron adapter', () => {
     const adapter = new ElectronAdapter(makeElectronApi());
     const message = { type: 'ping', payload: { ok: true } };
 
-    await expect(adapter.sendMessage(message)).resolves.toBe(message);
+    await expect(adapter.sendMessage(message)).rejects.toThrow(
+      'send message is an unsupported operation in the electron runtime environment'
+    );
   });
 });
