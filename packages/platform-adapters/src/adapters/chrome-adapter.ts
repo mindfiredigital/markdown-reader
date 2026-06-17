@@ -119,12 +119,30 @@ export class ChromeAdapter implements PlatformAdapter {
           }
 
           const reader = new FileReader();
-          reader.onload = () => {
+          reader.onload = async () => {
             const content = String(reader.result ?? '');
             const path = file.name;
             this.openedFiles.set(path, content);
-            void this.storage.setItem(`${STORAGE_KEYS.FILE_CONTENT_PREFIX}${path}`, content);
-            resolve(path);
+            try {
+              await this.storage.setItem(`${STORAGE_KEYS.FILE_CONTENT_PREFIX}${path}`, content);
+              resolve(path);
+            } catch (error: unknown) {
+              const errorMessage = error instanceof Error ? error.message : '';
+              const errorName =
+                typeof error === 'object' && error !== null && 'name' in error
+                  ? String((error as Record<string, unknown>).name)
+                  : '';
+
+              if (errorMessage.includes('QUOTA_BYTES') || errorName === 'QuotaExceededError') {
+                reject(
+                  new Error(
+                    'Extension storage limit (10MB) exceeded. Please clear some files to free up space.'
+                  )
+                );
+              } else {
+                reject(error instanceof Error ? error : new Error('Failed to cache file content.'));
+              }
+            }
           };
           reader.onerror = () => {
             reject(reader.error ?? new Error('Failed to read selected Markdown file.'));
