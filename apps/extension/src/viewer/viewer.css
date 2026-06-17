@@ -10,5 +10,5 @@ body,
 
 body {
   overflow: hidden;
-  background: var(--color-bg);
+  background: var(--color-bg, #ffffff);
 }
