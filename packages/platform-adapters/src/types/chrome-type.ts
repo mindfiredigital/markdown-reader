@@ -8,6 +8,7 @@ export type ChromeStorageArea = {
 export type ChromeRuntime = {
   lastError?: { message?: string };
   sendMessage<TResponse = unknown>(message: unknown): Promise<TResponse>;
+  getManifest(): { version: string; [key: string]: unknown };
   onMessage?: {
     addListener(
       listener: (

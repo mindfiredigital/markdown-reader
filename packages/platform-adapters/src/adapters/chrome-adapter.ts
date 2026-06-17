@@ -203,7 +203,8 @@ export class ChromeAdapter implements PlatformAdapter {
   }
 
   async getAppVersion(): Promise<string> {
-    return DEFAULT_APP_VERSION;
+    const version = this.chromeApi?.runtime?.getManifest?.()?.version;
+    return version ?? DEFAULT_APP_VERSION;
   }
 
   searchFolder(path: string, query: string): Promise<FolderSearchResult[]> {

@@ -1,3 +1,4 @@
+import { getChromeApi } from '../helpers/adapter-helper';
 export const PLATFORM_KIND = {
   ELECTRON: 'electron',
   CHROME: 'chrome',
@@ -24,4 +25,6 @@ export const CHROME_MESSAGE_TYPES = {
   DOWNLOAD_UPDATE: 'markdown-reader:download-update',
 } as const;
 
-export const DEFAULT_APP_VERSION = 'Chrome Extension';
+const chromeApi = getChromeApi();
+export const DEFAULT_APP_VERSION =
+  chromeApi?.runtime?.getManifest?.()?.version ?? '1.0.0-extension';
