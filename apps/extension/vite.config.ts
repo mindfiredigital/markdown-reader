@@ -14,6 +14,14 @@ export default defineConfig({
   root: chromeExtensionRoot,
   base: './',
   publicDir: resolve(rendererRoot, 'public'),
+  resolve: {
+    alias: {
+      '@package/platform-adapters': resolve(
+        chromeExtensionRoot,
+        '../../packages/platform-adapters'
+      ),
+    },
+  },
   plugins: [
     tailwindcss(),
     react({}),
