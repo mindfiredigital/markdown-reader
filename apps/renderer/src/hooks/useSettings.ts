@@ -1,22 +1,26 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FONT_SIZE, WIDTH_MAP } from '../types/component-types';
 import { AppSettings, DEFAULT_SETTINGS } from '@package/shared-types';
+import { usePlatformAPI } from '../hooks/usePlatform';
 
 export function useSettings() {
+  const api = usePlatformAPI();
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
   const fontSize = settings.fontSize;
   const readingWidth = settings.readingWidth;
 
   useEffect(() => {
-    if (!window.api) return;
+    if (!api.getSettings) return;
 
-    void window.api
+    void api
       .getSettings()
       .then((savedSettings) => {
         setSettings(savedSettings);
       })
-      .catch(() => {});
-  }, []);
+      .catch((error) => {
+        console.error('Failed to load settings using defaults', error);
+      });
+  }, [api]);
 
   useEffect(() => {
     document.documentElement.style.setProperty('--font-size-content', `${fontSize}px`);
@@ -40,20 +44,23 @@ export function useSettings() {
     style.textContent = settings.customCss || '';
   }, [settings.customCss]);
 
-  const updateSettings = useCallback(async (partial: Partial<AppSettings>) => {
-    if (!window.api) {
-      setSettings((current) => ({ ...current, ...partial }));
-      return;
-    }
+  const updateSettings = useCallback(
+    async (partial: Partial<AppSettings>) => {
+      if (!api.saveSettings) {
+        setSettings((current) => ({ ...current, ...partial }));
+        return;
+      }
 
-    try {
-      const next = await window.api.saveSettings(partial);
-      setSettings(next);
-    } catch (error) {
-      console.error('Failed to save settings:', error);
-      throw error;
-    }
-  }, []);
+      try {
+        const next = await api.saveSettings(partial);
+        setSettings(next);
+      } catch (error) {
+        console.error('Failed to save settings:', error);
+        throw error;
+      }
+    },
+    [api]
+  );
 
   const increaseFontSize = useCallback(() => {
     return updateSettings({

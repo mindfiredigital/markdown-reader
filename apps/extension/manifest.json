@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Markdown Reader",
+  "description": "Read and render Markdown files in Chrome.",
+  "version": "1.0.0",
+  "action": {
+    "default_title": "Markdown Reader",
+    "default_icon": {
+      "16": "icons/icon-16x16px.png",
+      "32": "icons/icon-32x32px.png",
+      "48": "icons/icon-48x48px.png",
+      "128": "icons/icon-128x128px.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": ["storage"],
+  "icons": {
+    "16": "icons/icon-16x16px.png",
+    "32": "icons/icon-32x32px.png",
+    "48": "icons/icon-48x48px.png",
+    "128": "icons/icon-128x128px.png"
+  }
+}
