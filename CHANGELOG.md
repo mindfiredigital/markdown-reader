@@ -1,4 +1,7 @@
 
+## 1.1.0
+- add build:extension script for CI pipeline
+
 ## 1.0.3
 - resolve inline image arbitrary file read, origin validation issues and marked instance bugs
 
