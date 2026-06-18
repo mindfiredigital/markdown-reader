@@ -16,7 +16,8 @@
     "lint": "pnpm -r run lint",
     "typecheck": "pnpm -r run typecheck",
     "test": "pnpm -r run test",
-    "test:coverage": "pnpm -r run test:coverage"
+    "test:coverage": "pnpm -r run test:coverage",
+    "build:extension": "pnpm --filter extension run build"
   },
   "keywords": [],
   "author": "Mindfire-digital",
