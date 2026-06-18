@@ -99,7 +99,7 @@ jobs:
           ref: ${{ needs.version_and_tag.outputs.new_sha }}
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
  
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -136,17 +136,61 @@ jobs:
             release/*.blockmap
           if-no-files-found: error
 
+  build_extension:
+    name: Build Chrome Extension 
+    needs: version_and_tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.version_and_tag.outputs.new_sha }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Chrome extension
+        run: pnpm build:extension
+
+      - name: Verify unpacked extension output
+        run: |
+          test -f dist/extensions/chrome/manifest.json
+          test -f dist/extensions/chrome/viewer.html
+          test -f dist/extensions/chrome/background.js
+
+      - name: Create extension-release.zip
+        run: |
+          mkdir -p release-artifacts
+          cd dist/extensions/chrome
+          zip -r ../../../release-artifacts/extension-release.zip .
+
+      - name: Upload Chrome Extension Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension-release
+          path: release-artifacts/extension-release.zip
+          if-no-files-found: error
 
   publish:
     name: Create Unified Release
-    needs: [version_and_tag,build]
+    needs: [version_and_tag, build, build_extension]
     runs-on: ubuntu-latest
     steps:
       - name: Download All Runner Artifacts
         uses: actions/download-artifact@v4
         with:
           path: release-artifacts
-          pattern: electron-build-*
+          pattern: "*"
           merge-multiple: true
 
       - name: Publish Consolidated GitHub Release
@@ -168,3 +212,4 @@ jobs:
             release-artifacts/*.AppImage
             release-artifacts/*.deb
             release-artifacts/*.blockmap
+            release-artifacts/*.zip
