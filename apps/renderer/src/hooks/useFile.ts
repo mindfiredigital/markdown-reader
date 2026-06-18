@@ -4,8 +4,10 @@ import { renderMarkdown } from '../renderer/markdown';
 import { extractTOC } from '../renderer/toc';
 import { TOCType } from '../types/component-types';
 import { RecentFile } from '@package/shared-types';
+import { usePlatformAPI } from '../hooks/usePlatform';
 
 export function useFile() {
+  const api = usePlatformAPI();
   const [html, setHtml] = useState<string>('');
   const [filePath, setFilePath] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -14,46 +16,49 @@ export function useFile() {
   const [recentFiles, setRecentFiles] = useState<RecentFile[]>([]);
 
   useEffect(() => {
-    window.api
+    api
       .getRecentFiles()
       .then(setRecentFiles)
       .catch(() => {});
-  }, []);
+  }, [api]);
 
-  const loadFile = useCallback(async (path: string) => {
-    setIsLoading(true);
-    setError('');
-    setFilePath(path);
-    try {
-      const rawMarkdown = await window.api.readFile(path);
-      const renderHtml = await renderMarkdown(rawMarkdown);
-      const safeHtml = DOMpurify.sanitize(renderHtml);
-      setHtml(safeHtml);
-      const nextToc = extractTOC(rawMarkdown);
-      setToc(nextToc);
-      await window.api.addRecentFile(path);
-      const updated = await window.api.getRecentFiles();
-      setRecentFiles(updated);
-      return {
-        html: safeHtml,
-        toc: nextToc,
-        filePath: path,
-      };
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError(String(error));
+  const loadFile = useCallback(
+    async (path: string) => {
+      setIsLoading(true);
+      setError('');
+      setFilePath(path);
+      try {
+        const rawMarkdown = (await api.readFile?.(path)) ?? '';
+        const renderHtml = await renderMarkdown(rawMarkdown);
+        const safeHtml = DOMpurify.sanitize(renderHtml);
+        setHtml(safeHtml);
+        const nextToc = extractTOC(rawMarkdown);
+        setToc(nextToc);
+        await api.addRecentFile(path);
+        const updated = await api.getRecentFiles();
+        setRecentFiles(updated);
+        return {
+          html: safeHtml,
+          toc: nextToc,
+          filePath: path,
+        };
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError(String(error));
+        }
+      } finally {
+        setIsLoading(false);
       }
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+    },
+    [api]
+  );
   const openFile = useCallback(async () => {
-    const chosenPath = await window.api.openFileDialog();
+    const chosenPath = await api.openFileDialog?.();
     if (!chosenPath) return;
     await loadFile(chosenPath);
-  }, [loadFile]);
+  }, [loadFile, api]);
   const reloadFile = useCallback(async () => {
     if (!filePath) return;
     await loadFile(filePath);

@@ -1,7 +1,9 @@
 import { useCallback, useState, useRef, useEffect } from 'react';
 import { FolderSearchResult } from '@package/shared-types';
+import { usePlatformAPI } from '../hooks/usePlatform';
 
 export function useFolderSearch(folderPath: string | null) {
+  const api = usePlatformAPI();
   const [isFolderSearchOpen, setIsFolderSearchOpen] = useState(false);
   const [folderQuery, setFolderQuery] = useState('');
   const [folderResults, setFolderResults] = useState<FolderSearchResult[]>([]);
@@ -20,7 +22,7 @@ export function useFolderSearch(folderPath: string | null) {
     async (query: string) => {
       setFolderQuery(query);
       const current = ++requestId.current;
-      if (!folderPath || !query.trim() || !window.api?.searchFolder) {
+      if (!folderPath || !query.trim() || !api.searchFolder) {
         setFolderResults([]);
         setIsSearchingFolder(false);
         return;
@@ -28,7 +30,7 @@ export function useFolderSearch(folderPath: string | null) {
 
       setIsSearchingFolder(true);
       try {
-        const results = await window.api.searchFolder(folderPath, query);
+        const results = await api.searchFolder(folderPath, query);
         if (current === requestId.current) setFolderResults(results);
       } catch {
         if (current === requestId.current) setFolderResults([]);
@@ -36,7 +38,7 @@ export function useFolderSearch(folderPath: string | null) {
         if (current === requestId.current) setIsSearchingFolder(false);
       }
     },
-    [folderPath]
+    [folderPath, api]
   );
 
   useEffect(() => {

@@ -10,8 +10,8 @@ export function useFilePersistence({
   contentRef,
   setShowToast,
 }: FilePersistenceProps) {
-  const debounceTimer = useRef<ReturnType<typeof window.setTimeout> | undefined>(undefined);
-  const scrollTimer = useRef<ReturnType<typeof window.setTimeout> | undefined>(undefined);
+  const debounceTimer = useRef<number | undefined>(undefined);
+  const scrollTimer = useRef<number | undefined>(undefined);
   const isMounted = useRef<boolean>(true);
 
   useEffect(() => {
