@@ -90,7 +90,10 @@ export function HeroSection() {
                     <img
                       src={item.icon}
                       alt={`${item.name} icon`}
-                      className="h-7 w-7 object-contain opacity-90 brightness-100"
+                      className={clsx(
+                        'h-7 w-7 object-contain opacity-90 brightness-100 download-platform-icon',
+                        item.name !== 'Windows' && 'download-platform-icon--theme-aware'
+                      )}
                     />
                     <h2 className="text-sm font-semibold text-foreground mt-3 mb-0.5">
                       {item.name}
