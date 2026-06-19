@@ -18,7 +18,7 @@ export default defineConfig({
     alias: {
       '@package/platform-adapters': resolve(
         chromeExtensionRoot,
-        '../../packages/platform-adapters'
+        '../../packages/platform-adapters/src/index.ts'
       ),
     },
   },
