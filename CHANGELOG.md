@@ -1,4 +1,7 @@
 
+## 1.1.1
+- add file name in cofig
+
 ## 1.1.0
 - add build:extension script for CI pipeline
 
