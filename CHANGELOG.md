@@ -1,4 +1,7 @@
 
+## 1.3.0
+- ground extension config context to project root to fix workspace aliases
+
 ## 1.2.0
 - migrate build pipeline to workspace root to resolve monorepo imports
 
