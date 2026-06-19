@@ -23,6 +23,7 @@ export default defineConfig({
         'packages/platform-adapters/src/index.ts'
       ),
       '@package/shared-types': resolve(workspaceRoot, 'packages/shared-types/src/index.ts'),
+      '@package/shared-constants': resolve(workspaceRoot, 'packages/shared-constants/src/index.ts'),
     },
   },
   plugins: [
