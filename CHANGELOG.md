@@ -1,4 +1,7 @@
 
+## 1.4.0
+- implement structured package isolation for chrome extension runner
+
 ## 1.3.0
 - ground extension config context to project root to fix workspace aliases
 
