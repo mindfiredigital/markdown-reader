@@ -4,11 +4,13 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
-const chromeExtensionRoot = __dirname;
-const rendererRoot = resolve(chromeExtensionRoot, '../../renderer');
-const extensionOutDir = resolve(chromeExtensionRoot, '../../dist/extensions/chrome');
+const workspaceRoot = __dirname;
+
+const chromeExtensionRoot = resolve(workspaceRoot, 'apps/extension');
+const rendererRoot = resolve(workspaceRoot, 'apps/renderer');
+const extensionOutDir = resolve(workspaceRoot, 'dist/extensions/chrome');
 const manifestSource = resolve(chromeExtensionRoot, 'manifest.json');
-const iconSourceDir = resolve(chromeExtensionRoot, '../../assets/icons');
+const iconSourceDir = resolve(workspaceRoot, 'assets/icons');
 
 export default defineConfig({
   root: chromeExtensionRoot,
@@ -17,9 +19,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@package/platform-adapters': resolve(
-        chromeExtensionRoot,
-        '../../packages/platform-adapters/src/index.ts'
+        workspaceRoot,
+        'packages/platform-adapters/src/index.ts'
       ),
+      '@package/shared-types': resolve(workspaceRoot, 'packages/shared-types/src/index.ts'),
     },
   },
   plugins: [
