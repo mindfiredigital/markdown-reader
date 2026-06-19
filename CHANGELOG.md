@@ -1,4 +1,7 @@
 
+## 1.2.0
+- migrate build pipeline to workspace root to resolve monorepo imports
+
 ## 1.1.1
 - add file name in cofig
 
