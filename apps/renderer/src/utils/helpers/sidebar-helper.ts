@@ -2,8 +2,7 @@ import { TOCType } from '../../types/component-types';
 
 // sets item level wise
 export function getItemClasses(item: TOCType, activeId: string): string {
-  let baseStyle =
-    'toc-item flex h-8 items-center truncate pr-3 text-left text-sm transition-colors';
+  let baseStyle = 'toc-item flex h-8 items-center truncate pr-3 text-left text-sm';
   if (item.level === 1) {
     baseStyle += ' pl-1 font-semibold';
   }
@@ -14,7 +13,7 @@ export function getItemClasses(item: TOCType, activeId: string): string {
     baseStyle += ' pl-7 text-xs';
   }
   if (item.id === activeId) {
-    baseStyle += ' font-medium';
+    baseStyle += ' font-semibold';
   }
   return baseStyle;
 }
