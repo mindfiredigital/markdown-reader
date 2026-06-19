@@ -2,91 +2,185 @@
 @plugin "@tailwindcss/typography";
 @source "./**/*.{ts,tsx}";
 
+/*LIGHT THEME*/
 :root,
 [data-theme="github-light"] {
-  --color-bg:          #ffffff;
-  --color-surface:     #f6f8fa;  
-  --color-border:      #d1d9e0;
-  --color-text:        #1f2328;
-  --color-text-muted:  #656d76;
-  --color-accent:      #0969da;   
-  --color-accent-bg:   #dbeafe;   
-  --color-error:       #b91c1c;
-  --color-error-bg:    #fee2e2;
-  --color-error-border:#dc2626;
-  --color-toast-bg:    #1d4ed8;
-  --reading-width:     768px;
-  --font-size-content: 16px;
+  --color-bg:                    #faf9f7;
+  --color-surface:               #f2f0ec;
+  --color-border:                #ddd7ce;
+  --color-text:                  #2c2418;
+  --color-text-muted:            #8a7e70;
+  --color-accent:                #c97b3a;
+  --color-accent-bg:             #fdf0e2;
+  --color-error:                 #b91c1c;
+  --color-error-bg:              #fef2f2;
+  --color-error-border:          #dc2626;
+  --color-toast-bg:              #b06a2a;
+
+  /* Sidebar tracking */
+  --color-sidebar-hover:         rgba(201,123,58,0.07);
+  --color-sidebar-active-bg:     #fdf0e2;
+  --color-sidebar-active-border: #c97b3a;
+  --color-sidebar-active-text:   #9a5e1f;
+
+  /* Welcome screen */
+  --color-welcome-gradient-from: #fdf8f2;
+  --color-welcome-gradient-to:   #f5ebe0;
+  --color-welcome-card-bg:       rgba(255,255,255,0.65);
+  --color-welcome-card-border:   rgba(201,123,58,0.18);
+
+  /* Primary button */
+  --color-btn-primary-bg:        #c97b3a;
+  --color-btn-primary-text:      #fffaf5;
+  --color-btn-primary-hover:     #b56a2b;
+
+  --reading-width:               768px;
+  --font-size-content:           16px;
 }
- 
+
+/*DARK THEME*/
 [data-theme="github-dark"] {
-  --color-bg:          #0d1117;
-  --color-surface:     #161b22;
-  --color-border:      #30363d;
-  --color-text:        #e6edf3;
-  --color-text-muted:  #8d96a0;
-  --color-accent:      #58a6ff;
-  --color-accent-bg:   #1d3557;
-  --color-error:       #fca5a5;
-  --color-error-bg:    #450a0a;
-  --color-error-border:#dc2626;
-  --color-toast-bg:    #1e3a8a;
+  --color-bg:                    #181614;
+  --color-surface:               #221f1b;
+  --color-border:                #3a342c;
+  --color-text:                  #ede6db;
+  --color-text-muted:            #9a8e7f;
+  --color-accent:                #e8a04f;
+  --color-accent-bg:             #3d2e18;
+  --color-error:                 #fca5a5;
+  --color-error-bg:              #451515;
+  --color-error-border:          #dc2626;
+  --color-toast-bg:              #c47f2a;
+
+  --color-sidebar-hover:         rgba(232,160,79,0.08);
+  --color-sidebar-active-bg:     #3d2e18;
+  --color-sidebar-active-border: #e8a04f;
+  --color-sidebar-active-text:   #f0c278;
+
+  --color-welcome-gradient-from: #1c1915;
+  --color-welcome-gradient-to:   #251f18;
+  --color-welcome-card-bg:       rgba(34,31,27,0.75);
+  --color-welcome-card-border:   rgba(232,160,79,0.2);
+
+  --color-btn-primary-bg:        #e8a04f;
+  --color-btn-primary-text:      #1a1408;
+  --color-btn-primary-hover:     #d4902e;
 }
- 
+
+/*DRACULA THEME*/
 [data-theme="dracula"] {
-  --color-bg:          #282a36;
-  --color-surface:     #21222c;
-  --color-border:      #44475a;
-  --color-text:        #f8f8f2;
-  --color-text-muted:  #6272a4;
-  --color-accent:      #bd93f9;
-  --color-accent-bg:   #44475a;
-  --color-error:       #ff5555;
-  --color-error-bg:    #3a1212;
-  --color-error-border:#ff5555;
-  --color-toast-bg:    #6272a4;
+  --color-bg:                    #282a36;
+  --color-surface:               #21222c;
+  --color-border:                #44475a;
+  --color-text:                  #f8f8f2;
+  --color-text-muted:            #8b90b3;
+  --color-accent:                #e8a04f;
+  --color-accent-bg:             #3d3225;
+  --color-error:                 #ff5555;
+  --color-error-bg:              #3a1212;
+  --color-error-border:          #ff5555;
+  --color-toast-bg:              #c47f2a;
+
+  --color-sidebar-hover:         rgba(232,160,79,0.08);
+  --color-sidebar-active-bg:     #3d3225;
+  --color-sidebar-active-border: #e8a04f;
+  --color-sidebar-active-text:   #f0c278;
+
+  --color-welcome-gradient-from: #282a36;
+  --color-welcome-gradient-to:   #2d2a24;
+  --color-welcome-card-bg:       rgba(33,34,44,0.7);
+  --color-welcome-card-border:   rgba(232,160,79,0.2);
+
+  --color-btn-primary-bg:        #e8a04f;
+  --color-btn-primary-text:      #1a1408;
+  --color-btn-primary-hover:     #d4902e;
 }
- 
+
+/*NORD THEME*/
 [data-theme="nord"] {
-  --color-bg:          #2e3440;
-  --color-surface:     #3b4252;
-  --color-border:      #4c566a;
-  --color-text:        #f8f8f2;
-  --color-text-muted:  #d8dee9;
-  --color-accent:      #88c0d0;
-  --color-accent-bg:   #4c566a;
-  --color-error:       #bf616a;
-  --color-error-bg:    #3b1c1c;
-  --color-error-border:#bf616a;
-  --color-toast-bg:    #5e81ac;
+  --color-bg:                    #2e3440;
+  --color-surface:               #3b4252;
+  --color-border:                #4c566a;
+  --color-text:                  #eceff4;
+  --color-text-muted:            #a5b1c2;
+  --color-accent:                #e8a04f;
+  --color-accent-bg:             #3f3527;
+  --color-error:                 #bf616a;
+  --color-error-bg:              #3b1c1c;
+  --color-error-border:          #bf616a;
+  --color-toast-bg:              #c47f2a;
+
+  --color-sidebar-hover:         rgba(232,160,79,0.08);
+  --color-sidebar-active-bg:     #3f3527;
+  --color-sidebar-active-border: #e8a04f;
+  --color-sidebar-active-text:   #f0c278;
+
+  --color-welcome-gradient-from: #2e3440;
+  --color-welcome-gradient-to:   #34302a;
+  --color-welcome-card-bg:       rgba(59,66,82,0.6);
+  --color-welcome-card-border:   rgba(232,160,79,0.2);
+
+  --color-btn-primary-bg:        #e8a04f;
+  --color-btn-primary-text:      #1a1408;
+  --color-btn-primary-hover:     #d4902e;
 }
- 
+
+/*MINIMAL THEME*/
 [data-theme="minimal"] {
-  --color-bg:          #ffffff;
-  --color-surface:     #f9f9f9;
-  --color-border:      #dddddd;
-  --color-text:        #000000;
-  --color-text-muted:  #555555;
-  --color-accent:      #000000;
-  --color-accent-bg:   #f0f0f0;
-  --color-error:       #b91c1c;
-  --color-error-bg:    #fee2e2;
-  --color-error-border:#dc2626;
-  --color-toast-bg:    #000000;
+  --color-bg:                    #faf8f5;
+  --color-surface:               #f3f1ed;
+  --color-border:                #e0dbd4;
+  --color-text:                  #1c1812;
+  --color-text-muted:            #7a7062;
+  --color-accent:                #b87333;
+  --color-accent-bg:             #f7ebe0;
+  --color-error:                 #b91c1c;
+  --color-error-bg:              #fef2f2;
+  --color-error-border:          #dc2626;
+  --color-toast-bg:              #a06428;
+
+  --color-sidebar-hover:         rgba(184,115,51,0.06);
+  --color-sidebar-active-bg:     #f7ebe0;
+  --color-sidebar-active-border: #b87333;
+  --color-sidebar-active-text:   #8a5524;
+
+  --color-welcome-gradient-from: #fdfbf8;
+  --color-welcome-gradient-to:   #f5efe6;
+  --color-welcome-card-bg:       rgba(255,255,255,0.6);
+  --color-welcome-card-border:   rgba(184,115,51,0.15);
+
+  --color-btn-primary-bg:        #b87333;
+  --color-btn-primary-text:      #fffaf5;
+  --color-btn-primary-hover:     #a06428;
 }
- 
+
+/*NOTION THEME*/
 [data-theme="notion"] {
-  --color-bg:          #ffffff;
-  --color-surface:     #fbfaf8;
-  --color-border:      #e9e8e3;
-  --color-text:        #37352f;
-  --color-text-muted:  #9b9a97;
-  --color-accent:      #0f7b6c;
-  --color-accent-bg:   #d3f5ef;
-  --color-error:       #b91c1c;
-  --color-error-bg:    #fee2e2;
-  --color-error-border:#dc2626;
-  --color-toast-bg:    #0f7b6c;
+  --color-bg:                    #fffefb;
+  --color-surface:               #faf7f2;
+  --color-border:                #ece5da;
+  --color-text:                  #37352f;
+  --color-text-muted:            #9b9a8e;
+  --color-accent:                #c07830;
+  --color-accent-bg:             #fdf0e2;
+  --color-error:                 #b91c1c;
+  --color-error-bg:              #fef2f2;
+  --color-error-border:          #dc2626;
+  --color-toast-bg:              #a86828;
+
+  --color-sidebar-hover:         rgba(192,120,48,0.06);
+  --color-sidebar-active-bg:     #fdf0e2;
+  --color-sidebar-active-border: #c07830;
+  --color-sidebar-active-text:   #96581e;
+
+  --color-welcome-gradient-from: #fffefb;
+  --color-welcome-gradient-to:   #f8f0e5;
+  --color-welcome-card-bg:       rgba(255,255,255,0.6);
+  --color-welcome-card-border:   rgba(192,120,48,0.15);
+
+  --color-btn-primary-bg:        #c07830;
+  --color-btn-primary-text:      #fffaf5;
+  --color-btn-primary-hover:     #a86828;
 }
 
 
@@ -102,9 +196,27 @@
   --color-error-bg:     var(--color-error-bg);
   --color-error-border: var(--color-error-border);
   --color-toast-bg:     var(--color-toast-bg);
+
+  /* Sidebar tracking */
+  --color-sidebar-hover:         var(--color-sidebar-hover);
+  --color-sidebar-active-bg:     var(--color-sidebar-active-bg);
+  --color-sidebar-active-border: var(--color-sidebar-active-border);
+  --color-sidebar-active-text:   var(--color-sidebar-active-text);
+
+  /* Welcome screen */
+  --color-welcome-gradient-from: var(--color-welcome-gradient-from);
+  --color-welcome-gradient-to:   var(--color-welcome-gradient-to);
+  --color-welcome-card-bg:       var(--color-welcome-card-bg);
+  --color-welcome-card-border:   var(--color-welcome-card-border);
+
+  /* Primary button */
+  --color-btn-primary-bg:        var(--color-btn-primary-bg);
+  --color-btn-primary-text:      var(--color-btn-primary-text);
+  --color-btn-primary-hover:     var(--color-btn-primary-hover);
 }
 
 
+/*BASE STYLES*/
 body {
   @apply font-sans antialiased;
   background-color: var(--color-bg);
@@ -179,21 +291,113 @@ body {
   color: inherit;
 }
 
+
+/*SIDEBAR TOC*/
 .toc-item {
-  @apply block w-full border-l-2 border-transparent py-1 text-left text-sm transition-colors;
+  @apply block w-full py-1.5 text-left text-sm rounded-lg mx-1;
   color: var(--color-text-muted);
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 .toc-item:hover {
   color: var(--color-text);
-  background-color: rgba(0, 0, 0, 0.06);
-}
-.toc-item[aria-current="true"] {
-  color: var(--color-text);
-  border-left-color: var(--color-accent);
-  background-color: var(--color-accent-bg);
-  font-weight: 500;
+  background-color: var(--color-sidebar-hover);
 }
 
+.toc-item[aria-current="true"],
+.toc-item[aria-current="location"] {
+  color: var(--color-btn-primary-text);
+  background-color: var(--color-btn-primary-bg);
+  font-weight: 600;
+}
+
+
+/*WELCOME SCREEN*/
+.welcome-bg {
+  background: linear-gradient(
+    160deg,
+    var(--color-welcome-gradient-from) 0%,
+    var(--color-welcome-gradient-to) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+
+.welcome-bg::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--color-accent) 0%,
+    transparent 70%
+  );
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+
+.welcome-bg::after {
+  content: "";
+  position: absolute;
+  bottom: -15%;
+  left: -8%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--color-accent) 0%,
+    transparent 70%
+  );
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+.welcome-card {
+  background: var(--color-welcome-card-bg);
+  border: 1px solid var(--color-welcome-card-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.welcome-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  border-color: var(--color-accent);
+}
+
+.btn-primary {
+  background-color: var(--color-btn-primary-bg);
+  color: var(--color-btn-primary-text);
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-btn-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(201,123,58,0.25);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+
+.welcome-title {
+  background: linear-gradient(135deg, var(--color-text) 30%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/*MERAMAID , KATEX ,CALLOUTS*/
 .mermaid-diagram {
   display: flex;
   justify-content: center;
