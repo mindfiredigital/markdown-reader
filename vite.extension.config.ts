@@ -9,10 +9,12 @@ const workspaceRoot = __dirname;
 const chromeExtensionRoot = resolve(workspaceRoot, 'apps/extension');
 const rendererRoot = resolve(workspaceRoot, 'apps/renderer');
 const extensionOutDir = resolve(workspaceRoot, 'dist/extensions/chrome');
+
 const manifestSource = resolve(chromeExtensionRoot, 'manifest.json');
 const iconSourceDir = resolve(workspaceRoot, 'assets/icons');
 
 export default defineConfig({
+  root: chromeExtensionRoot,
   base: './',
   publicDir: resolve(rendererRoot, 'public'),
   resolve: {
