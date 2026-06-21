@@ -159,6 +159,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build internal packages
+        run: pnpm --filter "{packages/**}" run build
+
       - name: Build Chrome extension
         run: pnpm build:extension
 
