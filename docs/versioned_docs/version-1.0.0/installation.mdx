@@ -1,0 +1,90 @@
+---
+title: Installation
+sidebar_position: 2
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+# Installation
+
+Download the latest version from GitHub Releases:
+
+[Open GitHub Releases](https://github.com/mindfiredigital/markdown-reader/releases)
+
+Markdown Reader is currently distributed without official Apple Developer ID or Windows code-signing certificates. The app is still installable, but your operating system may show a warning because it cannot verify the publisher certificate yet.
+
+That warning is expected for early unsigned builds. Download only from the official GitHub Releases page linked above, then follow the steps for your operating system.
+
+## Windows
+
+Download the `.exe` installer.
+
+<div className="markdown-reader-video-frame">
+  <video autoPlay loop muted playsInline aria-label="Windows Installation walkthrough">
+    <source src={useBaseUrl('./video/windows-install.mp4')} type="video/mp4" />
+  </video>
+</div>
+
+1. Open `Markdown Reader Setup 1.0.0.exe`
+2. Follow the installer wizard
+3. Launch Markdown Reader from the Start Menu or Desktop shortcut
+
+:::note Unsigned Windows build
+If Windows shows **Windows protected your PC**, the installer has been blocked by SmartScreen because the build is not code signed yet.
+
+1. Click **More info** in the warning window.
+2. Confirm that the app name is Markdown Reader.
+3. Click **Run anyway**.
+4. Continue through the installer.
+:::
+
+## macOS
+
+Download the `.dmg` file.
+
+1. Open the `.dmg`
+2. Drag Markdown Reader into Applications
+3. Launch the app from Applications
+
+:::note Unsigned macOS build
+If macOS blocks the app, Gatekeeper is warning you because the build is not signed with an Apple Developer ID certificate yet.
+
+1. Open **Applications**.
+2. Right-click **Markdown Reader** and choose **Open**.
+3. In the warning dialog, choose **Open** again if macOS offers it.
+4. If macOS still blocks the app, open **System Settings > Privacy & Security**.
+5. Find the Markdown Reader security message and choose **Open Anyway**.
+6. Return to Applications and open Markdown Reader.
+:::
+
+## Linux
+
+### AppImage & Debian Installation
+
+### AppImage Setup
+
+```bash
+chmod +x Markdown-Reader-1.0.0.AppImage
+./Markdown-Reader-1.0.0.AppImage
+```
+
+### Debian / Ubuntu Setup
+
+```bash
+sudo dpkg -i markdown-reader_1.0.0_amd64.deb
+```
+
+Some Linux desktop environments may ask you to confirm that the package or AppImage is trusted. This is expected for unsigned early builds. Install only the file you downloaded from the official GitHub Releases page.
+
+## File association
+
+After installation, Markdown Reader can be selected as the default app for `.md` and `.markdown` files.
+
+On Windows:
+
+1. Right-click any `.md` file
+2. Choose **Open with**
+3. Select **Markdown Reader**
+4. Enable **Always use this app**
+
+After that, double-clicking Markdown files opens them in Markdown Reader.
