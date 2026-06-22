@@ -7,6 +7,7 @@ type LoadFileResult =
   | {
       filePath: string;
       html: string;
+      markdown?: string;
       toc?: TOCType[];
     }
   | null

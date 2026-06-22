@@ -40,3 +40,17 @@ export const downloads = [
     icon: linuxIcon,
   },
 ];
+
+export const extensionDownload = {
+  name: 'Chrome Extension',
+  format: 'Browser extension',
+  description:
+    'Download the extension ZIP, extract it, and load it unpacked in Chrome, Edge, or Brave for instant .md file rendering.',
+  links: [
+    {
+      label: 'Download ZIP',
+      href: 'https://github.com/mindfiredigital/markdown-reader/releases/latest/download/extension-release.zip',
+    },
+  ],
+  icon: '/img/downloads/chrome.svg',
+};

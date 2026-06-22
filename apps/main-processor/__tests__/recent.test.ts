@@ -11,13 +11,13 @@ const mk = (path: string): RecentFile => ({
 });
 
 describe('recent list functions', () => {
-  it('addToRecentList puts new file at the front', () => {
-    const r = addToRecentList([mk('/b.md')], '/a.md');
+  it('addToRecentList puts new file at the front', async () => {
+    const r = await addToRecentList([mk('/b.md')], '/a.md');
     expect(r[0]?.path).toBe('/a.md');
   });
 
-  it('addToRecentList moves existing file to front without duplicating', () => {
-    const r = addToRecentList([mk('/a.md'), mk('/b.md')], '/b.md');
+  it('addToRecentList moves existing file to front without duplicating', async () => {
+    const r = await addToRecentList([mk('/a.md'), mk('/b.md')], '/b.md');
     expect(r[0]?.path).toBe('/b.md');
     expect(r).toHaveLength(2);
   });
@@ -37,8 +37,8 @@ describe('recent list functions', () => {
     expect(r.find((f) => f.path === '/a.md')).toBeUndefined();
   });
 
-  it('addToRecentList on empty list creates a one-item list', () => {
-    const r = addToRecentList([], '/first.md');
+  it('addToRecentList on empty list creates a one-item list', async () => {
+    const r = await addToRecentList([], '/first.md');
     expect(r).toHaveLength(1);
     expect(r[0]?.path).toBe('/first.md');
   });

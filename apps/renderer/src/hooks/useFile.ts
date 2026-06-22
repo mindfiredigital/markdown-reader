@@ -5,6 +5,7 @@ import { extractTOC } from '../renderer/toc';
 import { TOCType } from '../types/component-types';
 import { RecentFile } from '@package/shared-types';
 import { usePlatformAPI } from '../hooks/usePlatform';
+import { ErrorMessage } from '../utils/helpers/error-messages';
 
 export function useFile() {
   const api = usePlatformAPI();
@@ -39,15 +40,13 @@ export function useFile() {
         setRecentFiles(updated);
         return {
           html: safeHtml,
+          markdown: rawMarkdown,
           toc: nextToc,
           filePath: path,
         };
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError(String(error));
-        }
+        const raw = error instanceof Error ? error.message : String(error);
+        setError(ErrorMessage(raw, path));
       } finally {
         setIsLoading(false);
       }

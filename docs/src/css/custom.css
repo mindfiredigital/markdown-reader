@@ -280,3 +280,4 @@ html[data-theme='dark'] .header--github-link::before {
   box-shadow: 0 0 0 4px color-mix(in oklab, hsl(var(--primary)) 14%, transparent);
   border-radius: 8px;
 }
+

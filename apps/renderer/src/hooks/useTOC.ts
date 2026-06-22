@@ -5,6 +5,7 @@ export function useToc(tocItems: TOCType[]) {
   const [activeId, setActiveId] = useState('');
   useEffect(() => {
     if (!tocItems.length) return;
+    const mainElement = document.querySelector('main');
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries.find((e) => e.isIntersecting);
@@ -13,7 +14,8 @@ export function useToc(tocItems: TOCType[]) {
         }
       },
       {
-        rootMargin: '-20% 0px -70% 0px',
+        root: mainElement,
+        rootMargin: '-5% 0px -75% 0px',
       }
     );
     tocItems.forEach(({ id }) => {
