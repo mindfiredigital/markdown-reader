@@ -128,35 +128,6 @@ html[data-theme='dark'] .header--github-link::before {
     linear-gradient(180deg, #ffffff, #fff7f7);
 }
 
-/* Feature cards */
-.feature-card-clean {
-  position: relative;
-  overflow: hidden;
-  border-radius: 1.5rem;
-  padding: 2rem;
-  background: color-mix(in oklab, var(--background) 94%, transparent);
-  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
-  box-shadow: 0 12px 42px rgba(0, 0, 0, 0.08);
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
-}
-
-.feature-card-clean:hover {
-  transform: translateY(-3px);
-  border-color: color-mix(in oklab, var(--ifm-color-primary) 34%, var(--border));
-  box-shadow: 0 18px 56px rgba(0, 0, 0, 0.14);
-}
-
-.feature-icon-clean {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 0.9rem;
-  background: color-mix(in oklab, var(--ifm-color-primary) 10%, transparent);
-  border: 1px solid color-mix(in oklab, var(--ifm-color-primary) 18%, transparent);
-}
-
 /* MDX / docs cards */
 .markdown-reader-doc-card {
   border: 1px solid var(--ifm-color-emphasis-300);
