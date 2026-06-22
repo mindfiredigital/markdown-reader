@@ -17,13 +17,13 @@ describe('Welcome', () => {
 
   it('renders the Open File button', () => {
     render(<Welcome onOpen={() => {}} recentFiles={[]} />, { wrapper });
-    expect(screen.getByRole('button', { name: /open file/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Open File' })).toBeInTheDocument();
   });
 
   it('calls onOpen when the Open File button is clicked', () => {
     const handleOpen = vi.fn();
     render(<Welcome onOpen={handleOpen} recentFiles={[]} />, { wrapper });
-    fireEvent.click(screen.getByRole('button', { name: /open file/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Open File' }));
     expect(handleOpen).toHaveBeenCalledTimes(1);
   });
 
