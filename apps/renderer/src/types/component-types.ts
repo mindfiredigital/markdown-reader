@@ -195,3 +195,7 @@ export type ErrorBoundaryState = {
   hasError: boolean;
   error: Error | null;
 };
+
+export interface ReaderStatsProps {
+  markdown: string | undefined;
+}

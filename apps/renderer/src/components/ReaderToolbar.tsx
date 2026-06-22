@@ -116,7 +116,7 @@ export function ReaderToolbar({
                 <Icons.Download size={17} />
               </button>
               {exportOpen && (
-                <div className="absolute right-0 top-full mt-1.5 min-w-[140px] rounded-lg border border-border-theme bg-surface shadow-lg py-1 z-50">
+                <div className="absolute right-0 top-full mt-1.5 min-w-35 rounded-lg border border-border-theme bg-surface shadow-lg py-1 z-50">
                   {onExportHtml && (
                     <button
                       type="button"
