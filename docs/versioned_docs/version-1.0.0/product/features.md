@@ -2,6 +2,13 @@
 
 Markdown Reader is designed as a dedicated desktop reader for Markdown files.
 
+## Browser extension
+
+- Open Markdown Reader as a Chrome extension tab.
+- Pick local `.md` and `.markdown` files from the browser file picker.
+- Reuse the same reader UI, themes, zoom controls, and table of contents as the desktop app.
+- Keep recent files and settings with Chrome extension storage.
+
 ## File opening
 
 - Open `.md` and `.markdown` files from the OS file dialog.
@@ -37,4 +44,5 @@ Markdown Reader is designed as a dedicated desktop reader for Markdown files.
 
 - Export rendered Markdown to self-contained HTML.
 - Export rendered Markdown to PDF.
+- Export rendered Markdown to DOCX.
 - Preserve theme, typography, code blocks, math, diagrams, and images where possible.
