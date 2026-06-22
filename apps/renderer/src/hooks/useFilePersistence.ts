@@ -43,6 +43,7 @@ export function useFilePersistence({
         payload: {
           tabId: activeTab.id,
           html: result.html,
+          ...(result.markdown !== undefined ? { markdown: result.markdown } : {}),
           ...(result.toc ? { toc: result.toc } : {}),
         },
       });

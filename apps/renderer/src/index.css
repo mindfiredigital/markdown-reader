@@ -4,29 +4,29 @@
 
 :root,
 [data-theme="github-light"] {
-  --color-bg:          #ffffff;
-  --color-surface:     #f6f8fa;  
-  --color-border:      #d1d9e0;
-  --color-text:        #1f2328;
-  --color-text-muted:  #656d76;
-  --color-accent:      #0969da;   
-  --color-accent-bg:   #dbeafe;   
-  --color-error:       #b91c1c;
+  --color-bg:          #f0f7ff;  /* Primary: light blue */
+  --color-surface:     #ffffff;  /* Secondary: white */
+  --color-border:      #d1e2f6;  /* Borders: subtle gray-blue */
+  --color-text:        #0f172a;  /* Text: dark neutral */
+  --color-text-muted:  #475569;  /* Text: muted slate */
+  --color-accent:      #2563eb;  /* Accent: soft blue */
+  --color-accent-bg:   #e0f2fe;  /* Hover: soft blue highlights */
+  --color-error:       #dc2626;
   --color-error-bg:    #fee2e2;
-  --color-error-border:#dc2626;
+  --color-error-border:#fca5a5;
   --color-toast-bg:    #1d4ed8;
   --reading-width:     768px;
   --font-size-content: 16px;
 }
  
 [data-theme="github-dark"] {
-  --color-bg:          #0d1117;
-  --color-surface:     #161b22;
-  --color-border:      #30363d;
-  --color-text:        #e6edf3;
-  --color-text-muted:  #8d96a0;
-  --color-accent:      #58a6ff;
-  --color-accent-bg:   #1d3557;
+  --color-bg:          #0b1329;
+  --color-surface:     #111c38;
+  --color-border:      #1f305e;
+  --color-text:        #e2e8f0;
+  --color-text-muted:  #94a3b8;
+  --color-accent:      #3b82f6;
+  --color-accent-bg:   #1e293b;
   --color-error:       #fca5a5;
   --color-error-bg:    #450a0a;
   --color-error-border:#dc2626;
@@ -62,22 +62,22 @@
 }
  
 [data-theme="minimal"] {
-  --color-bg:          #ffffff;
-  --color-surface:     #f9f9f9;
-  --color-border:      #dddddd;
-  --color-text:        #000000;
-  --color-text-muted:  #555555;
-  --color-accent:      #000000;
-  --color-accent-bg:   #f0f0f0;
+  --color-bg:          #fafafa;
+  --color-surface:     #ffffff;
+  --color-border:      #e5e5e5;
+  --color-text:        #171717;
+  --color-text-muted:  #737373;
+  --color-accent:      #2563eb;
+  --color-accent-bg:   #eff6ff;
   --color-error:       #b91c1c;
   --color-error-bg:    #fee2e2;
   --color-error-border:#dc2626;
-  --color-toast-bg:    #000000;
+  --color-toast-bg:    #171717;
 }
  
 [data-theme="notion"] {
-  --color-bg:          #ffffff;
-  --color-surface:     #fbfaf8;
+  --color-bg:          #fbfaf8;
+  --color-surface:     #ffffff;
   --color-border:      #e9e8e3;
   --color-text:        #37352f;
   --color-text-muted:  #9b9a97;
@@ -109,6 +109,7 @@ body {
   @apply font-sans antialiased;
   background-color: var(--color-bg);
   color: var(--color-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .content-container {
@@ -179,19 +180,35 @@ body {
   color: inherit;
 }
 
+/* Scrollbar polish */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
 .toc-item {
-  @apply block w-full border-l-2 border-transparent py-1 text-left text-sm transition-colors;
+  @apply block w-full rounded-md py-1.5 text-left text-sm transition-all duration-150;
   color: var(--color-text-muted);
 }
 .toc-item:hover {
-  color: var(--color-text);
-  background-color: rgba(0, 0, 0, 0.06);
-}
-.toc-item[aria-current="true"] {
-  color: var(--color-text);
-  border-left-color: var(--color-accent);
+  color: var(--color-accent);
   background-color: var(--color-accent-bg);
-  font-weight: 500;
+}
+.toc-item[aria-current="true"],
+.toc-item[aria-current="location"] {
+  color: var(--color-accent);
+  background-color: var(--color-accent-bg);
+  font-weight: 600;
 }
 
 .mermaid-diagram {
