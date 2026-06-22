@@ -111,16 +111,27 @@ export function ReaderToolbar({
                 onClick={() => setExportOpen(!exportOpen)}
                 className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-accent"
                 aria-label="Export document"
+                aria-haspopup="menu"
                 aria-expanded={exportOpen}
               >
                 <Icons.Download size={17} />
               </button>
               {exportOpen && (
-                <div className="absolute right-0 top-full mt-1.5 min-w-35 rounded-lg border border-border-theme bg-surface shadow-lg py-1 z-50">
+                <div
+                 id="export-menu"
+                  role="menu"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') setExportOpen(false);
+                  }}
+                  className="absolute right-0 top-full mt-1.5 min-w-35 rounded-lg border border-border-theme bg-surface shadow-lg py-1 z-50"
+                >
                   {onExportHtml && (
                     <button
                       type="button"
-                      onClick={() => { onExportHtml(); setExportOpen(false); }}
+                      onClick={() => {
+                        setExportOpen(false);
+                        void Promise.resolve(onExportHtml()).catch(() => {});
+                      }}
                       className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
                     >
                       Export as HTML
@@ -129,7 +140,10 @@ export function ReaderToolbar({
                   {onExportPdf && (
                     <button
                       type="button"
-                      onClick={() => { onExportPdf(); setExportOpen(false); }}
+                      onClick={() => {
+                        setExportOpen(false);
+                        void Promise.resolve(onExportPdf()).catch(() => {});
+                      }}
                       className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
                     >
                       Export as PDF
@@ -138,7 +152,10 @@ export function ReaderToolbar({
                   {onExportDocx && (
                     <button
                       type="button"
-                      onClick={() => { onExportDocx(); setExportOpen(false); }}
+                      onClick={() => {
+                        setExportOpen(false);
+                        void Promise.resolve(onExportDocx()).catch(() => {});
+                      }}
                       className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
                     >
                       Export as DOCX
