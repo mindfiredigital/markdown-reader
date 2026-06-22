@@ -8,6 +8,6 @@
     "moduleResolution": "Bundler",
     "types": ["vite/client"]
   },
-  "include": ["src", "vite.config.ts", "../renderer/src"],
+  "include": ["src", "../renderer/src"],
   "exclude": ["node_modules", "dist"]
 }

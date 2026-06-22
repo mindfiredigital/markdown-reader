@@ -8,6 +8,7 @@ a dedicated, native, first-class desktop viewer for .md files.
 ## Table of Contents
 
 - [Why Markdown Reader?](#why-markdown-reader)
+- [Install the Chrome Extension from ZIP](#install-the-chrome-extension-from-zip)
 
 ---
 
@@ -62,6 +63,11 @@ markdown-reader is a dedicated native desktop Markdown reader:
 - Keyboard shortcuts
 - Native OS integration
 - Cross-platform builds
+- Multi-tab reading
+- Mermaid diagram rendering
+- Export to HTML
+- Export to PDF
+- Export to DOCX
 
 ---
 
@@ -142,6 +148,41 @@ pnpm install
 ```bash
 pnpm dev
 ```
+
+---
+
+## Install the Chrome Extension from ZIP
+
+The Chrome extension can be installed manually from a ZIP file attached to each GitHub Release.
+
+### Steps
+
+1. Go to the [Releases page](https://github.com/mindfiredigital/markdown-reader/releases) for this repository.
+2. Open the latest release and download `extension-release.zip` from the release assets.
+3. Extract or unzip the downloaded file somewhere permanent on your computer.
+
+   Choose a location you will keep, such as `Documents/Markdown Reader Extension`. Chrome loads unpacked extensions from that folder, so do not delete or move it after installation.
+
+4. Open Google Chrome, or another Chromium browser such as Brave, Microsoft Edge, or Opera.
+5. Navigate to:
+
+   ```text
+   chrome://extensions/
+   ```
+
+6. Enable **Developer mode** using the toggle in the top-right corner.
+7. Click **Load unpacked** in the top-left corner.
+8. Select the folder where you extracted the ZIP file.
+
+   Make sure you select the folder that contains `manifest.json`.
+
+9. Optional: pin **Markdown Reader** to your browser toolbar for quick access.
+
+After installation, click the extension icon to open Markdown Reader in a browser tab.
+
+### Developer-mode note
+
+Because this is a manual unpacked extension install, Chrome may occasionally ask you to confirm that you want to keep developer extensions enabled. That is normal for extensions loaded outside the Chrome Web Store. If you downloaded the ZIP from this repository's GitHub Releases page, you can keep using it confidently.
 
 ---
 
@@ -291,14 +332,3 @@ ISC License
 **Mindfire Digital**
 
 ---
-
-## Future Roadmap
-
-- PDF export
-- HTML export
-- Multi-tab support improvements
-- Plugin system
-- Workspace support
-- Better Mermaid rendering
-- Performance optimizations
-- Accessibility improvements
