@@ -1,6 +1,6 @@
 {
   "name": "markdown-reader",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "A markdown reader built with Electron",
   "main": "out/main/index.js",
   "scripts": {
@@ -16,7 +16,8 @@
     "lint": "pnpm -r run lint",
     "typecheck": "pnpm -r run typecheck",
     "test": "pnpm -r run test",
-    "test:coverage": "pnpm -r run test:coverage"
+    "test:coverage": "pnpm -r run test:coverage",
+    "build:extension": "vite build --config vite.extension.config.ts"
   },
   "keywords": [],
   "author": "Mindfire-digital",
@@ -75,7 +76,8 @@
       "esbuild": ">=0.28.1",
       "ws": ">=8.21.0",
       "form-data": ">=4.0.6",
-      "vite": ">=7.3.5"
+      "vite": ">=7.3.5",
+      "undici": "^7.28.0"
     }
   }
 }
