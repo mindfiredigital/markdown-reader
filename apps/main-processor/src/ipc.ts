@@ -221,7 +221,8 @@ export function registerIPCHandlers(): void {
 
   ipcMain.on(IPC_CONSTANTS.DOWNLOAD_UPDATE, (event) => {
     if (!validateSender(event)) {
-      throw new Error('Untrusted sender');
+      console.warn('Rejected DOWNLOAD_UPDATE from untrusted sender');
+      return;
     }
     void autoUpdater.downloadUpdate().catch((error: Error) => {
       console.error('Auto-updater download failed:', error.message);

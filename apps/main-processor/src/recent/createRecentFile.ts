@@ -1,14 +1,14 @@
 import { basename } from 'node:path';
 import { RecentFile } from '@package/shared-types';
-import { statSync } from 'node:fs';
+import { stat } from 'node:fs/promises';
 
-export function createRecentFile(filePath: string): RecentFile {
+export async function createRecentFile(filePath: string): Promise<RecentFile> {
   let size: number | undefined;
   try {
-    const stats = statSync(filePath);
+    const stats = await stat(filePath);
     size = stats.size;
   } catch {
-    // ignore error if file doesnot exists
+    // ignore error if file does not exist
   }
   return {
     path: filePath,
