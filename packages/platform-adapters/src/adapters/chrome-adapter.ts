@@ -176,8 +176,15 @@ export class ChromeAdapter implements PlatformAdapter {
 
   async addRecentFile(path: string): Promise<void> {
     const recentFiles = await this.getRecentFiles();
+    const content = this.openedFiles.get(path);
+
     const next: RecentFile[] = [
-      { path, name: path.split(/[\\/]/).pop() || path, openedAt: Date.now() },
+      {
+        path,
+        name: path.split(/[\\/]/).pop() || path,
+        openedAt: Date.now(),
+        ...(content !== undefined ? { size: content.length } : {}),
+      },
       ...recentFiles.filter((file) => file.path !== path),
     ];
 

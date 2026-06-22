@@ -3,4 +3,5 @@ export interface RecentFile {
   path: string;
   name: string;
   openedAt: number;
+  size?: number;
 }
