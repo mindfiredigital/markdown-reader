@@ -5,7 +5,7 @@ import { saveRecentFile } from './saveRecentFile';
 
 export async function addRecentFile(filePath: string): Promise<void> {
   const existing = await getRecentFiles();
-  const updated = addToRecentList(existing, filePath);
+  const updated = await addToRecentList(existing, filePath);
   await saveRecentFile(updated);
   app.addRecentDocument(filePath);
 }
