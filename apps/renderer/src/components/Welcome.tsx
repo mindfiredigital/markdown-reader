@@ -37,9 +37,14 @@ export function Welcome({onOpen,recentFiles,onOpenRecent}:WelcomeProps){
   return (
     <div className="flex flex-col items-center justify-center flex-1 gap-5 max-w-xl mx-auto px-6 py-8">
       {/* Drag & Drop Area */}
-      <div 
-        onClick={onOpen}
-        className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-border-theme hover:border-accent bg-surface hover:bg-accent-bg/30 transition-all duration-250 rounded-xl max-w-sm w-full cursor-pointer group"
+        <div
+          onClick={onOpen}
+          onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') onOpen();
+          }}
+          role="button"
+          tabIndex={0}
+          className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-border-theme hover:border-accent bg-surface hover:bg-accent-bg/30 transition-all duration-250 rounded-xl max-w-sm w-full cursor-pointer group"
       >
         <div className="p-2.5 bg-accent-bg text-accent rounded-full mb-2.5 group-hover:scale-110 transition-transform">
           <Icons.Folder size={20} />
