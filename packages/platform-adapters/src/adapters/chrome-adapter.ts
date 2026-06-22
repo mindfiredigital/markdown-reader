@@ -183,7 +183,7 @@ export class ChromeAdapter implements PlatformAdapter {
         path,
         name: path.split(/[\\/]/).pop() || path,
         openedAt: Date.now(),
-        ...(content !== undefined ? { size: content.length } : {}),
+        ...(content !== undefined ? { size: new TextEncoder().encode(content).length } : {}),
       },
       ...recentFiles.filter((file) => file.path !== path),
     ];
