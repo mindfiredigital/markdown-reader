@@ -36,8 +36,19 @@ export function useExport(activeTab: ActiveTab) {
       if (!printWindow) return;
       printWindow.document.write(buildHtmlDocument(activeTab.html, css));
       printWindow.document.close();
-      printWindow.addEventListener('afterprint', () => printWindow.close());
-      setTimeout(() => printWindow.print(), 300);
+      printWindow.addEventListener(
+        'load',
+        async () => {
+          try {
+            await printWindow.document.fonts?.ready;
+          } catch {
+            // no-op: best-effort font readiness
+          }
+          printWindow.print();
+        },
+        { once: true }
+      );
+      printWindow.addEventListener('afterprint', () => printWindow.close(), { once: true });
       return;
     }
 
