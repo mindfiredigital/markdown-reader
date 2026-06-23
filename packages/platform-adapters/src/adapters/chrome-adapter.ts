@@ -151,6 +151,14 @@ export class ChromeAdapter implements PlatformAdapter {
         },
         { once: true }
       );
+      input.addEventListener(
+        'cancel',
+        () => {
+          input.remove();
+          resolve(null);
+        },
+        { once: true }
+      );
 
       document.body.appendChild(input);
       input.click();
