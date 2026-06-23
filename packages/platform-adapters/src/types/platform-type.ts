@@ -31,13 +31,13 @@ export interface PlatformAdapter {
   removeMenuListeners(): void;
   onOpenFilePath(callback: (path: string) => void): void;
   removeOpenFilePathListener(): void;
-  showSaveDialog(options?: { defaultExt?: string; defaultPath?: string }): Promise<string | null>;
-  exportHTML(html: string, css: string, outputPath: string): Promise<void>;
-  exportPDF(html: string, css: string, outputPath: string): Promise<void>;
-  exportDOCX(html: string, css: string, outputPath: string): Promise<void>;
+  showSaveDialog?(options?: { defaultExt?: string; defaultPath?: string }): Promise<string | null>;
+  exportHTML?(html: string, css: string, outputPath: string): Promise<void>;
+  exportPDF?(html: string, css: string, outputPath: string): Promise<void>;
+  exportDOCX?(html: string, css: string, outputPath: string): Promise<void>;
   getPathForFile(file: File): string;
-  onUpdateAvailable(callback: (version: string) => void): () => void;
-  downloadUpdate(): void;
+  onUpdateAvailable?(callback: (version: string) => void): () => void;
+  downloadUpdate?(): void;
   sendMessage<TResponse = unknown, TPayload = unknown>(
     message: PlatformMessage<TPayload>
   ): Promise<TResponse>;
