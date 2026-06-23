@@ -230,6 +230,9 @@ export class ChromeAdapter implements PlatformAdapter {
   }
 
   onFileChanged(callback: (path: string) => void): void {
+    if (this.fileChangedListener) {
+      this.chromeApi.runtime?.onMessage?.removeListener(this.fileChangedListener);
+    }
     this.fileChangedListener = (message) => {
       if (isRuntimeEvent(message, 'file-changed') && typeof message.payload === 'string') {
         callback(message.payload);
@@ -268,6 +271,9 @@ export class ChromeAdapter implements PlatformAdapter {
   }
 
   onOpenFilePath(callback: (path: string) => void): void {
+    if (this.openFilePathListener) {
+      this.chromeApi.runtime?.onMessage?.removeListener(this.openFilePathListener);
+    }
     this.openFilePathListener = (message) => {
       if (isRuntimeEvent(message, 'open-file-path') && typeof message.payload === 'string') {
         callback(message.payload);
