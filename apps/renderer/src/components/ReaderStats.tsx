@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { ReaderStatsProps } from "../types/component-types";
 import { formatBytes } from "../utils/helpers/size-helper";
 
@@ -5,9 +6,12 @@ import { formatBytes } from "../utils/helpers/size-helper";
 export function ReaderStats({ markdown }: ReaderStatsProps) {
   if (!markdown) return null;
 
-  const wordCount = markdown.trim().split(/\s+/).filter(Boolean).length;
-  const lineCount = markdown.split('\n').length;
-  const byteSize = new Blob([markdown]).size;
+  const { wordCount, lineCount, byteSize } = useMemo(() => {
+    const wordCount = markdown.trim().split(/\s+/).filter(Boolean).length;
+    const lineCount = markdown.split('\n').length;
+    const byteSize = new Blob([markdown]).size;
+    return { wordCount, lineCount, byteSize };
+  }, [markdown]);
 
   return (
     <div 
