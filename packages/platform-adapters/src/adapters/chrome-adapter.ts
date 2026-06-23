@@ -341,6 +341,12 @@ export class ChromeAdapter implements PlatformAdapter {
     if (!runtime?.sendMessage) createUnsupportedPlatformMethod('chrome.runtime.sendMessage');
 
     const response = await runtime.sendMessage<ChromeMessageResponse<TResponse>>(message);
+    if (!response) {
+      throw new Error(
+        `No response received for message type "${message.type}". ` +
+          'The background listener may not be active.'
+      );
+    }
     if (!response.ok) {
       throw new Error(response.error);
     }
