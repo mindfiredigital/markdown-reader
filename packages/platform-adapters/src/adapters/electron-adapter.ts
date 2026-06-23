@@ -22,7 +22,21 @@ class BrowserLocalStorageAdapter implements StorageAdapter {
   }
 
   async setItem<T>(key: string, value: T): Promise<void> {
-    globalThis.localStorage?.setItem(key, JSON.stringify(value));
+    try {
+      globalThis.localStorage?.setItem(key, JSON.stringify(value));
+    } catch (error: unknown) {
+      const name =
+        typeof error === 'object' && error !== null && 'name' in error
+          ? String((error as Record<string, unknown>).name)
+          : '';
+      if (name === 'QuotaExceededError') {
+        console.warn(
+          `localStorage quota exceeded while saving key "${key}". Data was not persisted.`
+        );
+      } else {
+        throw error;
+      }
+    }
   }
 
   async removeItem(key: string): Promise<void> {
