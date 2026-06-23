@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Welcome } from '../../src/components/Welcome';
 import { createMockPlatform, createPlatformWrapper } from '../test-utils';
 
@@ -17,13 +18,14 @@ describe('Welcome', () => {
 
   it('renders the Open File button', () => {
     render(<Welcome onOpen={() => {}} recentFiles={[]} />, { wrapper });
-    expect(screen.getByRole('button', { name: 'Open File' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Open File/i })).toBeInTheDocument();
   });
 
-  it('calls onOpen when the Open File button is clicked', () => {
+  it('calls onOpen when the Open File button is clicked', async () => {
     const handleOpen = vi.fn();
+    const user = userEvent.setup();
     render(<Welcome onOpen={handleOpen} recentFiles={[]} />, { wrapper });
-    fireEvent.click(screen.getByRole('button', { name: 'Open File' }));
+    await user.click(screen.getByRole('button', { name: /Open File/i }));
     expect(handleOpen).toHaveBeenCalledTimes(1);
   });
 

@@ -28,6 +28,7 @@ export function Welcome({onOpen,recentFiles,onOpenRecent}:WelcomeProps){
         </div>
 
         <button
+          type="button"
           onClick={onOpen}
           className="px-6 py-2.5 rounded-xl text-sm font-semibold bg-accent text-white hover:bg-accent/90 shadow-md transition-all duration-200 flex items-center gap-2 hover:scale-[1.02] mt-2"
         >
@@ -81,17 +82,9 @@ export function Welcome({onOpen,recentFiles,onOpenRecent}:WelcomeProps){
   return (
     <div className="flex flex-col items-center justify-center flex-1 gap-5 max-w-xl mx-auto px-6 py-8">
       {/* Drag & Drop Area */}
-      <div
+      <button
+        type="button"
         onClick={onOpen}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') onOpen();
-          if (e.key === ' ') {
-            e.preventDefault();
-            onOpen();
-          }
-        }}
-        role="button"
-        tabIndex={0}
         className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-border-theme hover:border-accent bg-surface hover:bg-accent-bg/30 transition-all duration-250 rounded-xl max-w-sm w-full cursor-pointer group"
       >
         <div className="p-2.5 bg-accent-bg text-accent rounded-full mb-2.5 group-hover:scale-110 transition-transform">
@@ -99,13 +92,12 @@ export function Welcome({onOpen,recentFiles,onOpenRecent}:WelcomeProps){
         </div>
         <p className="text-sm font-semibold text-text-base mb-0.5">Drop your Markdown file here</p>
         <p className="text-xs text-text-muted mb-3">or click to browse</p>
-        <button
-          type="button"
+        <span
           className="px-4 py-1.5 bg-accent text-white text-xs font-semibold rounded-lg shadow-sm hover:bg-accent/95 transition-colors"
         >
           Open File
-        </button>
-      </div>
+        </span>
+      </button>
 
       {/* Recent Files */}
       {recentFiles.length > 0 && (
