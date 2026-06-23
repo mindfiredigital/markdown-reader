@@ -46,6 +46,7 @@ export function Welcome({onOpen,recentFiles,onOpenRecent}:WelcomeProps){
               {recentFiles.slice(0, 5).map((file) => (
                 <li key={file.path}>
                   <button
+                    type="button"
                     onClick={() => onOpenRecent?.(file.path)}
                     className="w-full text-left px-3 py-2 rounded-lg border border-border-theme bg-surface hover:bg-accent-bg hover:border-accent transition-all duration-200 group flex items-center justify-between gap-3"
                   >
