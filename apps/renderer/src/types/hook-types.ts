@@ -41,9 +41,9 @@ export interface UseMenuEventsProps {
   onNextTab: () => void;
   onPreviousTab: () => void;
   onCloseTab: () => void;
-  onExportHtml: () => void;
-  onExportPdf: () => void;
-  onExportDocx: () => void;
+  onExportHtml: (() => void) | undefined;
+  onExportPdf: (() => void) | undefined;
+  onExportDocx: (() => void) | undefined;
   onOpenSettings: () => void;
   onSetTheme: (theme: Theme) => void;
 }

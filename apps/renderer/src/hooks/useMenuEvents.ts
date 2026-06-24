@@ -42,9 +42,15 @@ export function useMenuEvents({
     api.onMenuEvent(MENU_EVENTS.NEXT_TAB, onNextTab);
     api.onMenuEvent(MENU_EVENTS.PREVIOUS_TAB, onPreviousTab);
     api.onMenuEvent(MENU_EVENTS.CLOSE_TAB, onCloseTab);
-    api.onMenuEvent(MENU_EVENTS.EXPORT_HTML, onExportHtml);
-    api.onMenuEvent(MENU_EVENTS.EXPORT_PDF, onExportPdf);
-    api.onMenuEvent(MENU_EVENTS.EXPORT_DOCX, onExportDocx);
+    if (onExportHtml) {
+      api.onMenuEvent(MENU_EVENTS.EXPORT_HTML, onExportHtml);
+    }
+    if (onExportPdf) {
+      api.onMenuEvent(MENU_EVENTS.EXPORT_PDF, onExportPdf);
+    }
+    if (onExportDocx) {
+      api.onMenuEvent(MENU_EVENTS.EXPORT_DOCX, onExportDocx);
+    }
     api.onMenuEvent(MENU_EVENTS.OPEN_SETTINGS, onOpenSettings);
     api.onMenuEvent(MENU_EVENTS.SET_THEME, (theme) => {
       if (typeof theme === 'string') {
