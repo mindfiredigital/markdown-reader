@@ -178,9 +178,9 @@ export interface ReaderToolbarProps {
   onOpenSearch?: () => void;
   updateVersion?: string | null;
   onDownloadUpdate?: () => void;
-  onExportHtml?: () => void;
-  onExportPdf?: () => void;
-  onExportDocx?: () => void;
+  onExportHtml?: (() => void) | undefined;
+  onExportPdf?: (() => void) | undefined;
+  onExportDocx?: (() => void) | undefined;
 }
 
 export interface SettingsPanelProps {
