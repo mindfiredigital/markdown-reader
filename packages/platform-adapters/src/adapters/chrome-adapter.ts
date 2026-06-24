@@ -9,11 +9,8 @@ import {
 import { createUnsupportedPlatformMethod, getChromeApi } from '../utils/helpers/adapter-helper';
 import type { PlatformAdapter, PlatformMessage } from '../types/platform-type';
 import type { StorageAdapter } from '../types/storage-type';
-import type {
-  ChromeMessageResponse,
-  ChromeExtensionApi,
-  ChromeRuntimeEvent,
-} from '../types/chrome-type';
+import type { ChromeMessageResponse, ChromeExtensionApi } from '../types/chrome-type';
+import { isRuntimeEvent } from '../utils/helpers/adapter-helper';
 
 class ChromeStorageAdapter implements StorageAdapter {
   constructor(private readonly chromeApi: ChromeExtensionApi) {}
@@ -382,13 +379,4 @@ export class ChromeAdapter implements PlatformAdapter {
 
     return response.data;
   }
-}
-
-function isRuntimeEvent(message: unknown, type: string): message is ChromeRuntimeEvent {
-  return (
-    typeof message === 'object' &&
-    message !== null &&
-    'type' in message &&
-    (message as { type?: unknown }).type === type
-  );
 }
