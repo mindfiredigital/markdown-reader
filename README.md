@@ -236,7 +236,7 @@ Because this is a manual unpacked extension install, Chrome may occasionally ask
 
 ---
 
-## Development Setup
+## Build the Chrome extension
 
 ### 1. Clone Repository
 

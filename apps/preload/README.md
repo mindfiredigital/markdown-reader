@@ -16,7 +16,7 @@ The renderer never calls `ipcRenderer` directly. It goes through this bridge, wh
 
 ## Structure
 
-```
+```text
 src/
 ├── index.ts         Defines the API contract and calls contextBridge.exposeInMainWorld
 └── utils/
@@ -29,7 +29,7 @@ src/
 
 Everything exposed to the renderer is defined in `index.ts` as an `apiContract` object. The type for this object (`MarkdownReaderAPI`) lives in `@package/shared-types`.
 
-```
+```text
 readFile(path)               → reads a file, returns content
 openFileDialog()             → opens OS file picker, returns selected path
 openFolderDialog()           → opens OS folder picker, returns selected path
