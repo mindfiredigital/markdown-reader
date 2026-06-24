@@ -1,11 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_SETTINGS } from '@package/shared-types';
 import { ChromeAdapter } from '../src/adapters/chrome-adapter.js';
-import {
-  CHROME_MESSAGE_TYPES,
-  DEFAULT_APP_VERSION,
-  STORAGE_KEYS,
-} from '../src/utils/constants/adapter-constants.js';
+import { DEFAULT_APP_VERSION, STORAGE_KEYS } from '../src/utils/constants/adapter-constants.js';
 import { makeChromeApi } from './test-utils.js';
 
 describe('chrome adapter', () => {
@@ -118,8 +114,9 @@ describe('chrome adapter', () => {
     Object.defineProperty(input, 'files', { value: [file] });
     input.dispatchEvent(new Event('change'));
 
-    await expect(filePathPromise).resolves.toBe('picked.md');
-    await expect(adapter.readFile('picked.md')).resolves.toBe('# Picked');
+    const filePath = await filePathPromise;
+    expect(filePath).toMatch(/^\[\d+:\d+\]\/picked\.md$/);
+    await expect(adapter.readFile(filePath!)).resolves.toBe('# Picked');
   });
 
   it('returns null when the file picker is cancelled', async () => {
@@ -174,6 +171,30 @@ describe('chrome adapter', () => {
     expect(api.runtime?.onMessage?.removeListener).toHaveBeenCalledTimes(2);
   });
 
+  it('handles multiple listeners registered for the same event without leaking', () => {
+    const { api } = makeChromeApi();
+    const adapter = new ChromeAdapter(api);
+
+    adapter.onMenuEvent('open-file', vi.fn());
+    adapter.onMenuEvent('open-file', vi.fn());
+    adapter.onMenuEvent('toggle-theme', vi.fn());
+
+    expect(api.runtime?.onMessage?.addListener).toHaveBeenCalledTimes(3);
+
+    adapter.removeMenuListeners();
+    expect(api.runtime?.onMessage?.removeListener).toHaveBeenCalledTimes(3);
+  });
+
+  it('sendMessage throws when runtime returns undefined', async () => {
+    const { api } = makeChromeApi();
+    api.runtime!.sendMessage = vi.fn().mockResolvedValue(undefined);
+    const adapter = new ChromeAdapter(api);
+
+    await expect(adapter.sendMessage({ type: 'get-version' })).rejects.toThrow(
+      'No response received for message type "get-version". The background listener may not be active.'
+    );
+  });
+
   it('forwards open file path events', () => {
     const { api, listeners } = makeChromeApi();
     const adapter = new ChromeAdapter(api);
@@ -198,14 +219,12 @@ describe('chrome adapter', () => {
     expect(cleanup()).toBeUndefined();
   });
 
-  it('sends download update as a background message', () => {
+  it('throws when downloadUpdate is called', () => {
     const { api } = makeChromeApi();
     const adapter = new ChromeAdapter(api);
 
-    adapter.downloadUpdate();
-
-    expect(api.runtime?.sendMessage).toHaveBeenCalledWith({
-      type: CHROME_MESSAGE_TYPES.DOWNLOAD_UPDATE,
-    });
+    expect(() => adapter.downloadUpdate()).toThrow(
+      'downloadUpdate is not supported by this platform adapter.'
+    );
   });
 });
