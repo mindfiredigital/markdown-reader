@@ -21,16 +21,16 @@ describe('Welcome', () => {
     expect(handleOpen).toHaveBeenCalledTimes(1);
   });
 
-  it('renders the Open File button', () => {
+  it('renders the Load Markdown File button in desktop mode', () => {
     render(<Welcome onOpen={() => {}} recentFiles={[]} />, { wrapper });
-    expect(screen.getByRole('button', { name: /Open File/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Load Markdown File/i })).toBeInTheDocument();
   });
 
-  it('calls onOpen when the Open File button is clicked', async () => {
+  it('calls onOpen when the Load Markdown File button is clicked', async () => {
     const handleOpen = vi.fn();
     const user = userEvent.setup();
     render(<Welcome onOpen={handleOpen} recentFiles={[]} />, { wrapper });
-    await user.click(screen.getByRole('button', { name: /Open File/i }));
+    await user.click(screen.getByRole('button', { name: /Load Markdown File/i }));
     expect(handleOpen).toHaveBeenCalledTimes(1);
   });
 
