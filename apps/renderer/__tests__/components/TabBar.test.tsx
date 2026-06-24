@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { TabBar } from '../../src/components/TabBar';
 import { Tab } from '../../src/types/component-types';
@@ -34,22 +35,24 @@ describe('TabBar', () => {
     expect(screen.getByRole('tab', { name: /README/i })).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('switches tab when a tab is clicked', () => {
+  it('switches tab when a tab is clicked', async () => {
     const onSwitch = vi.fn();
+    const user = userEvent.setup();
 
     render(<TabBar tabs={tabs} activeTabId="tab-1" onSwitch={onSwitch} onClose={() => {}} />);
 
-    fireEvent.click(screen.getByRole('tab', { name: /CHANGELOG/i }));
+    await user.click(screen.getByRole('tab', { name: /CHANGELOG/i }));
 
     expect(onSwitch).toHaveBeenCalledWith('tab-2');
   });
 
-  it('closes a tab when close button is clicked', () => {
+  it('closes a tab when close button is clicked', async () => {
     const onClose = vi.fn();
+    const user = userEvent.setup();
 
     render(<TabBar tabs={tabs} activeTabId="tab-1" onSwitch={() => {}} onClose={onClose} />);
 
-    fireEvent.click(screen.getAllByRole('button', { name: /close .* tab/i })[0]);
+    await user.click(screen.getAllByRole('button', { name: /close .* tab/i })[0]);
 
     expect(onClose).toHaveBeenCalledWith('tab-1');
   });

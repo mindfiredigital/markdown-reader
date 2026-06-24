@@ -1,8 +1,13 @@
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { RecentFile } from '@package/shared-types';
 import { addToRecentList } from '../src/recent/addToRecentList';
 import { getUniqueRecentFile } from '../src/recent/getUniqueRecentFile';
 import { removeFromRecentList } from '../src/recent/removeFromRecentList';
+import { stat } from 'node:fs/promises';
+
+vi.mock('node:fs/promises', () => ({
+  stat: vi.fn().mockRejectedValue(new Error('ENOENT')),
+}));
 
 const mk = (path: string): RecentFile => ({
   path,
@@ -41,5 +46,17 @@ describe('recent list functions', () => {
     const r = await addToRecentList([], '/first.md');
     expect(r).toHaveLength(1);
     expect(r[0]?.path).toBe('/first.md');
+  });
+
+  it('addToRecentList includes size property when stat succeeds', async () => {
+    vi.mocked(stat).mockResolvedValueOnce({ size: 1024 } as any);
+    const r = await addToRecentList([], '/success.md');
+    expect(r[0]).toHaveProperty('size', 1024);
+  });
+
+  it('addToRecentList handles size enrichment when stat fails', async () => {
+    const r = await addToRecentList([], '/failure.md');
+    expect(r[0]?.path).toBe('/failure.md');
+    expect(r[0]).not.toHaveProperty('size');
   });
 });

@@ -10,7 +10,6 @@ export function ReaderToolbar({
   onZoomOut,
   onZoomReset,
   onToggleTheme,
-  isExtension = false,
   onOpenFile,
   onOpenSettings,
   onOpenSearch,
@@ -67,10 +66,8 @@ export function ReaderToolbar({
 
       <div aria-hidden="true" className="mx-0.5 h-5 w-px bg-border-theme" />
 
-      {/* Extension Specific Controls */}
-      {isExtension && (
-        <>
-          {onOpenFile && (
+      {/* Optional Platform Controls */}
+      {onOpenFile && (
             <button
               type="button"
               onClick={onOpenFile}
@@ -112,14 +109,16 @@ export function ReaderToolbar({
                 className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-accent"
                 aria-label="Export document"
                 aria-haspopup="menu"
+                aria-controls="export-menu"
                 aria-expanded={exportOpen}
               >
                 <Icons.Download size={17} />
               </button>
               {exportOpen && (
                 <div
-                 id="export-menu"
-                  role="menu"
+                  id="export-menu"
+                  role="group"
+                  aria-label="Export options"
                   onKeyDown={(e) => {
                     if (e.key === 'Escape') setExportOpen(false);
                   }}
@@ -130,7 +129,7 @@ export function ReaderToolbar({
                       type="button"
                       onClick={() => {
                         setExportOpen(false);
-                        void Promise.resolve(onExportHtml()).catch(() => {});
+                        void Promise.resolve(onExportHtml()).catch((e) => console.error('Export HTML failed:', e));
                       }}
                       className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
                     >
@@ -142,7 +141,7 @@ export function ReaderToolbar({
                       type="button"
                       onClick={() => {
                         setExportOpen(false);
-                        void Promise.resolve(onExportPdf()).catch(() => {});
+                        void Promise.resolve(onExportPdf()).catch((e) => console.error('Export PDF failed:', e));
                       }}
                       className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
                     >
@@ -154,7 +153,7 @@ export function ReaderToolbar({
                       type="button"
                       onClick={() => {
                         setExportOpen(false);
-                        void Promise.resolve(onExportDocx()).catch(() => {});
+                        void Promise.resolve(onExportDocx()).catch((e) => console.error('Export DOCX failed:', e));
                       }}
                       className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
                     >
@@ -165,10 +164,6 @@ export function ReaderToolbar({
               )}
             </div>
           )}
-
-          <div aria-hidden="true" className="mx-1 h-5 w-px bg-border-theme" />
-        </>
-      )}
 
       {/* Font Zoom Controls */}
       <button

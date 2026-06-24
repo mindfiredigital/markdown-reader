@@ -143,10 +143,60 @@ cd markdown-reader
 pnpm install
 ```
 
-### 3. Start Development Server
+### 3. Build all packages
+
+go inside each package and build
+
+```bash
+pnpm build
+```
+
+### 4. Start Development Server
 
 ```bash
 pnpm dev
+```
+
+## Available Scripts
+
+### Development
+
+```bash
+pnpm dev
+```
+
+Starts Electron + Vite development environment.
+
+### Production Build
+
+```bash
+pnpm build
+```
+
+Builds Electron main, preload, and renderer processes.
+
+### Run Tests
+
+```bash
+pnpm test
+```
+
+### Run Coverage
+
+```bash
+pnpm test:coverage
+```
+
+### Run Lint
+
+```bash
+pnpm lint
+```
+
+### Run Typecheck
+
+```bash
+pnpm typecheck
 ```
 
 ---
@@ -186,62 +236,33 @@ Because this is a manual unpacked extension install, Chrome may occasionally ask
 
 ---
 
-## Available Scripts
+## Build the Chrome extension
 
-### Development
+### 1. Clone Repository
 
 ```bash
-pnpm dev
+git clone https://github.com/mindfiredigital/markdown-reader
+cd markdown-reader
 ```
 
-Starts Electron + Vite development environment.
+### 2. Install Dependencies
 
-### Production Build
+```bash
+pnpm install
+```
+
+### 3. Build all packages
+
+go inside each package and build
 
 ```bash
 pnpm build
 ```
 
-Builds Electron main, preload, and renderer processes.
-
-### Create Local Installer
+### 4. Build extension
 
 ```bash
-pnpm dist
-```
-
-Builds production installer locally without publishing.
-
-### Publish Release
-
-```bash
-pnpm dist:publish
-```
-
-Builds and publishes release artifacts to GitHub Releases.
-
-### Run Tests
-
-```bash
-pnpm test
-```
-
-### Run Coverage
-
-```bash
-pnpm test:coverage
-```
-
-### Run Lint
-
-```bash
-pnpm lint
-```
-
-### Run Typecheck
-
-```bash
-pnpm typecheck
+pnpm build:extension
 ```
 
 ---

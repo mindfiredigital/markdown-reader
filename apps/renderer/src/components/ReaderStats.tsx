@@ -1,13 +1,17 @@
+import { useMemo } from "react";
 import { ReaderStatsProps } from "../types/component-types";
 import { formatBytes } from "../utils/helpers/size-helper";
 
 // it will show the number of lines,size of the md file
 export function ReaderStats({ markdown }: ReaderStatsProps) {
+  const { wordCount, lineCount, byteSize } = useMemo(() => {
+    if (!markdown) return { wordCount: 0, lineCount: 0, byteSize: 0 };
+    const wordCount = markdown.trim().split(/\s+/).filter(Boolean).length;
+    const lineCount = markdown.split('\n').length;
+    const byteSize = new Blob([markdown]).size;
+    return { wordCount, lineCount, byteSize };
+  }, [markdown]);
   if (!markdown) return null;
-
-  const wordCount = markdown.trim().split(/\s+/).filter(Boolean).length;
-  const lineCount = markdown.split('\n').length;
-  const byteSize = new Blob([markdown]).size;
 
   return (
     <div 

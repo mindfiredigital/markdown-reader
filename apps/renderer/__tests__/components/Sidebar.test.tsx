@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {Sidebar} from "../../src/components/Sidebar"
 import { TOCType } from '../../src/types/component-types';
 
@@ -24,12 +25,13 @@ describe('Sidebar', () => {
 
 
   // test 2
-  it('calls onSelect with correct id when clicked', () => {
+  it('calls onSelect with correct id when clicked', async () => {
     const handleSelect = vi.fn();
+    const user = userEvent.setup();
     render(
       <Sidebar tocItems={mockTOC} activeId="" onSelect={handleSelect} isVisible={true} />
     );
-    fireEvent.click(screen.getByText('Component'));
+    await user.click(screen.getByText('Component'));
     expect(handleSelect).toHaveBeenCalledWith('component');
   });
 
