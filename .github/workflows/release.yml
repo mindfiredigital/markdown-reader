@@ -214,11 +214,7 @@ jobs:
           name: Markdown Reader Release ${{ needs.version_and_tag.outputs.tag }}
           draft: false
           prerelease: false
-          generate_release_notes: false
-          body: |
-            Automated release for Markdown Reader.
-
-            See CHANGELOG.md for the full release notes.
+          generate_release_notes: true
           files: |
             release-artifacts/*.exe
             release-artifacts/*.dmg
