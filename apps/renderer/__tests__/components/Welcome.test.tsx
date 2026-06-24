@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen} from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Welcome } from '../../src/components/Welcome';
 import { createMockPlatform, createPlatformWrapper } from '../test-utils';
@@ -7,13 +7,18 @@ import { createMockPlatform, createPlatformWrapper } from '../test-utils';
 describe('Welcome', () => {
   const wrapper = createPlatformWrapper();
 
-  it('renders the app title in extension mode', () => {
+  it('renders the app title and triggers onOpen in extension mode', async () => {
     const chromeWrapper = createPlatformWrapper({
       ...createMockPlatform(),
       kind: 'chrome',
     });
-    render(<Welcome onOpen={() => {}} recentFiles={[]} />, { wrapper: chromeWrapper });
+    const handleOpen = vi.fn();
+    const user = userEvent.setup();
+    render(<Welcome onOpen={handleOpen} recentFiles={[]} />, { wrapper: chromeWrapper });
     expect(screen.getByRole('heading', { name: /markdown reader/i })).toBeInTheDocument();
+    
+    await user.click(screen.getByRole('button', { name: /Open File/i }));
+    expect(handleOpen).toHaveBeenCalledTimes(1);
   });
 
   it('renders the Open File button', () => {
