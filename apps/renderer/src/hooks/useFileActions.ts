@@ -10,11 +10,15 @@ export function useFileActions({ loadFile, dispatch }: FileActionProps) {
 
   const openFolder = useCallback(async () => {
     if (!api.openFolderDialog || !api.readFolder) return;
-    const folderPath = await api.openFolderDialog();
-    if (!folderPath) return;
-    const tree = await api.readFolder(folderPath);
-    setFolderTree(tree);
-    setFolderPath(folderPath);
+    try {
+      const folderPath = await api.openFolderDialog();
+      if (!folderPath) return;
+      const tree = await api.readFolder(folderPath);
+      setFolderTree(tree);
+      setFolderPath(folderPath);
+    } catch (error) {
+      console.error('Failed to open folder:', error);
+    }
   }, [api]);
 
   const loadFileInTab = useCallback(
@@ -36,11 +40,18 @@ export function useFileActions({ loadFile, dispatch }: FileActionProps) {
 
   const openFileDialog = useCallback(() => {
     if (!api.openFileDialog) return;
-    void api.openFileDialog().then((chosenPath) => {
-      if (chosenPath) {
-        void loadFileInTab(chosenPath);
-      }
-    });
+    void api
+      .openFileDialog()
+      .then((chosenPath) => {
+        if (chosenPath) {
+          void loadFileInTab(chosenPath).catch((err) =>
+            console.error('Failed to load file in tab:', err)
+          );
+        }
+      })
+      .catch((error) => {
+        console.error('Failed to open file dialog:', error);
+      });
   }, [loadFileInTab, api]);
 
   return { folderTree, folderPath, setFolderTree, openFolder, loadFileInTab, openFileDialog };
