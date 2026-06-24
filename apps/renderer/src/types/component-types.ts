@@ -109,6 +109,7 @@ export interface Tab {
   filePath: string;
   fileName: string;
   html: string;
+  markdown?: string;
   toc?: TOCType[];
   scrollTop: number;
   fontSize: number;
@@ -120,7 +121,10 @@ export interface TabState {
 }
 
 export type TabAction =
-  | { type: 'OPEN_TAB'; payload: { filePath: string; html?: string; toc?: TOCType[] } }
+  | {
+      type: 'OPEN_TAB';
+      payload: { filePath: string; html?: string; markdown?: string; toc?: TOCType[] };
+    }
   | { type: 'CLOSE_TAB'; payload: { tabId: string } }
   | { type: 'SWITCH_TAB'; payload: { tabId: string } }
   | {
@@ -128,6 +132,7 @@ export type TabAction =
       payload: {
         tabId: string;
         html?: string;
+        markdown?: string;
         toc?: TOCType[];
         scrollTop?: number;
         fontSize?: number;
@@ -167,6 +172,15 @@ export interface ReaderToolbarProps {
   onZoomOut: () => void;
   onZoomReset: () => void;
   onToggleTheme: () => void;
+  isExtension?: boolean;
+  onOpenFile?: () => void;
+  onOpenSettings?: () => void;
+  onOpenSearch?: () => void;
+  updateVersion?: string | null;
+  onDownloadUpdate?: () => void;
+  onExportHtml?: (() => void) | undefined;
+  onExportPdf?: (() => void) | undefined;
+  onExportDocx?: (() => void) | undefined;
 }
 
 export interface SettingsPanelProps {
@@ -181,3 +195,7 @@ export type ErrorBoundaryState = {
   hasError: boolean;
   error: Error | null;
 };
+
+export interface ReaderStatsProps {
+  markdown: string | undefined;
+}

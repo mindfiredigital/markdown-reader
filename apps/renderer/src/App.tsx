@@ -31,8 +31,11 @@ import { ReaderToolbar } from './components/ReaderToolbar';
 import { useFolderSearch } from './hooks/useFolderSearch';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { usePlatformAPI } from './hooks/usePlatform';
+import { ReaderStats } from './components/ReaderStats';
 
 export default function App() {
+  const api = usePlatformAPI();
   const {  error, isLoading, openFile, toc,recentFiles,loadFile } =useFile();
   const { state, dispatch } = useTabStore();
   const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId) ?? null;
@@ -53,11 +56,20 @@ export default function App() {
   const {isFolderSearchOpen,folderQuery,folderResults,isSearchingFolder,openFolderSearch,closeFolderSearch,searchFolder}=useFolderSearch(folderPath)
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [appVersion, setAppVersion] = useState('');
+  const [updateVersion, setUpdateVersion] = useState<string | null>(null);
 
   useEffect(()=>{
-    if(!window.api?.getAppVersion) return;
-    void window.api.getAppVersion().then(setAppVersion).catch(()=>{});
-  },[])
+    if(!api.getAppVersion) return;
+    void api.getAppVersion().then(setAppVersion).catch(()=>{});
+  },[api]);
+
+  useEffect(() => {
+    if(!api.onUpdateAvailable) return;
+    const removeUpdateAvailable = api.onUpdateAvailable((version: string) => {
+      setUpdateVersion(version);
+    });
+    return removeUpdateAvailable;
+  }, [api]);
   
   useEffect(()=>{
     if(folderTree){
@@ -206,7 +218,23 @@ useShortcuts({
               />
             )}
             {!focusMode && (
-              <ReaderToolbar fontSize={fontSize} theme={theme} onZoomIn={increaseFontSize} onZoomOut={decreaseFontSize} onZoomReset={resetFontSize} onToggleTheme={toggleTheme}/>
+              <ReaderToolbar
+                fontSize={fontSize}
+                theme={theme}
+                onZoomIn={increaseFontSize}
+                onZoomOut={decreaseFontSize}
+                onZoomReset={resetFontSize}
+                onToggleTheme={toggleTheme}
+                isExtension={api.kind === 'chrome'}
+                onOpenFile={openFileDialog}
+                onOpenSettings={() => setSettingsOpen(true)}
+                onOpenSearch={openSearch}
+                updateVersion={updateVersion}
+                onDownloadUpdate={() => api.downloadUpdate?.()}
+                onExportHtml={exportHtml}
+                onExportPdf={exportPdf}
+                onExportDocx={exportDocx}
+              />
             )}
             <main 
             ref={contentRef} 
@@ -216,6 +244,7 @@ useShortcuts({
               
                 <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
             </main>
+            <ReaderStats markdown={activeTab.markdown} />
           </div>
           </ErrorBoundary>
         )}

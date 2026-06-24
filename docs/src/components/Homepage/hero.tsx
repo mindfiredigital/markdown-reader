@@ -7,7 +7,7 @@ import {
   ArrowRight,
   GitBranchIcon,
 } from 'lucide-react';
-import { downloads } from '@site/src/utils/constants/download-constants';
+import { downloads, extensionDownload } from '@site/src/utils/constants/download-constants';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 export function HeroSection() {
@@ -78,6 +78,8 @@ export function HeroSection() {
                   </div>
               </motion.div>
             </div>
+
+            {/* Desktop Downloads */}
             <motion.div
               className="mt-16 sm:mt-20 w-full max-w-3xl mx-auto border border-border/60 bg-background/40 backdrop-blur-md rounded-xl p-5 shadow-sm"
               initial={{ opacity: 0, y: 16 }}
@@ -90,7 +92,10 @@ export function HeroSection() {
                     <img
                       src={item.icon}
                       alt={`${item.name} icon`}
-                      className="h-7 w-7 object-contain opacity-90 brightness-100"
+                      className={clsx(
+                        'h-7 w-7 object-contain opacity-90 brightness-100 download-platform-icon',
+                        item.name !== 'Windows' && 'download-platform-icon--theme-aware'
+                      )}
                     />
                     <h2 className="text-sm font-semibold text-foreground mt-3 mb-0.5">
                       {item.name}
@@ -109,11 +114,49 @@ export function HeroSection() {
                 ))}
               </div>
             </motion.div>
+
+            {/* Extension Installation */}
+            <motion.div
+              className="mt-6 w-full max-w-3xl mx-auto border border-border/60 bg-background/40 backdrop-blur-md rounded-xl p-5 shadow-sm"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.55 }}
+            >
+              <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6">
+                <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-muted/20 border border-border/40 shrink-0">
+                  <img
+                    src={useBaseUrl(extensionDownload.icon)}
+                    alt="Chrome icon"
+                    className="h-8 w-8 object-contain"
+                  />
+                </div>
+                <div className="flex-1 text-center sm:text-left">
+                  <h3 className="text-sm font-semibold text-foreground mb-1">
+                    {extensionDownload.name}
+                  </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed max-w-md">
+                    {extensionDownload.description}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {extensionDownload.links.map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center px-3 py-1.5 rounded-md text-xs font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-all active:scale-[0.98]"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+
           </div>
         </div>
       </header>
     </section>
   );
 }
-
-

@@ -1,5 +1,6 @@
 import { app, ipcMain, dialog } from 'electron';
 import { sep } from 'node:path';
+import { autoUpdater } from 'electron-updater';
 import { readFile, unWatchFile, watchFile } from './file';
 import { getFolder } from './folder';
 import {
@@ -216,5 +217,15 @@ export function registerIPCHandlers(): void {
       throw new Error('Folder path is not authorized');
     }
     return await searchFolder(safeFolderPath, query);
+  });
+
+  ipcMain.on(IPC_CONSTANTS.DOWNLOAD_UPDATE, (event) => {
+    if (!validateSender(event)) {
+      console.warn('Rejected DOWNLOAD_UPDATE from untrusted sender');
+      return;
+    }
+    void autoUpdater.downloadUpdate().catch((error: Error) => {
+      console.error('Auto-updater download failed:', error.message);
+    });
   });
 }

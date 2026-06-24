@@ -1,34 +1,53 @@
 import { useCallback } from 'react';
 import { ActiveTab } from '../types/component-types';
 import exportCss from '../styles/export.css?raw';
+import { usePlatformAPI } from '../hooks/usePlatform';
 
 export function useExport(activeTab: ActiveTab) {
+  const api = usePlatformAPI();
+
   const exportHtml = useCallback(async () => {
-    if (!activeTab) return;
-    const outPath = await window.api.showSaveDialog({ defaultExt: 'html' });
-    if (!outPath) return;
+    if (!activeTab || !api.exportHTML) return;
     const css = exportCss;
-    await window.api.exportHTML(activeTab.html, css, outPath);
-  }, [activeTab]);
+
+    if (api.showSaveDialog) {
+      const outPath = await api.showSaveDialog({ defaultExt: 'html' });
+      if (!outPath) return;
+      await api.exportHTML(activeTab.html, css, outPath);
+    } else {
+      await api.exportHTML(activeTab.html, css, '');
+    }
+  }, [activeTab, api]);
 
   const exportPdf = useCallback(async () => {
-    if (!activeTab) return;
-    const outPath = await window.api.showSaveDialog({ defaultExt: 'pdf' });
-    if (!outPath) return;
+    if (!activeTab || !api.exportPDF) return;
     const css = exportCss;
-    await window.api.exportPDF(activeTab.html, css, outPath);
-  }, [activeTab]);
+
+    if (api.showSaveDialog) {
+      const outPath = await api.showSaveDialog({ defaultExt: 'pdf' });
+      if (!outPath) return;
+      await api.exportPDF(activeTab.html, css, outPath);
+    } else {
+      await api.exportPDF(activeTab.html, css, '');
+    }
+  }, [activeTab, api]);
 
   const exportDocx = useCallback(async () => {
-    if (!activeTab) return;
-
-    const outPath = await window.api.showSaveDialog({
-      defaultExt: 'docx',
-    });
-    if (!outPath) return;
+    if (!activeTab || !api.exportDOCX) return;
     const css = exportCss;
-    await window.api.exportDOCX(activeTab.html, css, outPath);
-  }, [activeTab]);
 
-  return { exportHtml, exportPdf, exportDocx };
+    if (api.showSaveDialog) {
+      const outPath = await api.showSaveDialog({ defaultExt: 'docx' });
+      if (!outPath) return;
+      await api.exportDOCX(activeTab.html, css, outPath);
+    } else {
+      await api.exportDOCX(activeTab.html, css, '');
+    }
+  }, [activeTab, api]);
+
+  return {
+    exportHtml: api.exportHTML ? exportHtml : undefined,
+    exportPdf: api.exportPDF ? exportPdf : undefined,
+    exportDocx: api.exportDOCX && api.showSaveDialog ? exportDocx : undefined,
+  };
 }

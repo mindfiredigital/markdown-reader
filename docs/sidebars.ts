@@ -12,6 +12,7 @@ const sidebars: SidebarsConfig = {
       label: 'Product Guide',
       items: [
         'product/features',
+        'product/browser-extension',
         'product/markdown-support',
         'product/keyboard-shortcuts',
         'product/export',

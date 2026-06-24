@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
+import { usePlatformAPI } from '../hooks/usePlatform';
 
 export function useOpenFilePath(loadFileInTab: (path: string) => Promise<void>) {
+  const api = usePlatformAPI();
   useEffect(() => {
-    window.api.onOpenFilePath((path) => {
+    if (!api.onOpenFilePath || !api.removeOpenFilePathListener) return;
+    api.onOpenFilePath((path) => {
       void loadFileInTab(path);
     });
     return () => {
-      window.api.removeOpenFilePathListener();
+      api.removeOpenFilePathListener?.();
     };
-  }, [loadFileInTab]);
+  }, [loadFileInTab, api]);
 }
