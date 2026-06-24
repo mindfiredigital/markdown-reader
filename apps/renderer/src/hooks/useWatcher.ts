@@ -5,13 +5,13 @@ export function useWatcher(filePath: string, onFileChanged: (path: string) => vo
   const api = usePlatformAPI();
   useEffect(() => {
     if (!filePath) return;
-    void api.watchFile(filePath).catch(() => {});
+    void api.watchFile(filePath).catch((e) => console.warn('Failed to watch file:', e));
     const handler = (path: string) => {
       onFileChanged(path);
     };
     api.onFileChanged(handler);
     return () => {
-      void api.unWatchFile(filePath).catch(() => {});
+      void api.unWatchFile(filePath).catch((e) => console.warn('Failed to unwatch file:', e));
       api.removeFileChangedListener();
     };
   }, [filePath, onFileChanged, api]);
