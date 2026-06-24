@@ -42,4 +42,6 @@ export function isRuntimeEvent(message: unknown, type: string): message is Chrom
   );
 }
 
-
+export function buildFullHtml(html: string, css: string): string {
+  return `<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
+}

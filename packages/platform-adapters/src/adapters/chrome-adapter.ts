@@ -6,7 +6,11 @@ import {
   PLATFORM_KIND,
   STORAGE_KEYS,
 } from '../utils/constants/adapter-constants';
-import { createUnsupportedPlatformMethod, getChromeApi } from '../utils/helpers/adapter-helper';
+import {
+  buildFullHtml,
+  createUnsupportedPlatformMethod,
+  getChromeApi,
+} from '../utils/helpers/adapter-helper';
 import type { PlatformAdapter, PlatformMessage } from '../types/platform-type';
 import type { StorageAdapter } from '../types/storage-type';
 import type { ChromeMessageResponse, ChromeExtensionApi } from '../types/chrome-type';
@@ -302,7 +306,7 @@ export class ChromeAdapter implements PlatformAdapter {
   }
 
   exportHTML(html: string, css: string, outputPath: string): Promise<void> {
-    const fullHtml = `<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
+    const fullHtml = buildFullHtml(html, css);
     const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -323,7 +327,7 @@ export class ChromeAdapter implements PlatformAdapter {
   }
 
   exportPDF(html: string, css: string, outputPath: string): Promise<void> {
-    const fullHtml = `<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
+    const fullHtml = buildFullHtml(html, css);
     const printWindow = window.open('', '_blank');
     if (!printWindow) return Promise.resolve();
     printWindow.document.write(fullHtml);
