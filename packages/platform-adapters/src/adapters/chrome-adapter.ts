@@ -304,19 +304,23 @@ export class ChromeAdapter implements PlatformAdapter {
     }
   }
 
-  showSaveDialog(options?: { defaultExt?: string; defaultPath?: string }): Promise<string | null> {
-    createUnsupportedPlatformMethod('showSaveDialog');
-    return Promise.resolve(null);
-  }
-
   exportHTML(html: string, css: string, outputPath: string): Promise<void> {
     const fullHtml = `<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
-    const blob = new Blob([fullHtml], { type: 'text/html' });
+    const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'document.html';
+
+    // fallback naming block if outputPath is an empty string
+    const targetName = outputPath ? outputPath.split(/[\\/]/).pop() || outputPath : 'document';
+    const cleanFilename = targetName.includes('/')
+      ? targetName.split('/').pop() || 'document'
+      : targetName;
+    a.download = cleanFilename.endsWith('.html') ? cleanFilename : `${cleanFilename}.html`;
+
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
     return Promise.resolve();
   }
@@ -344,11 +348,6 @@ export class ChromeAdapter implements PlatformAdapter {
     setTimeout(doPrint, 500);
 
     printWindow.addEventListener('afterprint', () => printWindow.close(), { once: true });
-    return Promise.resolve();
-  }
-
-  exportDOCX(html: string, css: string, outputPath: string): Promise<void> {
-    createUnsupportedPlatformMethod('exportDOCX');
     return Promise.resolve();
   }
 
