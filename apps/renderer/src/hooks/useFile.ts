@@ -29,7 +29,7 @@ export function useFile() {
       setError('');
       setFilePath(path);
       try {
-        const rawMarkdown = (await api.readFile?.(path)) ?? '';
+        const rawMarkdown = (await api.readFile(path)) ?? '';
         const renderHtml = await renderMarkdown(rawMarkdown);
         const safeHtml = DOMpurify.sanitize(renderHtml);
         setHtml(safeHtml);
@@ -54,7 +54,7 @@ export function useFile() {
     [api]
   );
   const openFile = useCallback(async () => {
-    const chosenPath = await api.openFileDialog?.();
+    const chosenPath = await api.openFileDialog();
     if (!chosenPath) return;
     await loadFile(chosenPath);
   }, [loadFile, api]);

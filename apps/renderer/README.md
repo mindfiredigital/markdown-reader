@@ -20,7 +20,7 @@ It has no direct access to Node.js or the file system. All file operations go th
 
 ## Structure
 
-```
+```text
 src/
 ├── App.tsx              Root component - wires together all hooks and panels
 ├── components/          UI components (Reader, Sidebar, TabBar, SearchBar, etc.)
@@ -78,6 +78,6 @@ pnpm test
 
 ## Notes
 
-- The renderer uses `window.markdownReaderAPI` (exposed by the preload) for all IPC communication. If you're adding a new feature that needs file system access or native dialogs, add it to the preload bridge first.
+- The renderer uses `window.markdownReaderAPI` (exposed by the preload) for all IPC communication when running in Electron. However, to support the Chrome extension, all features requiring file system access or native dialogs should be routed through `usePlatformAPI`. This abstraction handles the differences between the `ElectronAdapter` and the `ChromeAdapter`.
 - Themes are applied via CSS custom properties. Theme files live in `src/styles/`.
-- The app also runs inside the Chrome extension (same React codebase). Platform-specific behavior is handled through `usePlatformAPI`, which returns the right API depending on whether it's running in Electron or the browser extension.
+- Make sure to use the correct pattern: if you're building for Electron, the preload bridge `window.markdownReaderAPI` is the underlying implementation, but UI code should always call `usePlatformAPI` to stay cross-platform.

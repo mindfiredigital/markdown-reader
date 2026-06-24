@@ -16,7 +16,7 @@ The extension opens a full-page Markdown Reader tab from the Chrome toolbar. Fro
 - Recent file tracking through Chrome storage
 - Local-first reading with no account or cloud upload
 
-Because browsers protect local files more strictly than desktop apps, the extension asks you to choose a file through the browser file picker. After you choose it, the extension caches the opened content in Chrome storage so it can keep the recent-file experience usable inside Chrome.
+Because browsers protect local files more strictly than desktop apps, the extension asks you to choose a file through the browser file picker. After you choose it, the extension keeps the opened content in a temporary runtime cache for the current session and persists only recent-file metadata and settings in Chrome storage.
 
 ## Why it matters
 
@@ -31,7 +31,7 @@ Both experiences share the same product code where possible, so the reading beha
 
 Until the extension is officially published through the Chrome Web Store, you can manually load the pre-compiled extension package directly into Google Chrome using these steps:
 
-1. Download the extension bundle file (`markdown-reader-extension.zip`) from the latest repository releases section.
+1. Download the extension bundle file (`extension-release.zip`) from the latest repository releases section.
 2. Unzip or extract the folder to a safe location on your computer (e.g., your Documents folder).
 3. Open your Google Chrome browser and navigate to `chrome://extensions/` by typing it into the URL search bar.
 4. Turn on the **Developer mode** toggle switch located in the top-right corner of the Extensions dashboard page.

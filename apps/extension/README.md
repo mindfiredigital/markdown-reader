@@ -20,12 +20,12 @@ The extension has three parts:
 
 ## Structure
 
-```
+```text
 apps/extension/
 ├── manifest.json         Chrome extension manifest (Manifest V3)
 ├── popup.html            Popup page HTML shell
 ├── viewer.html           Full viewer page HTML shell
-├── vite.config.ts        Builds all three entry points into dist/extensions/chrome/
+├── vite.extension.config.ts  Builds all three entry points into dist/extensions/chrome/
 └── src/
     ├── background.ts     Service worker — handles icon click, routes messages
     ├── types.ts          Extension-specific TypeScript types

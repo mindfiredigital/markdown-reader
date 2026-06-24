@@ -6,14 +6,15 @@ import {
   PLATFORM_KIND,
   STORAGE_KEYS,
 } from '../utils/constants/adapter-constants';
-import { createUnsupportedPlatformMethod, getChromeApi } from '../utils/helpers/adapter-helper';
+import {
+  buildFullHtml,
+  createUnsupportedPlatformMethod,
+  getChromeApi,
+} from '../utils/helpers/adapter-helper';
 import type { PlatformAdapter, PlatformMessage } from '../types/platform-type';
 import type { StorageAdapter } from '../types/storage-type';
-import type {
-  ChromeMessageResponse,
-  ChromeExtensionApi,
-  ChromeRuntimeEvent,
-} from '../types/chrome-type';
+import type { ChromeMessageResponse, ChromeExtensionApi } from '../types/chrome-type';
+import { isRuntimeEvent } from '../utils/helpers/adapter-helper';
 
 class ChromeStorageAdapter implements StorageAdapter {
   constructor(private readonly chromeApi: ChromeExtensionApi) {}
@@ -55,7 +56,8 @@ export class ChromeAdapter implements PlatformAdapter {
   private readonly openedFiles = new Map<string, string>();
   private fileChangedListener: ((message: unknown) => void) | null = null;
   private openFilePathListener: ((message: unknown) => void) | null = null;
-  private readonly menuListeners = new Map<string, (message: unknown) => void>();
+  private readonly menuListeners = new Map<string, Array<(message: unknown) => void>>();
+  private readonly transientFiles = new Set<string>();
 
   constructor(chromeApi: ChromeExtensionApi | null = getChromeApi()) {
     if (!chromeApi?.runtime?.sendMessage || !chromeApi.storage?.local) {
@@ -121,7 +123,7 @@ export class ChromeAdapter implements PlatformAdapter {
           const reader = new FileReader();
           reader.onload = async () => {
             const content = String(reader.result ?? '');
-            const path = file.name;
+            const path = `[${file.size}:${file.lastModified}]/${file.name}`;
             this.openedFiles.set(path, content);
             try {
               await this.storage.setItem(`${STORAGE_KEYS.FILE_CONTENT_PREFIX}${path}`, content);
@@ -133,6 +135,7 @@ export class ChromeAdapter implements PlatformAdapter {
                   : '';
 
               if (errorMessage.includes('QUOTA_BYTES') || errorName === 'QuotaExceededError') {
+                this.transientFiles.add(path);
                 console.warn(
                   'Extension storage limit (10MB) exceeded. File opened for this session but not persisted.'
                 );
@@ -148,6 +151,14 @@ export class ChromeAdapter implements PlatformAdapter {
             reject(reader.error ?? new Error('Failed to read selected Markdown file.'));
           };
           reader.readAsText(file);
+        },
+        { once: true }
+      );
+      input.addEventListener(
+        'cancel',
+        () => {
+          input.remove();
+          resolve(null);
         },
         { once: true }
       );
@@ -175,6 +186,9 @@ export class ChromeAdapter implements PlatformAdapter {
   }
 
   async addRecentFile(path: string): Promise<void> {
+    if (this.transientFiles.has(path)) {
+      return;
+    }
     const recentFiles = await this.getRecentFiles();
     const content = this.openedFiles.get(path);
 
@@ -222,6 +236,9 @@ export class ChromeAdapter implements PlatformAdapter {
   }
 
   onFileChanged(callback: (path: string) => void): void {
+    if (this.fileChangedListener) {
+      this.chromeApi.runtime?.onMessage?.removeListener(this.fileChangedListener);
+    }
     this.fileChangedListener = (message) => {
       if (isRuntimeEvent(message, 'file-changed') && typeof message.payload === 'string') {
         callback(message.payload);
@@ -244,22 +261,35 @@ export class ChromeAdapter implements PlatformAdapter {
       }
     };
 
-    this.menuListeners.set(event, listener);
+    const listeners = this.menuListeners.get(event) || [];
+    listeners.push(listener);
+    this.menuListeners.set(event, listeners);
+
     this.chromeApi.runtime?.onMessage?.addListener(listener);
     return () => {
       this.chromeApi.runtime?.onMessage?.removeListener(listener);
-      this.menuListeners.delete(event);
+      const updated = this.menuListeners.get(event)?.filter((l) => l !== listener) || [];
+      if (updated.length === 0) {
+        this.menuListeners.delete(event);
+      } else {
+        this.menuListeners.set(event, updated);
+      }
     };
   }
 
   removeMenuListeners(): void {
-    this.menuListeners.forEach((listener) => {
-      this.chromeApi.runtime?.onMessage?.removeListener(listener);
+    this.menuListeners.forEach((listeners) => {
+      listeners.forEach((listener) => {
+        this.chromeApi.runtime?.onMessage?.removeListener(listener);
+      });
     });
     this.menuListeners.clear();
   }
 
   onOpenFilePath(callback: (path: string) => void): void {
+    if (this.openFilePathListener) {
+      this.chromeApi.runtime?.onMessage?.removeListener(this.openFilePathListener);
+    }
     this.openFilePathListener = (message) => {
       if (isRuntimeEvent(message, 'open-file-path') && typeof message.payload === 'string') {
         callback(message.payload);
@@ -275,32 +305,51 @@ export class ChromeAdapter implements PlatformAdapter {
     }
   }
 
-  showSaveDialog(options?: { defaultExt?: string; defaultPath?: string }): Promise<string | null> {
-    return this.sendMessage<string | null>({
-      type: CHROME_MESSAGE_TYPES.SHOW_SAVE_DIALOG,
-      payload: options,
-    });
-  }
-
   exportHTML(html: string, css: string, outputPath: string): Promise<void> {
-    return this.sendMessage<void>({
-      type: CHROME_MESSAGE_TYPES.EXPORT_HTML,
-      payload: { html, css, outputPath },
-    });
+    const fullHtml = buildFullHtml(html, css);
+    const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+
+    // fallback naming block if outputPath is an empty string
+    const targetName = outputPath ? outputPath.split(/[\\/]/).pop() || outputPath : 'document';
+    const cleanFilename = targetName.includes('/')
+      ? targetName.split('/').pop() || 'document'
+      : targetName;
+    a.download = cleanFilename.endsWith('.html') ? cleanFilename : `${cleanFilename}.html`;
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    return Promise.resolve();
   }
 
   exportPDF(html: string, css: string, outputPath: string): Promise<void> {
-    return this.sendMessage<void>({
-      type: CHROME_MESSAGE_TYPES.EXPORT_PDF,
-      payload: { html, css, outputPath },
-    });
-  }
+    const fullHtml = buildFullHtml(html, css);
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return Promise.resolve();
+    printWindow.document.write(fullHtml);
+    printWindow.document.close();
 
-  exportDOCX(html: string, css: string, outputPath: string): Promise<void> {
-    return this.sendMessage<void>({
-      type: CHROME_MESSAGE_TYPES.EXPORT_DOCX,
-      payload: { html, css, outputPath },
-    });
+    let printed = false;
+    const doPrint = async () => {
+      if (printed) return;
+      printed = true;
+      try {
+        await printWindow.document.fonts?.ready;
+      } catch {
+        // best-effort
+      }
+      printWindow.print();
+    };
+
+    printWindow.addEventListener('load', doPrint, { once: true });
+    setTimeout(doPrint, 500);
+
+    printWindow.addEventListener('afterprint', () => printWindow.close(), { once: true });
+    return Promise.resolve();
   }
 
   getPathForFile(file: File): string {
@@ -312,12 +361,7 @@ export class ChromeAdapter implements PlatformAdapter {
   }
 
   downloadUpdate(): void {
-    this.sendMessage<void>({ type: CHROME_MESSAGE_TYPES.DOWNLOAD_UPDATE }).catch(
-      (error: unknown) => {
-        const message = error instanceof Error ? error.message : String(error);
-        console.warn(`Chrome adapter download update message skipped: ${message}`);
-      }
-    );
+    createUnsupportedPlatformMethod('downloadUpdate');
   }
 
   async sendMessage<TResponse = unknown, TPayload = unknown>(
@@ -327,19 +371,16 @@ export class ChromeAdapter implements PlatformAdapter {
     if (!runtime?.sendMessage) createUnsupportedPlatformMethod('chrome.runtime.sendMessage');
 
     const response = await runtime.sendMessage<ChromeMessageResponse<TResponse>>(message);
+    if (!response) {
+      throw new Error(
+        `No response received for message type "${message.type}". ` +
+          'The background listener may not be active.'
+      );
+    }
     if (!response.ok) {
       throw new Error(response.error);
     }
 
     return response.data;
   }
-}
-
-function isRuntimeEvent(message: unknown, type: string): message is ChromeRuntimeEvent {
-  return (
-    typeof message === 'object' &&
-    message !== null &&
-    'type' in message &&
-    (message as { type?: unknown }).type === type
-  );
 }

@@ -19,7 +19,7 @@ This is the Electron main process. It runs in Node.js, handles everything that n
 
 ## Structure
 
-```
+```text
 src/
 ├── index.ts             Entry point - creates the window and registers everything
 ├── ipc.ts               All IPC handler registrations

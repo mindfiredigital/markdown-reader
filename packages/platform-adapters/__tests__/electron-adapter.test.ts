@@ -132,4 +132,22 @@ describe('electron adapter', () => {
       'send message is an unsupported operation in the electron runtime environment'
     );
   });
+
+  it('should give errors from preload api methods without hidding them', async () => {
+    const error = new Error('IPC failed');
+    const api = makeElectronApi({
+      readFile: vi.fn().mockRejectedValue(error),
+      saveSettings: vi.fn().mockRejectedValue(error),
+      exportHTML: vi.fn().mockRejectedValue(error),
+      exportPDF: vi.fn().mockRejectedValue(error),
+      exportDOCX: vi.fn().mockRejectedValue(error),
+    });
+    const adapter = new ElectronAdapter(api);
+
+    await expect(adapter.readFile('test.md')).rejects.toThrow('IPC failed');
+    await expect(adapter.saveSettings({ theme: 'github-dark' })).rejects.toThrow('IPC failed');
+    await expect(adapter.exportHTML('html', 'css', 'out.html')).rejects.toThrow('IPC failed');
+    await expect(adapter.exportPDF('html', 'css', 'out.pdf')).rejects.toThrow('IPC failed');
+    await expect(adapter.exportDOCX('html', 'css', 'out.docx')).rejects.toThrow('IPC failed');
+  });
 });
