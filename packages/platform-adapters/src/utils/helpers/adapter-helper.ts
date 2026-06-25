@@ -1,5 +1,5 @@
 import type { MarkdownReaderAPI } from '@package/shared-types';
-import type { ChromeExtensionApi } from '../../types/chrome-type';
+import type { ChromeExtensionApi, ChromeRuntimeEvent } from '../../types/chrome-type';
 
 export function getElectronApi(): MarkdownReaderAPI | null {
   const candidate = globalThis as typeof globalThis & {
@@ -31,4 +31,17 @@ export function createUnsupportedPlatformMethod(methodName: string): never {
 
 export function toErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+export function isRuntimeEvent(message: unknown, type: string): message is ChromeRuntimeEvent {
+  return (
+    typeof message === 'object' &&
+    message !== null &&
+    'type' in message &&
+    (message as { type?: unknown }).type === type
+  );
+}
+
+export function buildFullHtml(html: string, css: string): string {
+  return `<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
 }
