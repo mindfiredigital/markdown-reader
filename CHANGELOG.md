@@ -1,4 +1,7 @@
 
+## 1.0.4
+- reove strict csp blocking remote badges
+
 ## 1.4.0
 - implement structured package isolation for chrome extension runner
 
