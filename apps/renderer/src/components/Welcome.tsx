@@ -97,7 +97,8 @@ export function Welcome({onOpen,recentFiles,onOpenRecent}:WelcomeProps){
           <div className="p-3  text-accent rounded-xl mb-3 group-hover:scale-105 transition-all duration-200">
             <img
               src={fileIcon}
-              alt="Markdown Reader Logo"
+              alt=""
+              aria-hidden="true"
               className="w-10 h-10 object-contain"
             />
           </div>
