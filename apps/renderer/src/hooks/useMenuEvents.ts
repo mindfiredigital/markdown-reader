@@ -23,6 +23,8 @@ export function useMenuEvents({
   onExportDocx,
   onOpenSettings,
   onSetTheme,
+  onCopyMd,
+  onCopyText,
 }: UseMenuEventsProps) {
   const api = usePlatformAPI();
   useEffect(() => {
@@ -57,6 +59,8 @@ export function useMenuEvents({
         onSetTheme(theme as Theme);
       }
     });
+    if (onCopyMd) api.onMenuEvent(MENU_EVENTS.COPY_AS_MD, onCopyMd);
+    if (onCopyText) api.onMenuEvent(MENU_EVENTS.COPY_AS_TEXT, onCopyText);
 
     return () => {
       api.removeMenuListeners?.();
@@ -82,5 +86,7 @@ export function useMenuEvents({
     onExportDocx,
     onOpenSettings,
     onSetTheme,
+    onCopyMd,
+    onCopyText,
   ]);
 }

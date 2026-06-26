@@ -181,6 +181,9 @@ export interface ReaderToolbarProps {
   onExportHtml?: (() => void) | undefined;
   onExportPdf?: (() => void) | undefined;
   onExportDocx?: (() => void) | undefined;
+  onCopyHtml?: () => void;
+  onCopyMd?: () => void;
+  onCopyText?: () => void;
 }
 
 export interface SettingsPanelProps {
