@@ -237,6 +237,12 @@ const Download = ({ size = 20, ...props }: IconProps) => (
   </svg>
 );
 
+const Code=({size=20,...props}:IconProps)=>(
+  <svg width={size} height={size} viewBox="0 0 24 24" {...defaultProps} {...props}>
+    <polyline points="16 18 22 12 16 6"/>
+    <polyline points="8 6 2 12 8 18"/>
+  </svg>
+)
 export const Icons = {
-X,Hamburger,ZoomIn,ZoomOut,Sun,Moon,Folder,ChevronRight,ChevronDown,ArrowUp,ArrowDown,Plus,Settings,Search,FileText,Sparkles,Download
+X,Hamburger,ZoomIn,ZoomOut,Sun,Moon,Folder,ChevronRight,ChevronDown,ArrowUp,ArrowDown,Plus,Settings,Search,FileText,Sparkles,Download,Code
 };
