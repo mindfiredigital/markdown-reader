@@ -22,6 +22,9 @@ export const MENU_LABELS = {
   SEARCH_FOLDER: 'Search in Folder',
   SETTINGS: 'Settings',
   THEME: 'Theme',
+  COPY: 'Copy',
+  COPY_AS_MD: 'Copy as Markdown',
+  COPY_AS_TEXT: 'Copy as Plain Text',
 } as const;
 
 export const MENU_EVENTS = {
@@ -44,6 +47,8 @@ export const MENU_EVENTS = {
   EXPORT_DOCX: 'menu:export-docx',
   OPEN_SETTINGS: 'menu:open-settings',
   SET_THEME: 'menu:set-theme',
+  COPY_AS_MD: 'menu:copy-md',
+  COPY_AS_TEXT: 'menu:copy-text',
 } as const;
 
 export const MENU_EVENT_LIST = Object.values(MENU_EVENTS);
