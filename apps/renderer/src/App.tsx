@@ -33,6 +33,7 @@ import { SettingsPanel } from './components/SettingsPanel';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { usePlatformAPI } from './hooks/usePlatform';
 import { ReaderStats } from './components/ReaderStats';
+import { useCopyHandlers } from './hooks/useCopyHandlers';
 
 export default function App() {
   const api = usePlatformAPI();
@@ -57,6 +58,7 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [appVersion, setAppVersion] = useState('');
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);
+  const { copyAsMarkdown, copyAsPlainText } = useCopyHandlers();
 
   useEffect(()=>{
     if(!api.getAppVersion) return;
@@ -105,7 +107,9 @@ export default function App() {
   onExportPdf:exportPdf,
   onExportDocx:exportDocx,
   onOpenSettings:()=>setSettingsOpen(true),
-  onSetTheme:setTheme
+  onSetTheme:setTheme,
+  onCopyMd: () => copyAsMarkdown(activeTab?.markdown),
+  onCopyText: () => copyAsPlainText(activeTab?.html),
 });
 
 useShortcuts({
@@ -127,7 +131,7 @@ useShortcuts({
 
   return (
     <>
-      <div className="h-screen flex flex-col bg-bg text-text-base"  onDragEnter={handleDragEnter} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
+      <div className="h-screen flex flex-col bg-bg text-text-base select-none"  onDragEnter={handleDragEnter} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
         {isDraggingFile &&(
           <DragDrop/>
         )}
@@ -234,14 +238,16 @@ useShortcuts({
                 onExportHtml={exportHtml}
                 onExportPdf={exportPdf}
                 onExportDocx={exportDocx}
+                onCopyMd={() => copyAsMarkdown(activeTab?.markdown)}
+                onCopyText={() => copyAsPlainText(activeTab?.html)}
               />
             )}
             <main 
             ref={contentRef} 
-            className="flex-1 overflow-y-auto" 
+            className="flex-1 overflow-y-auto select-text" 
             onScroll={scroll}
             >
-              
+
                 <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
             </main>
             <ReaderStats markdown={activeTab.markdown} />
