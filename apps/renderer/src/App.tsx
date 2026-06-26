@@ -33,6 +33,8 @@ import { SettingsPanel } from './components/SettingsPanel';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { usePlatformAPI } from './hooks/usePlatform';
 import { ReaderStats } from './components/ReaderStats';
+import { useViewMode } from './hooks/useViewMode';
+import { RawTextViewer } from './components/RawTextViewer';
 
 export default function App() {
   const api = usePlatformAPI();
@@ -57,6 +59,7 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [appVersion, setAppVersion] = useState('');
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);
+  const { viewMode, toggleRawText } = useViewMode();
 
   useEffect(()=>{
     if(!api.getAppVersion) return;
@@ -234,6 +237,8 @@ useShortcuts({
                 onExportHtml={exportHtml}
                 onExportPdf={exportPdf}
                 onExportDocx={exportDocx}
+                viewMode={viewMode}
+                onToggleRawText={toggleRawText}
               />
             )}
             <main 
@@ -241,8 +246,11 @@ useShortcuts({
             className="flex-1 overflow-y-auto" 
             onScroll={scroll}
             >
-              
+              {viewMode === 'raw' ? (
+                <RawTextViewer markdown={activeTab.markdown} />
+              ) : (
                 <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
+              )}
             </main>
             <ReaderStats markdown={activeTab.markdown} />
           </div>
@@ -257,3 +265,4 @@ useShortcuts({
       </div>
     </>
   )}
+  
