@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Icons } from '../utils/constants/icon-contants';
 import { ReaderToolbarProps } from '../types/component-types';
+import { ICON_TITLE, MARKDOWN_TOGGLE } from '../utils/constants/markdown-constants';
 
 /* toolbar component to show zoom controls and theme toggle on UI */
 export function ReaderToolbar({
@@ -20,6 +21,7 @@ export function ReaderToolbar({
   onExportDocx,
   viewMode,
   onToggleRawText,
+  onToggleMindMap,
 }: ReaderToolbarProps) {
   const [exportOpen, setExportOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -180,11 +182,24 @@ export function ReaderToolbar({
         <button
           type="button"
           onClick={onToggleRawText}
-          className={`rounded-md p-2 transition-colors hover:bg-accent-bg ${viewMode === 'raw' ? 'text-accent bg-accent-bg' : 'text-text-muted hover:text-text-base'}`}
-          aria-label={viewMode === 'raw' ? "Show rendered text" : "Show raw text"}
-          title={viewMode === 'raw' ? "Show rendered text" : "Show raw text"}
+          className={`rounded-md p-2 transition-colors hover:bg-accent-bg ${viewMode === MARKDOWN_TOGGLE.RAW ? 'text-accent bg-accent-bg' : 'text-text-muted hover:text-text-base'}`}
+          aria-label={viewMode === MARKDOWN_TOGGLE.RAW ? ICON_TITLE.SHOW_RENDERED_TEXT : ICON_TITLE.SHOW_RAW_TEXT}
+          title={viewMode === MARKDOWN_TOGGLE.RAW ? ICON_TITLE.SHOW_RENDERED_TEXT : ICON_TITLE.SHOW_RAW_TEXT}
         >
           <Icons.Code size={17} />
+        </button>
+      )}
+
+      {/* Mind Map Toggle */}
+      {onToggleMindMap && (
+        <button
+          type="button"
+          onClick={onToggleMindMap}
+          className={`rounded-md p-2 transition-colors hover:bg-accent-bg ${viewMode === MARKDOWN_TOGGLE.MINDMAP ? 'text-accent bg-accent-bg' : 'text-text-muted hover:text-text-base'}`}
+          aria-label={viewMode === MARKDOWN_TOGGLE.MINDMAP ? ICON_TITLE.SHOW_RENDERED_TEXT : ICON_TITLE.SHOW_MIND_MAP}
+          title={viewMode === MARKDOWN_TOGGLE.MINDMAP ? ICON_TITLE.SHOW_RENDERED_TEXT : ICON_TITLE.SHOW_MIND_MAP}
+        >
+          <Icons.MindMap size={17} />
         </button>
       )}
 

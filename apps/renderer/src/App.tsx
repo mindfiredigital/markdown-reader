@@ -35,6 +35,8 @@ import { usePlatformAPI } from './hooks/usePlatform';
 import { ReaderStats } from './components/ReaderStats';
 import { useViewMode } from './hooks/useViewMode';
 import { RawTextViewer } from './components/RawTextViewer';
+import { MarkmapViewer } from './components/MarkmapViewer';
+import { MARKDOWN_TOGGLE } from './utils/constants/markdown-constants';
 
 export default function App() {
   const api = usePlatformAPI();
@@ -59,7 +61,7 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [appVersion, setAppVersion] = useState('');
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);
-  const { viewMode, toggleRawText } = useViewMode();
+  const { viewMode, toggleRawText, toggleMindMap } = useViewMode();
 
   useEffect(()=>{
     if(!api.getAppVersion) return;
@@ -239,6 +241,7 @@ useShortcuts({
                 onExportDocx={exportDocx}
                 viewMode={viewMode}
                 onToggleRawText={toggleRawText}
+                onToggleMindMap={toggleMindMap}
               />
             )}
             <main 
@@ -246,8 +249,10 @@ useShortcuts({
             className="flex-1 overflow-y-auto" 
             onScroll={scroll}
             >
-              {viewMode === 'raw' ? (
+              {viewMode === MARKDOWN_TOGGLE.RAW ? (
                 <RawTextViewer markdown={activeTab.markdown} />
+              ) : viewMode === MARKDOWN_TOGGLE.MINDMAP ? (
+                <MarkmapViewer markdown={activeTab.markdown} />
               ) : (
                 <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
               )}
