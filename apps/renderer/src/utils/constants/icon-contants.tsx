@@ -242,7 +242,18 @@ const Code=({size=20,...props}:IconProps)=>(
     <polyline points="16 18 22 12 16 6"/>
     <polyline points="8 6 2 12 8 18"/>
   </svg>
-)
+);
+
+const MindMap = ({ size = 20, ...props }: IconProps) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" {...defaultProps} {...props}>
+    <rect x="16" y="16" width="6" height="6" rx="1" />
+    <rect x="2" y="16" width="6" height="6" rx="1" />
+    <rect x="9" y="2" width="6" height="6" rx="1" />
+    <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3" />
+    <path d="M12 12V8" />
+  </svg>
+);
+
 export const Icons = {
-X,Hamburger,ZoomIn,ZoomOut,Sun,Moon,Folder,ChevronRight,ChevronDown,ArrowUp,ArrowDown,Plus,Settings,Search,FileText,Sparkles,Download,Code
+X,Hamburger,ZoomIn,ZoomOut,Sun,Moon,Folder,ChevronRight,ChevronDown,ArrowUp,ArrowDown,Plus,Settings,Search,FileText,Sparkles,Download,Code,MindMap
 };
