@@ -3,6 +3,7 @@ import { usePlatformAPI } from '../hooks/usePlatform';
 import { Icons } from '../utils/constants/icon-contants';
 import { formatBytes,formatDaysAgo } from '../utils/helpers/size-helper';
 import logoTcon from '../../../../assets/icon.png'
+import fileIcon from '../../../../assets/file.png'
 
 export function Welcome({onOpen,recentFiles,onOpenRecent}:WelcomeProps){
   const api = usePlatformAPI();
@@ -95,7 +96,7 @@ export function Welcome({onOpen,recentFiles,onOpenRecent}:WelcomeProps){
         >
           <div className="p-3  text-accent rounded-xl mb-3 group-hover:scale-105 transition-all duration-200">
             <img
-              src="/icons/app-icon.svg"
+              src={fileIcon}
               alt="Markdown Reader Logo"
               className="w-10 h-10 object-contain"
             />
