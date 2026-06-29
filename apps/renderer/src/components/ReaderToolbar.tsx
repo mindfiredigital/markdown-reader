@@ -201,7 +201,7 @@ export function ReaderToolbar({
       <button
         type="button"
         onClick={onZoomReset}
-        className="w-full text-center py-1 text-xs font-semibold text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
+        className="w-full rounded-md text-center py-1 text-xs font-semibold text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
         aria-label={`Reset zoom, current size ${fontSize} pixels`}
         title={`Reset zoom, current size ${fontSize} pixels`}
       >
