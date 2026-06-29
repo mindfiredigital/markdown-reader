@@ -1,6 +1,6 @@
 # Markdown Reader
 
-A native desktop applicaion for reading Markdown files, built entirely on the JavaScript/TypeScript ecosystem using Electron as the desktop runtime.
+A native desktop application for reading Markdown files, built entirely on the JavaScript/TypeScript ecosystem using Electron as the desktop runtime.
 
 markdown-reader is to Markdown what Adobe Acrobat Reader is to PDF:
 a dedicated, native, first-class desktop viewer for .md files.
@@ -8,7 +8,17 @@ a dedicated, native, first-class desktop viewer for .md files.
 ## Table of Contents
 
 - [Why Markdown Reader?](#why-markdown-reader)
+- [Features](#features)
+- [Supported Markdown Features](#supported-markdown-features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Development Setup](#development-setup)
+- [Available Scripts](#available-scripts)
 - [Install the Chrome Extension from ZIP](#install-the-chrome-extension-from-zip)
+- [Release Workflow](#release-workflow)
+- [Keyboard Shortcuts](#keyboard-shortcuts)
+- [Themes](#themes)
+- [License](#license)
 
 ---
 
@@ -57,17 +67,17 @@ markdown-reader is a dedicated native desktop Markdown reader:
 - Syntax highlighting with Shiki
 - KaTeX math rendering
 - Mermaid diagram support
+- **Automatic Mind Map Generation** (Interactive document structure tree visualization)
+- **Raw Text Toggle** (Instantly switch between rendered view and source markdown)
+- **Advanced Copy Options** (Export selection or content as MD, or Plain Text)
 - In-document search
 - Sidebar Table of Contents
 - File explorer & recent files
 - Keyboard shortcuts
-- Native OS integration
+- Native OS integration via platform-adapters
 - Cross-platform builds
 - Multi-tab reading
-- Mermaid diagram rendering
-- Export to HTML
-- Export to PDF
-- Export to DOCX
+- Export to HTML, PDF, and DOCX
 
 ---
 
@@ -87,6 +97,7 @@ markdown-reader is a dedicated native desktop Markdown reader:
 - Inline HTML
 - Mermaid diagrams
 - KaTeX math
+- **Interactive Mind Maps** (Auto-generated from document markdown structure)
 
 ---
 
@@ -103,6 +114,7 @@ markdown-reader is a dedicated native desktop Markdown reader:
 | Syntax highlighting | Shiki         |
 | Math rendering      | KaTeX         |
 | Diagram rendering   | Mermaid       |
+| Mind Map engine     | Markmap       |
 | Testing             | Vitest        |
 | Package manager     | pnpm          |
 
