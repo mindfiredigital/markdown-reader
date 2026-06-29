@@ -34,6 +34,8 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { usePlatformAPI } from './hooks/usePlatform';
 import { ReaderStats } from './components/ReaderStats';
 import { useCopyHandlers } from './hooks/useCopyHandlers';
+import { useViewMode } from './hooks/useViewMode';
+import { RawTextViewer } from './components/RawTextViewer';
 
 export default function App() {
   const api = usePlatformAPI();
@@ -59,6 +61,7 @@ export default function App() {
   const [appVersion, setAppVersion] = useState('');
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);
   const { copyAsMarkdown, copyAsPlainText } = useCopyHandlers();
+  const { viewMode, toggleRawText } = useViewMode();
 
   useEffect(()=>{
     if(!api.getAppVersion) return;
@@ -240,6 +243,8 @@ useShortcuts({
                 onExportDocx={exportDocx}
                 onCopyMd={() => copyAsMarkdown(activeTab?.markdown)}
                 onCopyText={() => copyAsPlainText(activeTab?.html)}
+                viewMode={viewMode}
+                onToggleRawText={toggleRawText}
               />
             )}
             <main 
@@ -248,7 +253,11 @@ useShortcuts({
             onScroll={scroll}
             >
 
+              {viewMode === 'raw' ? (
+                <RawTextViewer markdown={activeTab.markdown} />
+              ) : (
                 <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
+              )}
             </main>
             <ReaderStats markdown={activeTab.markdown} />
           </div>
@@ -263,3 +272,4 @@ useShortcuts({
       </div>
     </>
   )}
+  

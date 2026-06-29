@@ -19,7 +19,9 @@ export function ReaderToolbar({
   onExportPdf,
   onExportDocx,
   onCopyMd,
-  onCopyText
+  onCopyText,
+  viewMode,
+  onToggleRawText,
 }: ReaderToolbarProps) {
   const [exportOpen, setExportOpen] = useState(false);
   const [copyOpen, setCopyOpen] = useState(false);
@@ -231,6 +233,21 @@ export function ReaderToolbar({
               )}
             </div>
           )}
+      <div aria-hidden="true" className="my-1 h-px w-5 bg-border-theme" />
+
+      {/* Raw Text Toggle */}
+      {onToggleRawText && (
+        <button
+          type="button"
+          onClick={onToggleRawText}
+          className={`rounded-md p-2 transition-colors hover:bg-accent-bg ${viewMode === 'raw' ? 'text-accent bg-accent-bg' : 'text-text-muted hover:text-text-base'}`}
+          aria-label={viewMode === 'raw' ? "Show rendered text" : "Show raw text"}
+          title={viewMode === 'raw' ? "Show rendered text" : "Show raw text"}
+        >
+          <Icons.Code size={17} />
+        </button>
+      )}
+
       {/* Font Zoom Controls */}
       <button
         type="button"
@@ -244,7 +261,7 @@ export function ReaderToolbar({
       <button
         type="button"
         onClick={onZoomReset}
-        className="w-full text-center py-1 text-xs font-semibold text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
+        className="w-full rounded-md text-center py-1 text-xs font-semibold text-text-muted transition-colors hover:bg-accent-bg hover:text-text-base"
         aria-label={`Reset zoom, current size ${fontSize} pixels`}
         title={`Reset zoom, current size ${fontSize} pixels`}
       >

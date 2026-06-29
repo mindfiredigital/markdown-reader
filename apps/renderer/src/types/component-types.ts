@@ -181,9 +181,16 @@ export interface ReaderToolbarProps {
   onExportHtml?: (() => void) | undefined;
   onExportPdf?: (() => void) | undefined;
   onExportDocx?: (() => void) | undefined;
-  onCopyHtml?: () => void;
   onCopyMd?: () => void;
   onCopyText?: () => void;
+  viewMode?: ViewMode;
+  onToggleRawText?: () => void;
+}
+
+export type ViewMode = 'rendered' | 'raw';
+
+export interface RawTextViewerProps {
+  markdown?: string | undefined;
 }
 
 export interface SettingsPanelProps {
