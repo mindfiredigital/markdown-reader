@@ -48,6 +48,6 @@ export function useExport(activeTab: ActiveTab) {
   return {
     exportHtml: api.exportHTML ? exportHtml : undefined,
     exportPdf: api.exportPDF ? exportPdf : undefined,
-    exportDocx: api.exportDOCX && api.showSaveDialog ? exportDocx : undefined,
+    exportDocx: api.exportDOCX ? exportDocx : undefined,
   };
 }
