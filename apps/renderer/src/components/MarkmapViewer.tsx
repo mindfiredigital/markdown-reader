@@ -1,5 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { MarkmapViewerProps } from "../types/component-types";
+import { Icons } from "../utils/constants/icon-contants";
+import { browserDownload } from "../utils/helpers/extension-export-helper";
 
 // It converts the markdown content to a map using markmap library dynamically
 export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
@@ -50,8 +52,52 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
 
     return () => {
       isMounted = false;
+      if (markmapRef.current) {
+        markmapRef.current.destroy();
+        markmapRef.current = null;
+      }
     };
   }, [markdown]);
+
+  const handleDownloadSvg = useCallback(() => {
+    const svgElement = svgRef.current;
+    if (!svgElement) return;
+    const clone = svgElement.cloneNode(true) as SVGSVGElement;
+    const g = svgElement.querySelector('g');
+    const clonedG = clone.querySelector('g');
+    
+    if (g && clonedG) {
+      const bbox = g.getBBox();
+      const padding = 20;
+      clone.setAttribute(
+        'viewBox', 
+        `${bbox.x - padding} ${bbox.y - padding} ${bbox.width + padding * 2} ${bbox.height + padding * 2}`
+      );
+      clone.setAttribute('width', String(bbox.width + padding * 2));
+      clone.setAttribute('height', String(bbox.height + padding * 2));
+      clonedG.removeAttribute('transform');
+    }
+    const serializer = new XMLSerializer();
+    let source = serializer.serializeToString(clone);
+    if (!source.match(/^<\?xml[^>]+>/)) {
+      source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+    }
+    const styleMatch = source.match(/<style>[\s\S]*?<\/style>/);
+    if (!styleMatch) {
+      const styles = `
+        <style>
+          svg text { fill: #c9d1d9; }
+          svg foreignObject { color: #c9d1d9; }
+          svg foreignObject pre, svg foreignObject code { background-color: #0d1117; color: #c9d1d9; }
+          .markmap-node { stroke: #3b82f6; }
+          .markmap-link { stroke: #3b82f6; }
+        </style>
+      `;
+      source = source.replace(/<svg[^>]*>/, `$&${styles}`);
+    }
+
+    browserDownload(source, 'mindmap.svg', 'image/svg+xml;charset=utf-8');
+  }, []);
 
   if (!markdown) {
     return (
@@ -62,7 +108,7 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
   }
 
   return (
-    <div className="w-full h-full min-h-[70vh] flex flex-col items-center justify-center bg-surface p-4 text-text-base markmap-wrapper">
+    <div className="w-full h-full min-h-[70vh] flex flex-col items-center justify-center bg-surface p-4 text-text-base markmap-wrapper relative group">
       <style>{`
         .markmap-wrapper svg text {
           fill: var(--color-text) !important;
@@ -78,10 +124,21 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
           text-shadow: none !important;
         }
       `}</style>
+      <div className="absolute top-4 left-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button
+          onClick={handleDownloadSvg}
+          className="flex items-center gap-2 px-3 py-2 bg-surface border border-border rounded-md hover:bg-hover hover:text-primary transition-colors text-sm shadow-sm"
+          title="Download SVG"
+        >
+          <Icons.Download size={16} />
+          <span>Download SVG</span>
+        </button>
+      </div>
       <svg 
         ref={svgRef} 
         className="w-full h-full flex-1" 
         style={{ minHeight: '600px' }} 
+        xmlns="http://www.w3.org/2000/svg"
       />
     </div>
   );
