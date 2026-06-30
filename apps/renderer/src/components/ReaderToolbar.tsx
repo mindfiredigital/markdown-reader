@@ -123,7 +123,6 @@ export function ReaderToolbar({
                 className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-accent"
                 aria-label="Export document"
                 title="Export document"
-                aria-haspopup="menu"
                 aria-controls="export-menu"
                 aria-expanded={exportOpen}
               >
@@ -132,7 +131,6 @@ export function ReaderToolbar({
               {exportOpen && (
                 <div
                   id="export-menu"
-                  role="group"
                   aria-label="Export options"
                   onKeyDown={(e) => {
                     if (e.key === 'Escape') setExportOpen(false);
@@ -189,7 +187,6 @@ export function ReaderToolbar({
                 className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-accent"
                 aria-label="Copy document"
                 title="Copy document"
-                aria-haspopup="menu"
                 aria-controls="copy-menu"
                 aria-expanded={copyOpen}
               >
@@ -198,7 +195,6 @@ export function ReaderToolbar({
               {copyOpen && (
                 <div
                   id="copy-menu"
-                  role="group"
                   aria-label="Copy options"
                   onKeyDown={(e) => {
                     if (e.key === 'Escape') setCopyOpen(false);

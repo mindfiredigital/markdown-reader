@@ -46,7 +46,6 @@ export interface UseMenuEventsProps {
   onExportDocx: (() => void) | undefined;
   onOpenSettings: () => void;
   onSetTheme: (theme: Theme) => void;
-  onCopyHtml?: () => void;
   onCopyMd?: () => void;
   onCopyText?: () => void;
 }
