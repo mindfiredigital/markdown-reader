@@ -185,6 +185,7 @@ export function ReaderToolbar({
           className={`rounded-md p-2 transition-colors hover:bg-accent-bg ${viewMode === MARKDOWN_TOGGLE.RAW ? 'text-accent bg-accent-bg' : 'text-text-muted hover:text-text-base'}`}
           aria-label={viewMode === MARKDOWN_TOGGLE.RAW ? ICON_TITLE.SHOW_RENDERED_TEXT : ICON_TITLE.SHOW_RAW_TEXT}
           title={viewMode === MARKDOWN_TOGGLE.RAW ? ICON_TITLE.SHOW_RENDERED_TEXT : ICON_TITLE.SHOW_RAW_TEXT}
+          aria-pressed={viewMode===MARKDOWN_TOGGLE.RAW}
         >
           <Icons.Code size={17} />
         </button>
@@ -198,6 +199,7 @@ export function ReaderToolbar({
           className={`rounded-md p-2 transition-colors hover:bg-accent-bg ${viewMode === MARKDOWN_TOGGLE.MINDMAP ? 'text-accent bg-accent-bg' : 'text-text-muted hover:text-text-base'}`}
           aria-label={viewMode === MARKDOWN_TOGGLE.MINDMAP ? ICON_TITLE.SHOW_RENDERED_TEXT : ICON_TITLE.SHOW_MIND_MAP}
           title={viewMode === MARKDOWN_TOGGLE.MINDMAP ? ICON_TITLE.SHOW_RENDERED_TEXT : ICON_TITLE.SHOW_MIND_MAP}
+          aria-pressed={viewMode===MARKDOWN_TOGGLE.MINDMAP}
         >
           <Icons.MindMap size={17} />
         </button>

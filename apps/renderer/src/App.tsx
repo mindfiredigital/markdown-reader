@@ -94,7 +94,7 @@ export default function App() {
   useMenuEvents({
   onOpenFile: openFileDialog,
   onOpenFolder: openFolder,
-  onSearchDocument: openSearch,
+  onSearchDocument: viewMode === MARKDOWN_TOGGLE.MINDMAP ? () => {} : openSearch,
   onSearchFolder: openFolderSearch,
   onToggleToc: toggleSidebar,
   onToggleBrowser: toggleFileBrowser,
@@ -118,7 +118,7 @@ useShortcuts({
   onOpenFolder: openFolder,
   onToggleFocusMode: toggleFocusMode,
   onToggleTheme: toggleTheme,
-  onOpenSearch: openSearch,
+  onOpenSearch: viewMode === MARKDOWN_TOGGLE.MINDMAP ? () => {} : openSearch,
   onOpenFolderSearch: openFolderSearch,
   onCloseSearch: closeSearch,
   onZoomIn: increaseFontSize,
@@ -137,7 +137,7 @@ useShortcuts({
           <DragDrop/>
         )}
         {isLoading && <Loading />}
-        {isSearchOpen && (
+        {isSearchOpen && viewMode!==MARKDOWN_TOGGLE.MINDMAP && (
           <SearchBar
             query={query}
             matchCount={matchCount}
@@ -233,7 +233,7 @@ useShortcuts({
                 isExtension={api.kind === 'chrome'}
                 onOpenFile={openFileDialog}
                 onOpenSettings={() => setSettingsOpen(true)}
-                onOpenSearch={openSearch}
+                onOpenSearch={viewMode===MARKDOWN_TOGGLE.MINDMAP?()=>{}:openSearch}
                 updateVersion={updateVersion}
                 onDownloadUpdate={() => api.downloadUpdate?.()}
                 onExportHtml={exportHtml}
