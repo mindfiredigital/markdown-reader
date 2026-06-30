@@ -8,7 +8,16 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
 
   useEffect(() => {
     const svgElement = svgRef.current;
-    if (!svgElement || !markdown) return;
+    if (!svgElement) return;
+
+    if (!markdown) {
+      if (markmapRef.current) {
+        markmapRef.current.destroy();
+        markmapRef.current = null;
+      }
+      svgElement.innerHTML = '';
+      return;
+    }
 
     let isMounted = true;
 
@@ -16,11 +25,13 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
       try {
         const { Transformer } = await import('markmap-lib');
         const { Markmap } = await import('markmap-view');
+        const DOMPurify = (await import('dompurify')).default;
 
         if (!isMounted) return;
 
         const transformer = new Transformer();
-        const { root } = transformer.transform(markdown);
+        const sanitizedMarkdown = DOMPurify.sanitize(markdown);
+        const { root } = transformer.transform(sanitizedMarkdown);
 
         if (!markmapRef.current) {
           markmapRef.current = Markmap.create(svgElement, {
@@ -41,6 +52,14 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
       isMounted = false;
     };
   }, [markdown]);
+
+  if (!markdown) {
+    return (
+      <div className="w-full h-full min-h-[70vh] flex flex-col items-center justify-center bg-surface p-4 text-text-muted">
+        <p>No content to display in Mind Map</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full min-h-[70vh] flex flex-col items-center justify-center bg-surface p-4 text-text-base markmap-wrapper">
