@@ -10,12 +10,16 @@ export function useExport(activeTab: ActiveTab) {
     if (!activeTab || !api.exportHTML) return;
     const css = exportCss;
 
-    if (api.showSaveDialog) {
-      const outPath = await api.showSaveDialog({ defaultExt: 'html' });
-      if (!outPath) return;
-      await api.exportHTML(activeTab.html, css, outPath);
-    } else {
-      await api.exportHTML(activeTab.html, css, '');
+    try {
+      if (api.showSaveDialog) {
+        const outPath = await api.showSaveDialog({ defaultExt: 'html' });
+        if (!outPath) return;
+        await api.exportHTML(activeTab.html, css, outPath);
+      } else {
+        await api.exportHTML(activeTab.html, css, '');
+      }
+    } catch (err) {
+      console.error('Failed to export HTML', err);
     }
   }, [activeTab, api]);
 
@@ -23,12 +27,16 @@ export function useExport(activeTab: ActiveTab) {
     if (!activeTab || !api.exportPDF) return;
     const css = exportCss;
 
-    if (api.showSaveDialog) {
-      const outPath = await api.showSaveDialog({ defaultExt: 'pdf' });
-      if (!outPath) return;
-      await api.exportPDF(activeTab.html, css, outPath);
-    } else {
-      await api.exportPDF(activeTab.html, css, '');
+    try {
+      if (api.showSaveDialog) {
+        const outPath = await api.showSaveDialog({ defaultExt: 'pdf' });
+        if (!outPath) return;
+        await api.exportPDF(activeTab.html, css, outPath);
+      } else {
+        await api.exportPDF(activeTab.html, css, '');
+      }
+    } catch (err) {
+      console.error('Failed to export PDF', err);
     }
   }, [activeTab, api]);
 
@@ -36,18 +44,22 @@ export function useExport(activeTab: ActiveTab) {
     if (!activeTab || !api.exportDOCX) return;
     const css = exportCss;
 
-    if (api.showSaveDialog) {
-      const outPath = await api.showSaveDialog({ defaultExt: 'docx' });
-      if (!outPath) return;
-      await api.exportDOCX(activeTab.html, css, outPath);
-    } else {
-      await api.exportDOCX(activeTab.html, css, '');
+    try {
+      if (api.showSaveDialog) {
+        const outPath = await api.showSaveDialog({ defaultExt: 'docx' });
+        if (!outPath) return;
+        await api.exportDOCX(activeTab.html, css, outPath);
+      } else {
+        await api.exportDOCX(activeTab.html, css, '');
+      }
+    } catch (err) {
+      console.error('Failed to export DOCX', err);
     }
   }, [activeTab, api]);
 
   return {
     exportHtml: api.exportHTML ? exportHtml : undefined,
     exportPdf: api.exportPDF ? exportPdf : undefined,
-    exportDocx: api.exportDOCX && api.showSaveDialog ? exportDocx : undefined,
+    exportDocx: api.exportDOCX ? exportDocx : undefined,
   };
 }
