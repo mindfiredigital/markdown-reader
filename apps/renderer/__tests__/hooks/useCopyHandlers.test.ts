@@ -1,12 +1,17 @@
 import { renderHook, act } from '@testing-library/react';
 import { useCopyHandlers } from '../../src/hooks/useCopyHandlers';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('use Copy Handlers test', () => {
   let writeMock: ReturnType<typeof vi.fn>;
   let writeTextMock: ReturnType<typeof vi.fn>;
+  let originalClipboardItem: any;
+  let originalNavigatorClipboard: any;
 
   beforeEach(() => {
+    originalClipboardItem = global.ClipboardItem;
+    originalNavigatorClipboard = navigator.clipboard;
+
     writeMock = vi.fn();
     writeTextMock = vi.fn();
 
@@ -20,6 +25,16 @@ describe('use Copy Handlers test', () => {
     global.ClipboardItem = class {
       constructor(data: any) {}
     } as any;
+  });
+
+  afterEach(() => {
+    global.ClipboardItem = originalClipboardItem;
+    if (originalNavigatorClipboard) {
+      Object.assign(navigator, { clipboard: originalNavigatorClipboard });
+    } else {
+      // @ts-ignore
+      delete navigator.clipboard;
+    }
   });
 
   it('should copy As Markdown copies markdown to clipboard using ClipboardItem', async () => {
@@ -43,7 +58,6 @@ describe('use Copy Handlers test', () => {
   });
 
   it('should fall back to writeText if ClipboardItem is not available', async () => {
-    const originalClipboardItem = global.ClipboardItem;
     delete global.ClipboardItem;
 
     const { result } = renderHook(() => useCopyHandlers());
@@ -55,7 +69,6 @@ describe('use Copy Handlers test', () => {
     expect(writeMock).not.toHaveBeenCalled();
     expect(writeTextMock).toHaveBeenCalledWith('**fallback**');
     expect(success).toBe(true);
-    global.ClipboardItem = originalClipboardItem;
   });
 
   it('should short-circuit and return false for empty or undefined input', async () => {
@@ -84,7 +97,6 @@ describe('use Copy Handlers test', () => {
   });
 
   it('should extract plain text correctly from HTML', async () => {
-    const originalClipboardItem = global.ClipboardItem;
     delete global.ClipboardItem;
 
     const { result } = renderHook(() => useCopyHandlers());
@@ -92,6 +104,5 @@ describe('use Copy Handlers test', () => {
       await result.current.copyAsPlainText('<div><h1>Title</h1><p>Paragraph</p></div>');
     });
     expect(writeTextMock).toHaveBeenCalledWith('TitleParagraph');
-    global.ClipboardItem = originalClipboardItem;
   });
 });
