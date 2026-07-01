@@ -45,8 +45,16 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
         if (!isMounted) return;
 
         const transformer = new Transformer();
-        const sanitizedMarkdown = DOMPurify.sanitize(markdown);
-        const { root } = transformer.transform(sanitizedMarkdown);
+        const { root } = transformer.transform(markdown);
+        const walkAndSanitize = (node: any) => {
+          if (node.content) {
+            node.content = DOMPurify.sanitize(node.content);
+          }
+          if (node.children) {
+            node.children.forEach(walkAndSanitize);
+          }
+        };
+        walkAndSanitize(root);
 
         if (!markmapRef.current) {
           markmapRef.current = Markmap.create(svgElement, {
