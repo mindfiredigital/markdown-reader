@@ -19,24 +19,31 @@ export function ReaderToolbar({
   onExportHtml,
   onExportPdf,
   onExportDocx,
+  onCopyMd,
+  onCopyText,
   viewMode,
   onToggleRawText,
   onToggleMindMap,
 }: ReaderToolbarProps) {
   const [exportOpen, setExportOpen] = useState(false);
+  const [copyOpen, setCopyOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
+  const copyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!exportOpen) return;
+    if (!exportOpen && !copyOpen) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (exportRef.current && !exportRef.current.contains(e.target as Node)) {
+      if (exportOpen && exportRef.current && !exportRef.current.contains(e.target as Node)) {
         setExportOpen(false);
+      }
+      if (copyOpen && copyRef.current && !copyRef.current.contains(e.target as Node)) {
+        setCopyOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [exportOpen]);
+  }, [exportOpen, copyOpen]);
 
   // Collapsed state - show only a small toggle button
   if (collapsed) {
@@ -118,7 +125,6 @@ export function ReaderToolbar({
                 className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-accent"
                 aria-label="Export document"
                 title="Export document"
-                aria-haspopup="menu"
                 aria-controls="export-menu"
                 aria-expanded={exportOpen}
               >
@@ -127,7 +133,7 @@ export function ReaderToolbar({
               {exportOpen && (
                 <div
                   id="export-menu"
-                  role="group"
+                  role="menu"
                   aria-label="Export options"
                   onKeyDown={(e) => {
                     if (e.key === 'Escape') setExportOpen(false);
@@ -136,6 +142,7 @@ export function ReaderToolbar({
                 >
                   {onExportHtml && (
                     <button
+                      role="menuitem"
                       type="button"
                       onClick={() => {
                         setExportOpen(false);
@@ -148,6 +155,7 @@ export function ReaderToolbar({
                   )}
                   {onExportPdf && (
                     <button
+                      role="menuitem"
                       type="button"
                       onClick={() => {
                         setExportOpen(false);
@@ -160,6 +168,7 @@ export function ReaderToolbar({
                   )}
                   {onExportDocx && (
                     <button
+                      role="menuitem"
                       type="button"
                       onClick={() => {
                         setExportOpen(false);
@@ -175,6 +184,60 @@ export function ReaderToolbar({
             </div>
           )}
 
+          {/* Copy dropdown */}
+          {(onCopyMd || onCopyText) && (
+            <div ref={copyRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setCopyOpen(!copyOpen)}
+                className="rounded-md p-2 text-text-muted transition-colors hover:bg-accent-bg hover:text-accent"
+                aria-label="Copy document"
+                title="Copy document"
+                aria-controls="copy-menu"
+                aria-expanded={copyOpen}
+              >
+                <Icons.Copy size={17} />
+              </button>
+              {copyOpen && (
+                <div
+                  id="copy-menu"
+                  role="menu"
+                  aria-label="Copy options"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') setCopyOpen(false);
+                  }}
+                  className="absolute right-0 top-full mt-1.5 min-w-35 rounded-lg border border-border-theme bg-surface shadow-lg py-1 z-50"
+                >
+                  {onCopyMd && (
+                    <button
+                      role="menuitem"
+                      type="button"
+                      onClick={() => {
+                        setCopyOpen(false);
+                        void Promise.resolve(onCopyMd()).catch((e) => console.error('Copy MD failed:', e));
+                      }}
+                      className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
+                    >
+                      Copy as Markdown
+                    </button>
+                  )}
+                  {onCopyText && (
+                    <button
+                      role="menuitem"
+                      type="button"
+                      onClick={() => {
+                        setCopyOpen(false);
+                        void Promise.resolve(onCopyText()).catch((e) => console.error('Copy Text failed:', e));
+                      }}
+                      className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
+                    >
+                      Copy as Plain Text
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
       <div aria-hidden="true" className="my-1 h-px w-5 bg-border-theme" />
 
       {/* Raw Text Toggle */}

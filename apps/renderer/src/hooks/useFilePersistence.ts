@@ -8,7 +8,7 @@ export function useFilePersistence({
   loadFile,
   dispatch,
   contentRef,
-  setShowToast,
+  showNotification,
 }: FilePersistenceProps) {
   const debounceTimer = useRef<number | undefined>(undefined);
   const scrollTimer = useRef<number | undefined>(undefined);
@@ -52,7 +52,7 @@ export function useFilePersistence({
           contentRef.current.scrollTop = currentScroll;
         }
       });
-      setShowToast(true);
+      showNotification('File updated');
     }, 150);
   }, [activeTab, loadFile, dispatch]);
 

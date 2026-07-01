@@ -33,6 +33,7 @@ import { SettingsPanel } from './components/SettingsPanel';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { usePlatformAPI } from './hooks/usePlatform';
 import { ReaderStats } from './components/ReaderStats';
+import { useCopyHandlers } from './hooks/useCopyHandlers';
 import { useViewMode } from './hooks/useViewMode';
 import { RawTextViewer } from './components/RawTextViewer';
 import { MarkmapViewer } from './components/MarkmapViewer';
@@ -51,6 +52,11 @@ export default function App() {
   const {settings,increaseFontSize,decreaseFontSize,resetFontSize,fontSize,updateSettings}=useSettings();
   const {query,matchCount,currentMatch,isSearchOpen,openSearch,closeSearch,setQuery,goToNextMatch,goToPrevMatch,getHiglightedHtml} = useSearch(activeTab?.html ?? '');
   const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('File updated');
+  const showNotification = (msg: string) => {
+    setToastMessage(msg);
+    setShowToast(true);
+  };
   const contentRef=useRef<HTMLDivElement>(null);
   const {exportHtml,exportPdf,exportDocx}=useExport(activeTab);
   const {goToNextTab,goToPreviousTab,closeActiveTab}=useTabNavigation(state.tabs,state.activeTabId,dispatch);
@@ -58,12 +64,25 @@ export default function App() {
   const {folderTree,folderPath,openFolder,loadFileInTab,openFileDialog}=useFileActions({loadFile,dispatch});
   const {isDraggingFile,handleDragEnter,handleDragOver,handleDragLeave,handleDrop}=useDragDrop(loadFileInTab);
   useOpenFilePath(loadFileInTab);
-  const {scroll}=useFilePersistence({activeTab,loadFile,dispatch,contentRef,setShowToast});
+  const {scroll}=useFilePersistence({activeTab,loadFile,dispatch,contentRef,showNotification});
   const {isFolderSearchOpen,folderQuery,folderResults,isSearchingFolder,openFolderSearch,closeFolderSearch,searchFolder}=useFolderSearch(folderPath)
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [appVersion, setAppVersion] = useState('');
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);
+  const { copyAsMarkdown, copyAsPlainText } = useCopyHandlers();
   const { viewMode, toggleRawText, toggleMindMap } = useViewMode();
+
+  const handleCopyMd = async () => {
+    if (await copyAsMarkdown(activeTab?.markdown)) {
+      showNotification('Copied Markdown to clipboard');
+    }
+  };
+
+  const handleCopyText = async () => {
+    if (await copyAsPlainText(activeTab?.html)) {
+      showNotification('Copied Plain Text to clipboard');
+    }
+  };
 
   useEffect(()=>{
     if(!api.getAppVersion) return;
@@ -112,7 +131,9 @@ export default function App() {
   onExportPdf:exportPdf,
   onExportDocx:exportDocx,
   onOpenSettings:()=>setSettingsOpen(true),
-  onSetTheme:setTheme
+  onSetTheme:setTheme,
+  onCopyMd: handleCopyMd,
+  onCopyText: handleCopyText,
 });
 
 useShortcuts({
@@ -134,7 +155,7 @@ useShortcuts({
 
   return (
     <>
-      <div className="h-screen flex flex-col bg-bg text-text-base"  onDragEnter={handleDragEnter} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
+      <div className="h-screen flex flex-col bg-bg text-text-base select-none"  onDragEnter={handleDragEnter} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
         {isDraggingFile &&(
           <DragDrop/>
         )}
@@ -169,7 +190,7 @@ useShortcuts({
                 setQuery(folderQuery);
                 closeFolderSearch();
               }).catch(() => {
-                setShowToast(true);
+                showNotification('Failed to load file');
               });
             }}
 
@@ -241,6 +262,8 @@ useShortcuts({
                 onExportHtml={exportHtml}
                 onExportPdf={exportPdf}
                 onExportDocx={exportDocx}
+                onCopyMd={handleCopyMd}
+                onCopyText={handleCopyText}
                 viewMode={viewMode}
                 onToggleRawText={toggleRawText}
                 onToggleMindMap={toggleMindMap}
@@ -248,7 +271,7 @@ useShortcuts({
             )}
             <main 
             ref={contentRef} 
-            className="flex-1 overflow-y-auto" 
+            className="flex-1 overflow-y-auto select-text" 
             onScroll={scroll}
             >
               {viewMode === MARKDOWN_TOGGLE.RAW ? (
@@ -264,7 +287,7 @@ useShortcuts({
           </ErrorBoundary>
         )}
 
-        <Toast message="File updated" show={showToast} onDone={() => setShowToast(false)} />
+        <Toast message={toastMessage} show={showToast} onDone={() => setShowToast(false)} />
         {!focusMode && (
           <StatusBar filePath={activeTab?.filePath ?? ''} theme={theme} fontSize={fontSize} />
         )}

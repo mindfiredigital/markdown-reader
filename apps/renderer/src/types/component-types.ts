@@ -181,6 +181,8 @@ export interface ReaderToolbarProps {
   onExportHtml?: (() => void) | undefined;
   onExportPdf?: (() => void) | undefined;
   onExportDocx?: (() => void) | undefined;
+  onCopyMd?: () => Promise<void> | void;
+  onCopyText?: () => Promise<void> | void;
   viewMode?: ViewMode;
   onToggleRawText?: () => void;
   onToggleMindMap?: () => void;
