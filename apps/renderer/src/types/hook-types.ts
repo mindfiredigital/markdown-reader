@@ -18,7 +18,7 @@ export interface FilePersistenceProps {
   loadFile: (path: string) => Promise<LoadFileResult>;
   dispatch: React.Dispatch<TabAction>;
   contentRef: React.RefObject<HTMLDivElement | null>;
-  setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
+  showNotification: (msg: string) => void;
 }
 
 export interface FileActionProps {

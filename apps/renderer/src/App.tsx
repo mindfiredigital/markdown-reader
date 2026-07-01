@@ -48,6 +48,11 @@ export default function App() {
   const {settings,increaseFontSize,decreaseFontSize,resetFontSize,fontSize,updateSettings}=useSettings();
   const {query,matchCount,currentMatch,isSearchOpen,openSearch,closeSearch,setQuery,goToNextMatch,goToPrevMatch,getHiglightedHtml} = useSearch(activeTab?.html ?? '');
   const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('File updated');
+  const showNotification = (msg: string) => {
+    setToastMessage(msg);
+    setShowToast(true);
+  };
   const contentRef=useRef<HTMLDivElement>(null);
   const {exportHtml,exportPdf,exportDocx}=useExport(activeTab);
   const {goToNextTab,goToPreviousTab,closeActiveTab}=useTabNavigation(state.tabs,state.activeTabId,dispatch);
@@ -55,13 +60,25 @@ export default function App() {
   const {folderTree,folderPath,openFolder,loadFileInTab,openFileDialog}=useFileActions({loadFile,dispatch});
   const {isDraggingFile,handleDragEnter,handleDragOver,handleDragLeave,handleDrop}=useDragDrop(loadFileInTab);
   useOpenFilePath(loadFileInTab);
-  const {scroll}=useFilePersistence({activeTab,loadFile,dispatch,contentRef,setShowToast});
+  const {scroll}=useFilePersistence({activeTab,loadFile,dispatch,contentRef,showNotification});
   const {isFolderSearchOpen,folderQuery,folderResults,isSearchingFolder,openFolderSearch,closeFolderSearch,searchFolder}=useFolderSearch(folderPath)
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [appVersion, setAppVersion] = useState('');
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);
   const { copyAsMarkdown, copyAsPlainText } = useCopyHandlers();
   const { viewMode, toggleRawText } = useViewMode();
+
+  const handleCopyMd = async () => {
+    if (await copyAsMarkdown(activeTab?.markdown)) {
+      showNotification('Copied Markdown to clipboard');
+    }
+  };
+
+  const handleCopyText = async () => {
+    if (await copyAsPlainText(activeTab?.html)) {
+      showNotification('Copied Plain Text to clipboard');
+    }
+  };
 
   useEffect(()=>{
     if(!api.getAppVersion) return;
@@ -111,8 +128,8 @@ export default function App() {
   onExportDocx:exportDocx,
   onOpenSettings:()=>setSettingsOpen(true),
   onSetTheme:setTheme,
-  onCopyMd: () => copyAsMarkdown(activeTab?.markdown),
-  onCopyText: () => copyAsPlainText(activeTab?.html),
+  onCopyMd: handleCopyMd,
+  onCopyText: handleCopyText,
 });
 
 useShortcuts({
@@ -169,7 +186,7 @@ useShortcuts({
                 setQuery(folderQuery);
                 closeFolderSearch();
               }).catch(() => {
-                setShowToast(true);
+                showNotification('Failed to load file');
               });
             }}
 
@@ -241,8 +258,8 @@ useShortcuts({
                 onExportHtml={exportHtml}
                 onExportPdf={exportPdf}
                 onExportDocx={exportDocx}
-                onCopyMd={() => copyAsMarkdown(activeTab?.markdown)}
-                onCopyText={() => copyAsPlainText(activeTab?.html)}
+                onCopyMd={handleCopyMd}
+                onCopyText={handleCopyText}
                 viewMode={viewMode}
                 onToggleRawText={toggleRawText}
               />
@@ -264,7 +281,7 @@ useShortcuts({
           </ErrorBoundary>
         )}
 
-        <Toast message="File updated" show={showToast} onDone={() => setShowToast(false)} />
+        <Toast message={toastMessage} show={showToast} onDone={() => setShowToast(false)} />
         {!focusMode && (
           <StatusBar filePath={activeTab?.filePath ?? ''} theme={theme} fontSize={fontSize} />
         )}
