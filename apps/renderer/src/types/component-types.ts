@@ -185,9 +185,10 @@ export interface ReaderToolbarProps {
   onCopyText?: () => Promise<void> | void;
   viewMode?: ViewMode;
   onToggleRawText?: () => void;
+  onToggleMindMap?: () => void;
 }
 
-export type ViewMode = 'rendered' | 'raw';
+export type ViewMode = 'rendered' | 'raw' | 'mindmap';
 
 export interface RawTextViewerProps {
   markdown?: string | undefined;
@@ -208,4 +209,8 @@ export type ErrorBoundaryState = {
 
 export interface ReaderStatsProps {
   markdown: string | undefined;
+}
+
+export interface MarkmapViewerProps {
+  markdown?: string | undefined;
 }

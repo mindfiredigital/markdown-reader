@@ -36,6 +36,10 @@ import { ReaderStats } from './components/ReaderStats';
 import { useCopyHandlers } from './hooks/useCopyHandlers';
 import { useViewMode } from './hooks/useViewMode';
 import { RawTextViewer } from './components/RawTextViewer';
+import { MarkmapViewer } from './components/MarkmapViewer';
+import { MARKDOWN_TOGGLE } from './utils/constants/markdown-constants';
+
+const arrow = () => {};
 
 export default function App() {
   const api = usePlatformAPI();
@@ -66,7 +70,7 @@ export default function App() {
   const [appVersion, setAppVersion] = useState('');
   const [updateVersion, setUpdateVersion] = useState<string | null>(null);
   const { copyAsMarkdown, copyAsPlainText } = useCopyHandlers();
-  const { viewMode, toggleRawText } = useViewMode();
+  const { viewMode, toggleRawText, toggleMindMap } = useViewMode();
 
   const handleCopyMd = async () => {
     if (await copyAsMarkdown(activeTab?.markdown)) {
@@ -111,7 +115,7 @@ export default function App() {
   useMenuEvents({
   onOpenFile: openFileDialog,
   onOpenFolder: openFolder,
-  onSearchDocument: openSearch,
+  onSearchDocument: viewMode === MARKDOWN_TOGGLE.MINDMAP ? arrow : openSearch,
   onSearchFolder: openFolderSearch,
   onToggleToc: toggleSidebar,
   onToggleBrowser: toggleFileBrowser,
@@ -137,7 +141,7 @@ useShortcuts({
   onOpenFolder: openFolder,
   onToggleFocusMode: toggleFocusMode,
   onToggleTheme: toggleTheme,
-  onOpenSearch: openSearch,
+  onOpenSearch: viewMode === MARKDOWN_TOGGLE.MINDMAP ? arrow : openSearch,
   onOpenFolderSearch: openFolderSearch,
   onCloseSearch: closeSearch,
   onZoomIn: increaseFontSize,
@@ -156,7 +160,7 @@ useShortcuts({
           <DragDrop/>
         )}
         {isLoading && <Loading />}
-        {isSearchOpen && (
+        {isSearchOpen && viewMode!==MARKDOWN_TOGGLE.MINDMAP && (
           <SearchBar
             query={query}
             matchCount={matchCount}
@@ -252,7 +256,7 @@ useShortcuts({
                 isExtension={api.kind === 'chrome'}
                 onOpenFile={openFileDialog}
                 onOpenSettings={() => setSettingsOpen(true)}
-                onOpenSearch={openSearch}
+                onOpenSearch={viewMode === MARKDOWN_TOGGLE.MINDMAP ? arrow : openSearch}
                 updateVersion={updateVersion}
                 onDownloadUpdate={() => api.downloadUpdate?.()}
                 onExportHtml={exportHtml}
@@ -262,6 +266,7 @@ useShortcuts({
                 onCopyText={handleCopyText}
                 viewMode={viewMode}
                 onToggleRawText={toggleRawText}
+                onToggleMindMap={toggleMindMap}
               />
             )}
             <main 
@@ -269,9 +274,10 @@ useShortcuts({
             className="flex-1 overflow-y-auto select-text" 
             onScroll={scroll}
             >
-
-              {viewMode === 'raw' ? (
+              {viewMode === MARKDOWN_TOGGLE.RAW ? (
                 <RawTextViewer markdown={activeTab.markdown} />
+              ) : viewMode === MARKDOWN_TOGGLE.MINDMAP ? (
+                <MarkmapViewer markdown={activeTab.markdown} />
               ) : (
                 <Reader html={activeTab.html} getHiglightedHtml={getHiglightedHtml} />
               )}
