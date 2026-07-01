@@ -131,6 +131,7 @@ export function ReaderToolbar({
               {exportOpen && (
                 <div
                   id="export-menu"
+                  role="menu"
                   aria-label="Export options"
                   onKeyDown={(e) => {
                     if (e.key === 'Escape') setExportOpen(false);
@@ -139,6 +140,7 @@ export function ReaderToolbar({
                 >
                   {onExportHtml && (
                     <button
+                      role="menuitem"
                       type="button"
                       onClick={() => {
                         setExportOpen(false);
@@ -151,6 +153,7 @@ export function ReaderToolbar({
                   )}
                   {onExportPdf && (
                     <button
+                      role="menuitem"
                       type="button"
                       onClick={() => {
                         setExportOpen(false);
@@ -163,6 +166,7 @@ export function ReaderToolbar({
                   )}
                   {onExportDocx && (
                     <button
+                      role="menuitem"
                       type="button"
                       onClick={() => {
                         setExportOpen(false);
@@ -195,6 +199,7 @@ export function ReaderToolbar({
               {copyOpen && (
                 <div
                   id="copy-menu"
+                  role="menu"
                   aria-label="Copy options"
                   onKeyDown={(e) => {
                     if (e.key === 'Escape') setCopyOpen(false);
@@ -203,6 +208,7 @@ export function ReaderToolbar({
                 >
                   {onCopyMd && (
                     <button
+                      role="menuitem"
                       type="button"
                       onClick={() => {
                         setCopyOpen(false);
@@ -215,6 +221,7 @@ export function ReaderToolbar({
                   )}
                   {onCopyText && (
                     <button
+                      role="menuitem"
                       type="button"
                       onClick={() => {
                         setCopyOpen(false);
