@@ -46,8 +46,8 @@ export interface UseMenuEventsProps {
   onExportDocx: (() => void) | undefined;
   onOpenSettings: () => void;
   onSetTheme: (theme: Theme) => void;
-  onCopyMd?: () => void;
-  onCopyText?: () => void;
+  onCopyMd?: () => Promise<void> | void;
+  onCopyText?: () => Promise<void> | void;
 }
 
 export interface UseShortcutsProps {
