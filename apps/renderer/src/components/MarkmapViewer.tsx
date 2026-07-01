@@ -1,23 +1,38 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { Markmap } from 'markmap-view';
 import { MarkmapViewerProps } from "../types/component-types";
 
 // It converts the markdown content to a map using markmap library dynamically
 export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const markmapRef = useRef<any>(null);
+  const markmapRef = useRef<Markmap | null>(null);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    const svgElement = svgRef.current;
-    if (!svgElement) return;
+    return () => {
+      if (markmapRef.current) {
+        markmapRef.current.destroy();
+        markmapRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    setHasError(false);
 
     if (!markdown) {
       if (markmapRef.current) {
         markmapRef.current.destroy();
         markmapRef.current = null;
       }
-      svgElement.innerHTML = '';
+      if (svgRef.current) {
+        svgRef.current.innerHTML = '';
+      }
       return;
     }
+
+    const svgElement = svgRef.current;
+    if (!svgElement) return;
 
     let isMounted = true;
 
@@ -43,6 +58,9 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
         markmapRef.current.fit();
       } catch (e) {
         console.error('Failed to render markmap', e);
+        if (isMounted) {
+          setHasError(true);
+        }
       }
     };
 
@@ -52,6 +70,14 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
       isMounted = false;
     };
   }, [markdown]);
+
+  if (hasError) {
+    return (
+      <div className="w-full h-full min-h-[70vh] flex flex-col items-center justify-center bg-surface p-4 text-text-muted">
+        <p className="text-error">Failed to load mindmap view</p>
+      </div>
+    );
+  }
 
   if (!markdown) {
     return (
@@ -63,24 +89,9 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
 
   return (
     <div className="w-full h-full min-h-[70vh] flex flex-col items-center justify-center bg-surface p-4 text-text-base markmap-wrapper">
-      <style>{`
-        .markmap-wrapper svg text {
-          fill: var(--color-text) !important;
-        }
-        .markmap-wrapper svg foreignObject,
-        .markmap-wrapper svg foreignObject * {
-          color: var(--color-text) !important;
-        }
-        .markmap-wrapper svg foreignObject pre,
-        .markmap-wrapper svg foreignObject code {
-          background-color: var(--color-surface) !important;
-          color: var(--color-text) !important;
-          text-shadow: none !important;
-        }
-      `}</style>
       <svg 
         ref={svgRef} 
-        className="w-full h-full flex-1" 
+        className="w-full h-full flex-1 markmap-svg" 
         style={{ minHeight: '600px' }} 
       />
     </div>
