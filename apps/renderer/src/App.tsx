@@ -38,6 +38,8 @@ import { RawTextViewer } from './components/RawTextViewer';
 import { MarkmapViewer } from './components/MarkmapViewer';
 import { MARKDOWN_TOGGLE } from './utils/constants/markdown-constants';
 
+const arrow = () => {};
+
 export default function App() {
   const api = usePlatformAPI();
   const {  error, isLoading, openFile, toc,recentFiles,loadFile } =useFile();
@@ -94,7 +96,7 @@ export default function App() {
   useMenuEvents({
   onOpenFile: openFileDialog,
   onOpenFolder: openFolder,
-  onSearchDocument: viewMode === MARKDOWN_TOGGLE.MINDMAP ? () => {} : openSearch,
+  onSearchDocument: viewMode === MARKDOWN_TOGGLE.MINDMAP ? arrow : openSearch,
   onSearchFolder: openFolderSearch,
   onToggleToc: toggleSidebar,
   onToggleBrowser: toggleFileBrowser,
@@ -118,7 +120,7 @@ useShortcuts({
   onOpenFolder: openFolder,
   onToggleFocusMode: toggleFocusMode,
   onToggleTheme: toggleTheme,
-  onOpenSearch: viewMode === MARKDOWN_TOGGLE.MINDMAP ? () => {} : openSearch,
+  onOpenSearch: viewMode === MARKDOWN_TOGGLE.MINDMAP ? arrow : openSearch,
   onOpenFolderSearch: openFolderSearch,
   onCloseSearch: closeSearch,
   onZoomIn: increaseFontSize,
@@ -233,7 +235,7 @@ useShortcuts({
                 isExtension={api.kind === 'chrome'}
                 onOpenFile={openFileDialog}
                 onOpenSettings={() => setSettingsOpen(true)}
-                onOpenSearch={viewMode===MARKDOWN_TOGGLE.MINDMAP?()=>{}:openSearch}
+                onOpenSearch={viewMode === MARKDOWN_TOGGLE.MINDMAP ? arrow : openSearch}
                 updateVersion={updateVersion}
                 onDownloadUpdate={() => api.downloadUpdate?.()}
                 onExportHtml={exportHtml}
