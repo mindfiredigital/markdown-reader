@@ -21,7 +21,7 @@ describe('use view mode hook test', () => {
     expect(result.current.viewMode).toBe('rendered');
   });
 
-  it('should toggle between mindmap and redered content', () => {
+  it('should toggle between mindmap and rendered content', () => {
     const { result } = renderHook(() => useViewMode());
     act(() => {
       result.current.toggleMindMap();
