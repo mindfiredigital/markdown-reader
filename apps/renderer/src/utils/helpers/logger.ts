@@ -1,23 +1,28 @@
+import { normalizeArgs } from './normalize-args';
+
 export const logger = {
   info: (message: string, ...args: unknown[]) => {
+    const normalized = normalizeArgs(args);
     if (window.api && window.api.log) {
-      window.api.log.info(message, ...args);
+      window.api.log.info(message, ...normalized);
     } else {
-      console.info(message, ...args);
+      console.info(message, ...normalized);
     }
   },
   error: (message: string, ...args: unknown[]) => {
+    const normalized = normalizeArgs(args);
     if (window.api && window.api.log) {
-      window.api.log.error(message, ...args);
+      window.api.log.error(message, ...normalized);
     } else {
-      console.error(message, ...args);
+      console.error(message, ...normalized);
     }
   },
   warn: (message: string, ...args: unknown[]) => {
+    const normalized = normalizeArgs(args);
     if (window.api && window.api.log) {
-      window.api.log.warn(message, ...args);
+      window.api.log.warn(message, ...normalized);
     } else {
-      console.warn(message, ...args);
+      console.warn(message, ...normalized);
     }
   },
 };
