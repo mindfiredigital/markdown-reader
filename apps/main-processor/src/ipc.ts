@@ -38,7 +38,10 @@ export function registerIPCHandlers(): void {
       if (!validLevels.includes(level)) return;
 
       const safeMessage = String(message).slice(0, 5000);
-      const safeArgs = args.slice(0, 5);
+      const safeArgs = args.slice(0, 5).map((a) => {
+        const s = typeof a === 'string' ? a : JSON.stringify(a);
+        return s && s.length > 2000 ? s.slice(0, 2000) : a;
+      });
 
       if (level === 'info') log.info(safeMessage, ...safeArgs);
       else if (level === 'error') log.error(safeMessage, ...safeArgs);
