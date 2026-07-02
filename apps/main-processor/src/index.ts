@@ -9,11 +9,9 @@ import { setupAutoUpdater } from './updater';
 import { resolveMarkdownFilePath } from './utils/helper/ipc-path-resolver';
 import log from 'electron-log/main';
 
-log.initialize();
+log.initialize({ preload: false });
 Object.assign(console, log.functions);
-process.on('uncaughtException', (err) => {
-  log.error('Uncaught Exception:', err);
-});
+log.errorHandler.startCatching();
 
 let mainWindow: BrowserWindow | null = null;
 let pendingFilePath: string | null = null;
