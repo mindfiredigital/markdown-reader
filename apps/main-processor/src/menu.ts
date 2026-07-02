@@ -43,6 +43,19 @@ export function buildMenuTemplate(currentTheme: string): MenuItemConstructorOpti
       ],
     },
     {
+      label: MENU_LABELS.COPY,
+      submenu: [
+        {
+          label: MENU_LABELS.COPY_AS_MD,
+          click: send(MENU_EVENTS.COPY_AS_MD),
+        },
+        {
+          label: MENU_LABELS.COPY_AS_TEXT,
+          click: send(MENU_EVENTS.COPY_AS_TEXT),
+        },
+      ],
+    },
+    {
       label: MENU_LABELS.VIEW,
       submenu: [
         {
