@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { logger } from '../utils/helpers/logger';
 import { FONT_SIZE, WIDTH_MAP } from '../types/component-types';
 import { AppSettings, DEFAULT_SETTINGS } from '@package/shared-types';
 import { usePlatformAPI } from '../hooks/usePlatform';
@@ -18,7 +19,10 @@ export function useSettings() {
         setSettings(savedSettings);
       })
       .catch((error) => {
-        console.error('Failed to load settings using defaults', error);
+        logger.error(
+          'Failed to load settings using defaults:',
+          error instanceof Error ? error.message : String(error)
+        );
       });
   }, [api]);
 
@@ -55,7 +59,10 @@ export function useSettings() {
         const next = await api.saveSettings(partial);
         setSettings(next);
       } catch (error) {
-        console.error('Failed to save settings:', error);
+        logger.error(
+          'Failed to save settings:',
+          error instanceof Error ? error.message : String(error)
+        );
         throw error;
       }
     },

@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 export const copyToClipboard = async (content: string, mimeType: string): Promise<boolean> => {
   try {
     if (!navigator?.clipboard) {
@@ -17,7 +19,7 @@ export const copyToClipboard = async (content: string, mimeType: string): Promis
       throw new Error('Clipboard API write methods not available');
     }
   } catch (err) {
-    console.error('Failed to copy text: ', err);
+    logger.error('Failed to copy text: ', err instanceof Error ? err.message : String(err));
     return false;
   }
 };

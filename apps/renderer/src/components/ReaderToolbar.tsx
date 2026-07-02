@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { logger } from '../utils/helpers/logger';
 import { Icons } from '../utils/constants/icon-contants';
 import { ReaderToolbarProps } from '../types/component-types';
 import { ICON_TITLE, MARKDOWN_TOGGLE } from '../utils/constants/markdown-constants';
@@ -146,7 +147,7 @@ export function ReaderToolbar({
                       type="button"
                       onClick={() => {
                         setExportOpen(false);
-                        void Promise.resolve(onExportHtml()).catch((e) => console.error('Export HTML failed:', e));
+                        void Promise.resolve(onExportHtml()).catch((e) => logger.error('Export HTML failed:', e instanceof Error ? e.message : String(e)));
                       }}
                       className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
                     >
@@ -159,7 +160,7 @@ export function ReaderToolbar({
                       type="button"
                       onClick={() => {
                         setExportOpen(false);
-                        void Promise.resolve(onExportPdf()).catch((e) => console.error('Export PDF failed:', e));
+                        void Promise.resolve(onExportPdf()).catch((e) => logger.error('Export PDF failed:', e instanceof Error ? e.message : String(e)));
                       }}
                       className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
                     >
@@ -172,7 +173,7 @@ export function ReaderToolbar({
                       type="button"
                       onClick={() => {
                         setExportOpen(false);
-                        void Promise.resolve(onExportDocx()).catch((e) => console.error('Export DOCX failed:', e));
+                        void Promise.resolve(onExportDocx()).catch((e) => logger.error('Export DOCX failed:', e instanceof Error ? e.message : String(e)));
                       }}
                       className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
                     >
@@ -214,7 +215,7 @@ export function ReaderToolbar({
                       type="button"
                       onClick={() => {
                         setCopyOpen(false);
-                        void Promise.resolve(onCopyMd()).catch((e) => console.error('Copy MD failed:', e));
+                        void Promise.resolve(onCopyMd()).catch((e) => logger.error('Copy MD failed:', e instanceof Error ? e.message : String(e)));
                       }}
                       className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
                     >
@@ -227,7 +228,7 @@ export function ReaderToolbar({
                       type="button"
                       onClick={() => {
                         setCopyOpen(false);
-                        void Promise.resolve(onCopyText()).catch((e) => console.error('Copy Text failed:', e));
+                        void Promise.resolve(onCopyText()).catch((e) => logger.error('Copy Text failed:', e instanceof Error ? e.message : String(e)));
                       }}
                       className="w-full text-left px-3 py-1.5 text-sm text-text-base hover:bg-accent-bg hover:text-accent transition-colors"
                     >
