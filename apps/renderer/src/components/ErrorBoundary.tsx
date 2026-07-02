@@ -11,7 +11,7 @@ export class ErrorBoundary extends React.Component<React.PropsWithChildren, Erro
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    logger.error('Renderer error boundary caught an error:', error instanceof Error ? error.message : String(error), errorInfo);
+    logger.error('Renderer error boundary caught an error:', error, errorInfo);
   }
 
   render(): React.ReactNode {
