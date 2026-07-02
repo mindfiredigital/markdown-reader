@@ -1,4 +1,7 @@
 
+## 1.0.6
+- fix mindmap generation codeblock colour issue
+
 ## 1.0.5
 - fix welcome screen icon
 
