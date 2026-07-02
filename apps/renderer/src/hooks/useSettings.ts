@@ -59,10 +59,7 @@ export function useSettings() {
         const next = await api.saveSettings(partial);
         setSettings(next);
       } catch (error) {
-        logger.error(
-          'Failed to save settings:',
-          error instanceof Error ? error.message : String(error)
-        );
+        logger.error('Failed to save settings:', error);
         throw error;
       }
     },

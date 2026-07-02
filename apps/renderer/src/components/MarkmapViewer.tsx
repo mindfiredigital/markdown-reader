@@ -68,7 +68,7 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
         markmapRef.current.setData(root);
         markmapRef.current.fit();
       } catch (e) {
-        logger.error('Failed to render markmap:', e instanceof Error ? e.message : String(e));
+        logger.error('Failed to render markmap:', e);
         if (isMounted) {
           setHasError(true);
         }

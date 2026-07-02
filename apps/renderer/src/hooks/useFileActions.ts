@@ -18,10 +18,7 @@ export function useFileActions({ loadFile, dispatch }: FileActionProps) {
       setFolderTree(tree);
       setFolderPath(folderPath);
     } catch (error) {
-      logger.error(
-        'Failed to open folder:',
-        error instanceof Error ? error.message : String(error)
-      );
+      logger.error('Failed to open folder:', error);
     }
   }, [api]);
 
@@ -49,18 +46,12 @@ export function useFileActions({ loadFile, dispatch }: FileActionProps) {
       .then((chosenPath) => {
         if (chosenPath) {
           void loadFileInTab(chosenPath).catch((err) =>
-            logger.error(
-              'Failed to load file in tab:',
-              err instanceof Error ? err.message : String(err)
-            )
+            logger.error('Failed to load file in tab:', err)
           );
         }
       })
       .catch((error) => {
-        logger.error(
-          'Failed to open file dialog:',
-          error instanceof Error ? error.message : String(error)
-        );
+        logger.error('Failed to open file dialog:', error);
       });
   }, [loadFileInTab, api]);
 

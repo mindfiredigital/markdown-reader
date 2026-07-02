@@ -22,10 +22,7 @@ export function useFile() {
       .getRecentFiles()
       .then(setRecentFiles)
       .catch((error) => {
-        logger.error(
-          'Failed to get recent files:',
-          error instanceof Error ? error.message : String(error)
-        );
+        logger.error('Failed to get recent files:', error);
       });
   }, [api]);
 
@@ -52,7 +49,8 @@ export function useFile() {
         };
       } catch (error: unknown) {
         const raw = error instanceof Error ? error.message : String(error);
-        logger.error(`Failed to load file ${path}:`, raw);
+        const redactedPath = path.split(/[\\/]/).pop() || path;
+        logger.error(`Failed to load file ${redactedPath}:`, error);
         setError(ErrorMessage(raw, path));
       } finally {
         setIsLoading(false);

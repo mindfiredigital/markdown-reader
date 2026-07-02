@@ -20,7 +20,7 @@ export function useExport(activeTab: ActiveTab) {
         await api.exportHTML(activeTab.html, css, '');
       }
     } catch (err) {
-      logger.error('Failed to export HTML:', err instanceof Error ? err.message : String(err));
+      logger.error('Failed to export HTML:', err);
     }
   }, [activeTab, api]);
 
@@ -37,7 +37,7 @@ export function useExport(activeTab: ActiveTab) {
         await api.exportPDF(activeTab.html, css, '');
       }
     } catch (err) {
-      logger.error('Failed to export PDF:', err instanceof Error ? err.message : String(err));
+      logger.error('Failed to export PDF:', err);
     }
   }, [activeTab, api]);
 
@@ -54,7 +54,7 @@ export function useExport(activeTab: ActiveTab) {
         await api.exportDOCX(activeTab.html, css, '');
       }
     } catch (err) {
-      logger.error('Failed to export DOCX:', err instanceof Error ? err.message : String(err));
+      logger.error('Failed to export DOCX:', err);
     }
   }, [activeTab, api]);
 
