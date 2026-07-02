@@ -23,4 +23,5 @@ export const IPC_CONSTANTS = {
   UPDATE_AVAILABLE: 'update-available',
   DOWNLOAD_UPDATE: 'download-update',
   UPDATE_DOWNLOADED: 'update-downloaded',
+  LOG_MESSAGE: 'log-message',
 } as const;

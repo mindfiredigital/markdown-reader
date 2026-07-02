@@ -24,9 +24,31 @@ import { searchFolder } from './folder-search';
 import { AppSettings } from '@package/shared-types';
 import { getSettings } from './settings/get-settings';
 import { saveSettings } from './settings/save-settings';
+import log from 'electron-log/main';
 
 //registers all IPC handlers for main process
 export function registerIPCHandlers(): void {
+  // log messages from renderer
+  ipcMain.on(
+    IPC_CONSTANTS.LOG_MESSAGE,
+    (event, level: string, message: string, ...args: unknown[]) => {
+      if (!validateSender(event)) return;
+
+      const validLevels = ['info', 'error', 'warn'];
+      if (!validLevels.includes(level)) return;
+
+      const safeMessage = String(message).slice(0, 5000);
+      const safeArgs = args.slice(0, 5).map((a) => {
+        const s = typeof a === 'string' ? a : JSON.stringify(a);
+        return s && s.length > 2000 ? s.slice(0, 2000) : a;
+      });
+
+      if (level === 'info') log.info(safeMessage, ...safeArgs);
+      else if (level === 'error') log.error(safeMessage, ...safeArgs);
+      else if (level === 'warn') log.warn(safeMessage, ...safeArgs);
+    }
+  );
+
   //returns text content of the file
   ipcMain.handle(IPC_CONSTANTS.READ_FILE, async (event, filePath: string) => {
     if (!validateSender(event)) {

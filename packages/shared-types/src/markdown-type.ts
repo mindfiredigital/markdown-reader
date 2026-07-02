@@ -31,4 +31,9 @@ export type MarkdownReaderAPI = {
   getPathForFile(file: File): string;
   onUpdateAvailable: (callback: (version: string) => void) => () => void;
   downloadUpdate: () => void;
+  log: {
+    info(message: string, ...args: unknown[]): void;
+    error(message: string, ...args: unknown[]): void;
+    warn(message: string, ...args: unknown[]): void;
+  };
 };

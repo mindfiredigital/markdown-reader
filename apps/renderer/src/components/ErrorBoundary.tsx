@@ -1,4 +1,5 @@
 import React from 'react';
+import { logger } from '../utils/helpers/logger';
 import { ErrorBoundaryState } from '../types/component-types';
 
 
@@ -9,8 +10,8 @@ export class ErrorBoundary extends React.Component<React.PropsWithChildren, Erro
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: unknown): void {
-    console.error('Renderer error boundary caught an error:', error);
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    logger.error('Renderer error boundary caught an error:', error, errorInfo);
   }
 
   render(): React.ReactNode {

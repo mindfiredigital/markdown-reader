@@ -66,6 +66,7 @@
     ]
   },
   "dependencies": {
+    "electron-log": "^5.4.4",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },

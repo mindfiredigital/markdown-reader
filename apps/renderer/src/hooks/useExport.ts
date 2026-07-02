@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { logger } from '../utils/helpers/logger';
 import { ActiveTab } from '../types/component-types';
 import exportCss from '../styles/export.css?raw';
 import { usePlatformAPI } from '../hooks/usePlatform';
@@ -19,7 +20,7 @@ export function useExport(activeTab: ActiveTab) {
         await api.exportHTML(activeTab.html, css, '');
       }
     } catch (err) {
-      console.error('Failed to export HTML', err);
+      logger.error('Failed to export HTML:', err);
     }
   }, [activeTab, api]);
 
@@ -36,7 +37,7 @@ export function useExport(activeTab: ActiveTab) {
         await api.exportPDF(activeTab.html, css, '');
       }
     } catch (err) {
-      console.error('Failed to export PDF', err);
+      logger.error('Failed to export PDF:', err);
     }
   }, [activeTab, api]);
 
@@ -53,7 +54,7 @@ export function useExport(activeTab: ActiveTab) {
         await api.exportDOCX(activeTab.html, css, '');
       }
     } catch (err) {
-      console.error('Failed to export DOCX', err);
+      logger.error('Failed to export DOCX:', err);
     }
   }, [activeTab, api]);
 
