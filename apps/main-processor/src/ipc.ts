@@ -31,10 +31,18 @@ export function registerIPCHandlers(): void {
   // log messages from renderer
   ipcMain.on(
     IPC_CONSTANTS.LOG_MESSAGE,
-    (_event, level: string, message: string, ...args: unknown[]) => {
-      if (level === 'info') log.info(message, ...args);
-      else if (level === 'error') log.error(message, ...args);
-      else if (level === 'warn') log.warn(message, ...args);
+    (event, level: string, message: string, ...args: unknown[]) => {
+      if (!validateSender(event)) return;
+
+      const validLevels = ['info', 'error', 'warn'];
+      if (!validLevels.includes(level)) return;
+
+      const safeMessage = String(message).slice(0, 5000);
+      const safeArgs = args.slice(0, 5);
+
+      if (level === 'info') log.info(safeMessage, ...safeArgs);
+      else if (level === 'error') log.error(safeMessage, ...safeArgs);
+      else if (level === 'warn') log.warn(safeMessage, ...safeArgs);
     }
   );
 
