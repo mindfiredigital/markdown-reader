@@ -1,6 +1,6 @@
 {
   "name": "markdown-reader",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A markdown reader built with Electron",
   "main": "out/main/index.js",
   "scripts": {
