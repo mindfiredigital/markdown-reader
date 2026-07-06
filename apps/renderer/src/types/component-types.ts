@@ -39,6 +39,7 @@ export interface ThemeContextType {
 export interface HeadingProps {
   text: string;
   depth: number;
+  rawText?: string;
 }
 export interface TOCType {
   id: string;

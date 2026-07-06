@@ -4,6 +4,9 @@ import { shikiHighlighter } from '../renderer/shiki';
 import { escapeHtml, heading } from '../utils/helpers/heading-helper';
 import { MARKDOWN_LANGUAGES } from '../utils/constants/markdown-constants';
 import { DEFAULT_THEME } from '../utils/constants/theme-constants';
+import markedFootnote from 'marked-footnote';
+import { superscriptExtension } from '../utils/helpers/superscript-extension';
+import { emojiExtension } from '../utils/helpers/emoji-extension';
 
 let instance: Marked | null = null;
 let currentRegistry: Map<string, number>;
@@ -18,11 +21,15 @@ export function getMarkdown(registry: Map<string, number>): Marked {
     gfm: true,
     breaks: false,
     renderer: {
-      heading(props) {
-        return heading(props, currentRegistry);
+      heading(this: any, token: any) {
+        const parsedText = this.parser.parseInline(token.tokens);
+        return heading({ text: parsedText, depth: token.depth, rawText: token.text }, currentRegistry);
       },
     },
   });
+
+  instance.use(markedFootnote());
+  instance.use({ extensions: [superscriptExtension, emojiExtension] });
 
   //configure marked to use Shikhi for code blocks
   instance.use(
