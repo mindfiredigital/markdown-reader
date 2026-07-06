@@ -9,3 +9,18 @@ export const CALLOUT_MAP: Record<string, { icon: string; label: string }> = {
   CAUTION: { icon: '🛑', label: 'Caution' },
   INFO: { icon: 'ℹ️', label: 'Info' },
 };
+
+export const EMOJI_MAP: Record<string, string> = {
+  smile: '😄',
+  rocket: '🚀',
+  tada: '🎉',
+  'star-struck': '🤩',
+  heart: '❤️',
+  fire: '🔥',
+  thumbsup: '👍',
+  thumbsdown: '👎',
+  check: '✅',
+  cross: '❌',
+  warning: '⚠️',
+  info: 'ℹ️',
+};
