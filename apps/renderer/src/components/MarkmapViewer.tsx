@@ -3,6 +3,7 @@ import type { Markmap } from 'markmap-view';
 import { MarkmapViewerProps } from "../types/component-types";
 import { Icons } from "../utils/constants/icon-contants";
 import { browserDownload } from "../utils/helpers/extension-export-helper";
+import { logger } from "../utils/helpers/logger";
 
 // It converts the markdown content to a map using markmap library dynamically
 export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
@@ -67,7 +68,7 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
         markmapRef.current.setData(root);
         markmapRef.current.fit();
       } catch (e) {
-        console.error('Failed to render markmap', e);
+        logger.error('Failed to render markmap:', e);
         if (isMounted) {
           setHasError(true);
         }

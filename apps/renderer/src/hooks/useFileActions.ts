@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { logger } from '../utils/helpers/logger';
 import { FileType } from '@package/shared-types';
 import { FileActionProps } from '../types/hook-types';
 import { usePlatformAPI } from '../hooks/usePlatform';
@@ -17,7 +18,7 @@ export function useFileActions({ loadFile, dispatch }: FileActionProps) {
       setFolderTree(tree);
       setFolderPath(folderPath);
     } catch (error) {
-      console.error('Failed to open folder:', error);
+      logger.error('Failed to open folder:', error);
     }
   }, [api]);
 
@@ -45,12 +46,12 @@ export function useFileActions({ loadFile, dispatch }: FileActionProps) {
       .then((chosenPath) => {
         if (chosenPath) {
           void loadFileInTab(chosenPath).catch((err) =>
-            console.error('Failed to load file in tab:', err)
+            logger.error('Failed to load file in tab:', err)
           );
         }
       })
       .catch((error) => {
-        console.error('Failed to open file dialog:', error);
+        logger.error('Failed to open file dialog:', error);
       });
   }, [loadFileInTab, api]);
 

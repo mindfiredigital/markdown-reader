@@ -7,6 +7,11 @@ import { registerMenu } from './register-menu';
 import { parseFilePathFromArgv } from './cli';
 import { setupAutoUpdater } from './updater';
 import { resolveMarkdownFilePath } from './utils/helper/ipc-path-resolver';
+import log from 'electron-log/main';
+
+log.initialize({ preload: false });
+Object.assign(console, log.functions);
+log.errorHandler.startCatching();
 
 let mainWindow: BrowserWindow | null = null;
 let pendingFilePath: string | null = null;
