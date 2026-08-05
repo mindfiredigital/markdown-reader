@@ -39,8 +39,12 @@ export function registerIPCHandlers(): void {
 
       const safeMessage = String(message).slice(0, 5000);
       const safeArgs = args.slice(0, 5).map((a) => {
-        const s = typeof a === 'string' ? a : JSON.stringify(a);
-        return s && s.length > 2000 ? s.slice(0, 2000) : a;
+        try {
+          const s = typeof a === 'string' ? a : JSON.stringify(a);
+          return s && s.length > 2000 ? s.slice(0, 2000) : a;
+        } catch (error) {
+          return '[Unserializable argument]';
+        }
       });
 
       if (level === 'info') log.info(safeMessage, ...safeArgs);
