@@ -214,3 +214,8 @@ export interface ReaderStatsProps {
 export interface MarkmapViewerProps {
   markdown?: string | undefined;
 }
+
+export interface IMarkmapNode {
+  content?: string;
+  children?: IMarkmapNode[];
+}

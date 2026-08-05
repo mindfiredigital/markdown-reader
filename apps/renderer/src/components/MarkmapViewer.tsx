@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState,useCallback } from "react";
 import type { Markmap } from 'markmap-view';
-import { MarkmapViewerProps } from "../types/component-types";
+import { MarkmapViewerProps, IMarkmapNode } from "../types/component-types";
 import { Icons } from "../utils/constants/icon-contants";
 import { browserDownload } from "../utils/helpers/extension-export-helper";
 import { logger } from "../utils/helpers/logger";
@@ -49,7 +49,7 @@ export function MarkmapViewer({ markdown }: MarkmapViewerProps) {
 
         const transformer = new Transformer();
         const { root } = transformer.transform(markdown);
-        const walkAndSanitize = (node: any) => {
+        const walkAndSanitize = (node: IMarkmapNode) => {
           if (node.content) {
             node.content = DOMPurify.sanitize(node.content);
           }
