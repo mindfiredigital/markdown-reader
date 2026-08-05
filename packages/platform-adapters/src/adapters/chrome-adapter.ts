@@ -327,39 +327,7 @@ export class ChromeAdapter implements PlatformAdapter {
   }
 
   async exportDOCX(html: string, css: string, outputPath: string): Promise<void> {
-    const fullHtml = buildFullHtml(html, css);
-    const HTMLtoDOCX = (await import('html-to-docx')).default;
-    const result = await HTMLtoDOCX(fullHtml, null, {
-      table: { row: { cantSplit: true } },
-      footer: true,
-      pageNumber: true,
-    });
-
-    let blob: Blob;
-    if (typeof Blob !== 'undefined' && result instanceof Blob) {
-      blob = result;
-    } else if (result instanceof ArrayBuffer) {
-      blob = new Blob([result], {
-        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      });
-    } else {
-      blob = new Blob([result as any], {
-        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      });
-    }
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    const targetName = outputPath ? outputPath.split(/[\\/]/).pop() || outputPath : 'document';
-    const cleanFilename = targetName.includes('/')
-      ? targetName.split('/').pop() || 'document'
-      : targetName;
-    a.download = cleanFilename.endsWith('.docx') ? cleanFilename : `${cleanFilename}.docx`;
-
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 100);
+    throw new Error('DOCX export is not supported in the Chrome Extension environment.');
   }
 
   exportPDF(html: string, css: string, outputPath: string): Promise<void> {

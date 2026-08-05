@@ -52,7 +52,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: false,
     rollupOptions: {
-      external: ['html-to-docx'],
+      external: [],
       input: {
         popup: resolve(chromeExtensionRoot, 'popup.html'),
         viewer: resolve(chromeExtensionRoot, 'viewer.html'),
