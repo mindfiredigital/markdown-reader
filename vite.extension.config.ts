@@ -3,7 +3,6 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 const workspaceRoot = __dirname;
 
@@ -31,10 +30,6 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
     react({}),
-    nodePolyfills({
-      include: ['buffer', 'stream', 'util', 'fs', 'path'],
-      globals: { Buffer: true, process: true },
-    }),
     {
       name: 'copy-chrome-extension-assets',
       closeBundle() {
@@ -57,6 +52,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: false,
     rollupOptions: {
+      external: ['html-to-docx'],
       input: {
         popup: resolve(chromeExtensionRoot, 'popup.html'),
         viewer: resolve(chromeExtensionRoot, 'viewer.html'),
