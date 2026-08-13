@@ -24,6 +24,8 @@ Markdown Reader is designed as a dedicated desktop reader for Markdown files.
 - Font size controls.
 - Reading width presets.
 - Focus mode for distraction-free reading.
+- Source code toggle to view raw Markdown.
+- Automatic mind map generation from Markdown content.
 
 ## Markdown rendering
 
@@ -40,8 +42,9 @@ Markdown Reader is designed as a dedicated desktop reader for Markdown files.
 - Tabs for opening multiple Markdown files.
 - Keyboard shortcuts for common reading actions.
 
-## Export
+## Export and Copy
 
+- Copy options to copy content as raw Markdown or plain text.
 - Export rendered Markdown to self-contained HTML.
 - Export rendered Markdown to PDF.
 - Export rendered Markdown to DOCX.

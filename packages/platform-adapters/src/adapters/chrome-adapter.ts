@@ -322,8 +322,12 @@ export class ChromeAdapter implements PlatformAdapter {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 100);
     return Promise.resolve();
+  }
+
+  async exportDOCX(html: string, css: string, outputPath: string): Promise<void> {
+    throw new Error('DOCX export is not supported in the Chrome Extension environment.');
   }
 
   exportPDF(html: string, css: string, outputPath: string): Promise<void> {

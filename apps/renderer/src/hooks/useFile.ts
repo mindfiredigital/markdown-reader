@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { logger } from '../utils/helpers/logger';
 import DOMpurify from 'dompurify';
 import { renderMarkdown } from '../renderer/markdown';
 import { extractTOC } from '../renderer/toc';
@@ -20,7 +21,9 @@ export function useFile() {
     api
       .getRecentFiles()
       .then(setRecentFiles)
-      .catch(() => {});
+      .catch((error) => {
+        logger.error('Failed to get recent files:', error);
+      });
   }, [api]);
 
   const loadFile = useCallback(
@@ -46,6 +49,8 @@ export function useFile() {
         };
       } catch (error: unknown) {
         const raw = error instanceof Error ? error.message : String(error);
+        const redactedPath = path.split(/[\\/]/).pop() || path;
+        logger.error(`Failed to load file ${redactedPath}:`, error);
         setError(ErrorMessage(raw, path));
       } finally {
         setIsLoading(false);

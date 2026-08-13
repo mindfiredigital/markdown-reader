@@ -181,6 +181,17 @@ export interface ReaderToolbarProps {
   onExportHtml?: (() => void) | undefined;
   onExportPdf?: (() => void) | undefined;
   onExportDocx?: (() => void) | undefined;
+  onCopyMd?: () => Promise<void> | void;
+  onCopyText?: () => Promise<void> | void;
+  viewMode?: ViewMode;
+  onToggleRawText?: () => void;
+  onToggleMindMap?: () => void;
+}
+
+export type ViewMode = 'rendered' | 'raw' | 'mindmap';
+
+export interface RawTextViewerProps {
+  markdown?: string | undefined;
 }
 
 export interface SettingsPanelProps {
@@ -198,4 +209,13 @@ export type ErrorBoundaryState = {
 
 export interface ReaderStatsProps {
   markdown: string | undefined;
+}
+
+export interface MarkmapViewerProps {
+  markdown?: string | undefined;
+}
+
+export interface IMarkmapNode {
+  content?: string;
+  children?: IMarkmapNode[];
 }

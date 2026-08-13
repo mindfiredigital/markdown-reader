@@ -218,6 +218,23 @@ body {
   overflow-x: auto;
 }
 
+/*dark mode colors for markmap svg's */
+.markmap-svg text {
+  fill: var(--color-text) !important;
+}
+
+.markmap-svg foreignObject,
+.markmap-svg foreignObject * {
+  color: var(--color-text) !important;
+}
+
+.markmap-svg foreignObject pre,
+.markmap-svg foreignObject code {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text) !important;
+  text-shadow: none !important;
+}
+
 .mermaid-error,
 .katex-error {
   color: var(--color-error);

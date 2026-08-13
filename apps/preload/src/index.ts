@@ -61,6 +61,14 @@ const apiContract: MarkdownReaderAPI = {
     };
   },
   downloadUpdate: () => ipcRenderer.send(IPC_CONSTANTS.DOWNLOAD_UPDATE),
+  log: {
+    info: (message: string, ...args: unknown[]) =>
+      ipcRenderer.send(IPC_CONSTANTS.LOG_MESSAGE, 'info', message, ...args),
+    error: (message: string, ...args: unknown[]) =>
+      ipcRenderer.send(IPC_CONSTANTS.LOG_MESSAGE, 'error', message, ...args),
+    warn: (message: string, ...args: unknown[]) =>
+      ipcRenderer.send(IPC_CONSTANTS.LOG_MESSAGE, 'warn', message, ...args),
+  },
 };
 
 // bridge between renderer and main
